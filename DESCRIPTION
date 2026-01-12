@@ -1,0 +1,39 @@
+Package: MsBackendMassIVE
+Title: Retrieve Mass Spectrometry Data from MassIVE
+Version: 0.0.0
+Authors@R:
+    c(person(given = "Philippine", family = "Louail",
+                    email = "philippine.louail@eurac.edu",
+                    role = c("aut"),
+                    comment = c(ORCID = "0009-0007-5429-6846")))
+Description: MassIVE is one of the main public repositories for storage
+             of metabolomics experiments. The MsBackendMassIVE package provides
+	     functionality to retrieve and represent mass spectrometry (MS)
+	     data from MassIVE. Data files are downloaded and cached
+	     locally avoiding repetitive downloads. MS data from metabolomics
+	     experiments can thus be directly and seamlessly integrated into
+	     R-based analysis workflows with the Spectra and
+	     MsBackendMassIVE package.
+Depends:
+    R (>= 4.2.0),
+    Spectra (>= 1.15.12)
+Imports:
+    curl,
+    ProtGenerics,
+    BiocFileCache,
+    S4Vectors,
+    methods
+Suggests:
+    testthat,
+    rmarkdown,
+    mzR,
+    knitr,
+    BiocStyle
+License: Artistic-2.0
+Encoding: UTF-8
+VignetteBuilder: knitr
+BugReports: https://github.com/RforMassSpectrometry/MsBackendMassIVE/issues
+URL: https://github.com/RforMassSpectrometry/MsBackendMassIVE
+biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport, Proteomics
+Roxygen: list(markdown=TRUE)
+RoxygenNote: 7.3.2
