@@ -1,11 +1,19 @@
 Package: MsBackendMassIVE
 Title: Retrieve Mass Spectrometry Data from MassIVE
-Version: 0.0.0
+Version: 0.1
 Authors@R:
-    c(person(given = "Philippine", family = "Louail",
-                    email = "philippine.louail@eurac.edu",
-                    role = c("aut"),
-                    comment = c(ORCID = "0009-0007-5429-6846")))
+    c(person(given = "Gabriele", family = "Tomè",
+             email = "gabriele.tome@eurac.edu",
+             role = c("aut","cre"),
+             comment = c(ORCID = "0000-0002-3976-6068")),
+      person(given = "Philippine", family = "Louail",
+             email = "philippine.louail@eurac.edu",
+             role = c("aut"),
+             comment = c(ORCID = "0009-0007-5429-6846")),
+      person(given = "Johannes", family = "Rainer",
+             email = "Johannes.Rainer@eurac.edu",
+             role = c("aut"),
+             comment = c(ORCID = "0000-0002-6977-7147")))
 Description: MassIVE is one of the main public repositories for storage
              of metabolomics experiments. The MsBackendMassIVE package provides
 	     functionality to retrieve and represent mass spectrometry (MS)
@@ -18,11 +26,13 @@ Depends:
     R (>= 4.2.0),
     Spectra (>= 1.15.12)
 Imports:
-    curl,
+    rvest,
+    httr,
     ProtGenerics,
     BiocFileCache,
     S4Vectors,
-    methods
+    methods,
+    progress
 Suggests:
     testthat,
     rmarkdown,
@@ -36,4 +46,4 @@ BugReports: https://github.com/RforMassSpectrometry/MsBackendMassIVE/issues
 URL: https://github.com/RforMassSpectrometry/MsBackendMassIVE
 biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport, Proteomics
 Roxygen: list(markdown=TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
