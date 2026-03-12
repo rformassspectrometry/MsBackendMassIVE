@@ -97,7 +97,7 @@ thus not support changing \emph{m/z} and intensity values directly.
 To account for high server load and eventually failing or rejected
 downloads from the MassIVE FTP server (\verb{ftp://massive-ftp.ucsd.edu/}), the
 download functions repeatedly retry to download a file. An error is thrown
-if the download fails for 3 consecutive attempts. Between each attempt,
+if the download fails for 5 consecutive attempts. Between each attempt,
 the function waits for an increasing time period (5 seconds between the
 first and second and 10 seconds between the 2nd and 3rd attempt). This
 time period can also be configured with the \code{"massive.sleep_mult"} option,
