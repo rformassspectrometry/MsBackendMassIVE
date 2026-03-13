@@ -1,0 +1,17 @@
+# Package index
+
+## All functions
+
+- [`massive_ftp_path()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+  [`massive_list_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+  [`massive_sync_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+  [`massive_cached_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+  [`massive_delete_cache()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+  : Utility functions for the MassIVE repository
+- [`MsBackendMassIVE()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
+  [`backendInitialize(`*`<MsBackendMassIVE>`*`)`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
+  [`backendRequiredSpectraVariables(`*`<MsBackendMassIVE>`*`)`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
+  [`massive_sync()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
+  : MsBackend representing MS data from MassIVE
+- [`retry()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/retry.md)
+  : Retry expression on failure
