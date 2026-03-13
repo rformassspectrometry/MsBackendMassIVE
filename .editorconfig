@@ -8,7 +8,22 @@ end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+[DESCRIPTION]
+indent_style = space
+indent_size = 4
+max_line_length = 80
+
+[*.c]
+indent_style = space
+indent_size = 4
+max_line_length = 80
+
 [*.R]
+indent_style = space
+indent_size = 4
+max_line_length = 80
+
+[*.qmd]
 indent_style = space
 indent_size = 4
 max_line_length = 80
@@ -16,10 +31,11 @@ max_line_length = 80
 [*.Rmd]
 indent_style = space
 indent_size = 4
+max_line_length = 80
 
 [Makefile]
 indent_style = tab
 
-[.travis.yml]
+[*.yml]
 indent_style = space
 indent_size = 2

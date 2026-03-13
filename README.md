@@ -1,15 +1,20 @@
-# Retrieve Mass Spectrometry Data from MetaboLights
+# Retrieve Mass Spectrometry Data from MassIVE
 
-[![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
-
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![R-CMD-check-bioc](https://github.com/RforMassSpectrometry/MsBackendMassIVE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RforMassSpectrometry/MsBackendMassIVE/actions?query=workflow%3AR-CMD-check-bioc)
+[![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE/graph/badge.svg?token=jpxt7OlA2k)](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE)
+[![:name status badge](https://rformassspectrometry.r-universe.dev/badges/:name)](https://rformassspectrometry.r-universe.dev/)
+[![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)
 
 This repository provides a *backend* for
 [Spectra](https://github.com/RforMassSpectrometry/Spectra) objects that
-represents and retrieves mass spectrometry (MS) data directly from metabolomics
-experiments deposited at the public
-[MassIVE](...) repository. Mass
-spectrometry data files of an experiment are downloaded and cached locally using
-the [BiocFileCache](https://bioconductor.org/packages/BiocFileCache) package.
+represents and retrieves mass spectrometry (MS) data directly from data sets
+deposited at the public
+[MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp)
+repository. Mass spectrometry data files of a data set are downloaded and
+cached locally using the
+[BiocFileCache](https://bioconductor.org/packages/BiocFileCache) package to
+avoid repeated download.
 
 
 # Installation
