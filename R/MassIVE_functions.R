@@ -184,8 +184,8 @@ massive_list_files <- function(x = character(), pattern = NULL) {
 
     ## Check query as a correct id
     if(!length(fls))
-        stop("No files found in GNPS2 dataset. Does the data set \"", x,
-             "\" exist?", call. = FALSE)
+        stop("No MS data files found in GNPS2 dataset. Does the data set \"", x,
+             "\" have them?", call. = FALSE)
 
     if (length(pattern))
         fls[grepl(pattern, fls)]

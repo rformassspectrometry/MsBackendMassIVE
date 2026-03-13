@@ -92,7 +92,7 @@ test_that("massive_ftp_path works", {
     expect_true(grepl("MSV000065798/$", res))
 
     expect_error(massive_ftp_path("MSV000065798", mustWork = TRUE),
-                 "No files found")
+                 "No MS data files found")
 
     expect_error(massive_ftp_path(c("A", "B")), "single ID")
 })
@@ -101,7 +101,7 @@ test_that("massive_list_files works", {
     Sys.sleep(4)
     res <- massive_list_files("MSV000080547", pattern = "1.mzML$")
     expect_true(length(res) == 2)
-    expect_error(massive_list_files("AAA"), "No files found")
+    expect_error(massive_list_files("AAA"), "No MS data files found")
 })
 
 test_that("massive_delete_cache works", {
