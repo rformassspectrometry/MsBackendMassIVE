@@ -143,8 +143,31 @@ test_that("massive_data_download works", {
             massive_data_download(massiveId = "MSV000080547",
                                   fileName = "params.xml", path = tmp)
         ),
-        "Create directory"
+        "Created directory"
     )
     expect_true(dir.exists(tmp))
     expect_true(file.exists(paste0(tmp, "/params.xml")))
+
+    ## Test overwrite = FALSE (default): file should be skipped
+    mtime_before <- file.info(file.path(tmp, "params.xml"))$mtime
+    Sys.sleep(1)
+    expect_message(
+        suppressWarnings(
+            massive_data_download(massiveId = "MSV000080547",
+                                  fileName = "params.xml", path = tmp)
+        ),
+        "already exists"
+    )
+    mtime_after <- file.info(file.path(tmp, "params.xml"))$mtime
+    expect_equal(mtime_before, mtime_after)
+
+    ## Test overwrite = TRUE: file should be re-downloaded
+    Sys.sleep(1)
+    suppressWarnings(
+        massive_data_download(massiveId = "MSV000080547",
+                              fileName = "params.xml", path = tmp,
+                              overwrite = TRUE)
+    )
+    mtime_overwritten <- file.info(file.path(tmp, "params.xml"))$mtime
+    expect_true(mtime_overwritten > mtime_before)
 })

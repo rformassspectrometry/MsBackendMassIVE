@@ -18,7 +18,8 @@ massive_data_download(
   massiveId = character(),
   pattern = "*",
   fileName = character(),
-  path = "./"
+  path = "./",
+  overwrite = FALSE
 )
 
 massive_sync_data_files(
@@ -61,6 +62,10 @@ downloaded and cached.}
 
 \item{path}{for \code{massive_data_download()}: optional \code{character} defining the
 directory where download the files.}
+
+\item{overwrite}{for \code{massive_data_download()}: \code{logical(1)} whether
+existing files should be overwritten. Defaults to \code{FALSE}, in which
+case files that already exist in \code{path} are skipped.}
 }
 \value{
 \itemize{

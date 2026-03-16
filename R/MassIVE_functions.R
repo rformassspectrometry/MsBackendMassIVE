@@ -108,6 +108,10 @@
 #' @param path for `massive_data_download()`: optional `character` defining the
 #'     directory where download the files.
 #'
+#' @param overwrite for `massive_data_download()`: `logical(1)` whether
+#'     existing files should be overwritten. Defaults to `FALSE`, in which
+#'     case files that already exist in `path` are skipped.
+#'
 #' @return
 #'
 #' - For `massive_ftp_path()`: `character(1)` with the ftp path to the specified
@@ -213,7 +217,8 @@ massive_list_files <- function(x = character(), pattern = NULL) {
 #'
 #' @export
 massive_data_download <- function(massiveId = character(), pattern = "*",
-                                  fileName = character(), path = "./"){
+                                  fileName = character(), path = "./",
+                                  overwrite = FALSE){
     if (!length(massiveId))
         stop("No MassIVE data set ID provided with parameter 'massiveId'")
 
@@ -233,8 +238,8 @@ massive_data_download <- function(massiveId = character(), pattern = "*",
 
     ## Create dir if not exist
     if (!dir.exists(path)) {
-        dir.create(path)
-        message(paste0("Create directory: ",path))
+        dir.create(path, recursive = TRUE)
+        message("Created directory: ", path)
     }
 
     ## Update the Volume if files are in ccms_peak folder
@@ -256,23 +261,15 @@ massive_data_download <- function(massiveId = character(), pattern = "*",
                            total = length(ffiles), clear = FALSE)
     res <- lapply(ffiles, function(z) {
         pb$tick()
-        response <- "yes"
-        ## Verify if already exist, if exist download only if user want
-        if(file.exists(paste0(path, "/", basename(z)))) {
-            cat("File", basename(z), "already exists in ", path, ".\n",
-                "Do you want to replace it? (yes/no): ")
-            response <- tolower(trimws(readline()))
+        dest <- file.path(path, basename(z))
+        if (file.exists(dest) && !overwrite) {
+            message("File '", basename(z), "' already exists in '",
+                    path, "'. Skipping. Use 'overwrite = TRUE' to replace.")
+            return(invisible(NULL))
         }
-
-        if(response %in% c("yes","y")) {
-            invisible(capture.output(suppressMessages(
-                retry(download.file(url = z,
-                                    destfile = paste0(path, "/",
-                                                      basename(z)),
-                                    mode = "wb"),
-                      sleep_mult = .sleep_mult()))))
-        }
-
+        invisible(capture.output(suppressMessages(
+            retry(download.file(url = z, destfile = dest, mode = "wb"),
+                  sleep_mult = .sleep_mult()))))
     })
 }
 
