@@ -52,6 +52,12 @@
 #'   Parameter `fileName` allows to specify names of selected data files to
 #'   sync.
 #'
+#' - `massive_data_download()`: Download files from the MassIVE repository for a
+#'   specified MassIVE dataset. Use `pattern` to filter files by name using a
+#'   regular expression (downloads all files by default). Use `fileName` to
+#'   specify one or more exact file names to download. Use `path` to set the
+#'   destination directory for downloaded files.
+#'
 #' - `massive_delete_cache()`: removes all local content for the MassIVE
 #'   data set with ID `massiveId`. This will delete eventually present
 #'   locally cached data files for the specified data set. This does not
@@ -99,6 +105,9 @@
 #'     defining the names of specific data files of a data set that should be
 #'     downloaded and cached.
 #'
+#' @param path for `massive_data_download()`: optional `character` defining the
+#'     directory where download the files.
+#'
 #' @return
 #'
 #' - For `massive_ftp_path()`: `character(1)` with the ftp path to the specified
@@ -122,6 +131,10 @@
 #' ## Retrieve the available .mzML files.
 #' mzMLfiles <- massive_list_files("MSV000080547", pattern = "mzML$")
 #' mzMLfiles
+#'
+#' ## Download parameter file for the data set MSV000080547
+#' massive_data_download("MSV000080547", pattern = "params.xml",
+#'                       path = tempdir())
 #'
 NULL
 
@@ -190,6 +203,77 @@ massive_list_files <- function(x = character(), pattern = NULL) {
     if (length(pattern))
         fls[grepl(pattern, fls)]
     else fls
+}
+
+#' @rdname MassIVE-utils
+#'
+#' @importFrom progress progress_bar
+#'
+#' @importFrom utils capture.output URLencode download.file
+#'
+#' @export
+massive_data_download <- function(massiveId = character(), pattern = "*",
+                                  fileName = character(), path = "./"){
+    if (!length(massiveId))
+        stop("No MassIVE data set ID provided with parameter 'massiveId'")
+
+    fpath <- massive_ftp_path(massiveId, mustWork = FALSE)
+    dfiles <- massive_list_files(massiveId, pattern = pattern)
+    if (!length(dfiles)) {
+        stop("No files matching the provided file pattern found for ",
+             "MassIVE data set ", massiveId, ".", call. = FALSE)
+    }
+
+    if (length(fileName)) {
+        keep <- basename(dfiles) %in% fileName
+        if (!any(keep))
+            stop("None of the 'fileName' found in data set \"", massiveId, "\"")
+        dfiles <- dfiles[keep]
+    }
+
+    ## Create dir if not exist
+    if (!dir.exists(path)) {
+        dir.create(path)
+        message(paste0("Create directory: ",path))
+    }
+
+    ## Update the Volume if files are in ccms_peak folder
+    ## ccms_peak is in volume z01 for all the project
+    api_z_volume = "ftp://massive-ftp.ucsd.edu/z01/"
+    ffiles <- sapply(dfiles,
+                     function(f) {
+                         u <- ifelse(grepl("^ccms_peak", f),
+                                     paste0(api_z_volume, massiveId, "/", f),
+                                     paste0(fpath, f))
+                         ## URLencode for file name with spaces
+                         URLencode(u)
+                     }, USE.NAMES = FALSE)
+
+    ## Save files in the folder
+    pb <- progress_bar$new(format = paste0("[:bar] :current/:",
+                                           "total (:percent) in ",
+                                           ":elapsed"),
+                           total = length(ffiles), clear = FALSE)
+    res <- lapply(ffiles, function(z) {
+        pb$tick()
+        response <- "yes"
+        ## Verify if already exist, if exist download only if user want
+        if(file.exists(paste0(path, "/", basename(z)))) {
+            cat("File", basename(z), "already exists in ", path, ".\n",
+                "Do you want to replace it? (yes/no): ")
+            response <- tolower(trimws(readline()))
+        }
+
+        if(response %in% c("yes","y")) {
+            invisible(capture.output(suppressMessages(
+                retry(download.file(url = z,
+                                    destfile = paste0(path, "/",
+                                                      basename(z)),
+                                    mode = "wb"),
+                      sleep_mult = .sleep_mult()))))
+        }
+
+    })
 }
 
 
@@ -354,3 +438,4 @@ massive_delete_cache <- function(massiveId = character()) {
         }
     }
 }
+

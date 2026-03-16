@@ -4,6 +4,7 @@
 \alias{MassIVE-utils}
 \alias{massive_ftp_path}
 \alias{massive_list_files}
+\alias{massive_data_download}
 \alias{massive_sync_data_files}
 \alias{massive_cached_data_files}
 \alias{massive_delete_cache}
@@ -12,6 +13,13 @@
 massive_ftp_path(x = character(), mustWork = TRUE)
 
 massive_list_files(x = character(), pattern = NULL)
+
+massive_data_download(
+  massiveId = character(),
+  pattern = "*",
+  fileName = character(),
+  path = "./"
+)
 
 massive_sync_data_files(
   massiveId = character(),
@@ -50,6 +58,9 @@ set/experiment.}
 \code{massive_cached_data_files()}: optional \code{character}
 defining the names of specific data files of a data set that should be
 downloaded and cached.}
+
+\item{path}{for \code{massive_data_download()}: optional \code{character} defining the
+directory where download the files.}
 }
 \value{
 \itemize{
@@ -107,6 +118,11 @@ file names should be returned.
 MassIVE data set eventually downloading and locally caching them.
 Parameter \code{fileName} allows to specify names of selected data files to
 sync.
+\item \code{massive_data_download()}: Download files from the MassIVE repository for a
+specified MassIVE dataset. Use \code{pattern} to filter files by name using a
+regular expression (downloads all files by default). Use \code{fileName} to
+specify one or more exact file names to download. Use \code{path} to set the
+destination directory for downloaded files.
 \item \code{massive_delete_cache()}: removes all local content for the MassIVE
 data set with ID \code{massiveId}. This will delete eventually present
 locally cached data files for the specified data set. This does not
@@ -141,6 +157,10 @@ massive_list_files("MSV000080547")
 ## Retrieve the available .mzML files.
 mzMLfiles <- massive_list_files("MSV000080547", pattern = "mzML$")
 mzMLfiles
+
+## Download parameter file for the data set MSV000080547
+massive_data_download("MSV000080547", pattern = "params.xml",
+                      path = tempdir())
 
 }
 \author{

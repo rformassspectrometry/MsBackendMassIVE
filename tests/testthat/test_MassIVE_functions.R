@@ -102,6 +102,9 @@ test_that("massive_list_files works", {
     res <- massive_list_files("MSV000080547", pattern = "1.mzML$")
     expect_true(length(res) == 2)
     expect_error(massive_list_files("AAA"), "No MS data files found")
+
+    expect_error(massive_list_files("MSV000065798"),
+                 "No MS data files found")
 })
 
 test_that("massive_delete_cache works", {
@@ -113,4 +116,35 @@ test_that("massive_delete_cache works", {
     massive_delete_cache("MSV000080547")
     i <- bfcinfo(bfc)
     expect_true(!any(i$massive_id %in% "MSV000080547"))
+})
+
+test_that("massive_data_download works", {
+    expect_error(massive_data_download(), "No MassIVE data set ID")
+
+    expect_error(massive_data_download(massiveId = "A"), "Failed to connect")
+    expect_error(massive_data_download(massiveId = c("A", "B")), "single ID")
+
+    expect_error(massive_data_download(massiveId = "MSV000065798"),
+                 "No MS data files found")
+
+    expect_error(massive_data_download(massiveId = "MSV000080547",
+                                       pattern = "nonexistentpattern"),
+                 "No files matching")
+
+    expect_error(massive_data_download(massiveId = "MSV000080547",
+                                       fileName = "nonexistentfile"),
+        "None of the 'fileName'")
+
+    ## Test creation directory
+    tmp <- file.path(tempdir(), paste0("test_", sample(1e6, 1)))
+    on.exit(unlink(tmp, recursive = TRUE))
+    expect_message(
+        suppressWarnings(
+            massive_data_download(massiveId = "MSV000080547",
+                                  fileName = "params.xml", path = tmp)
+        ),
+        "Create directory"
+    )
+    expect_true(dir.exists(tmp))
+    expect_true(file.exists(paste0(tmp, "/params.xml")))
 })
