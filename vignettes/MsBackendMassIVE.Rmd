@@ -1,0 +1,172 @@
+---
+title: "Retrieve and Use Mass Spectrometry Data from MassIVE"
+output:
+    BiocStyle::html_document:
+        toc_float: true
+vignette: >
+    %\VignetteIndexEntry{Retrieve and Use Mass Spectrometry Data from MassIVE}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+    %\VignettePackage{MsBackendMassIVE}
+    %\VignetteDepends{Spectra,BiocStyle}
+---
+
+```{r style, echo = FALSE, results = 'asis', message=FALSE}
+BiocStyle::markdown()
+```
+
+**Package**: `r Biocpkg("MsBackendMassIVE")`<br />
+**Authors**: `r packageDescription("MsBackendMassIVE")[["Author"]] `<br />
+**Last modified:** `r file.info("MsBackendMassIVE.Rmd")$mtime`<br />
+**Compiled**: `r date()`
+
+```{r, echo = FALSE, message = FALSE}
+library(Spectra)
+library(BiocStyle)
+```
+
+# Introduction
+
+The `r Biocpkg("Spectra")` package provides a central infrastructure for the
+handling of Mass Spectrometry (MS) data in Bioconductor. The package supports
+interchangeable use of different *backends* to import and represent MS data from
+a variety of sources and data formats. The *MsBackendMassIVE* package allows to
+retrieve MS data files directly from the
+[MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp) (Mass
+Spectrometry Interactive Virtual Environment) repository.
+MassIVE is a community resource developed by the NIH-funded Center for
+Computational Mass Spectrometry at UC San Diego to promote the global, free
+exchange of mass spectrometry data. MassIVE supports deposition of both
+proteomics and metabolomics experiments and is a full member of the
+[ProteomeXchange](http://www.proteomexchange.org/) consortium.
+
+The *MsBackendMassIVE* package downloads and locally caches MS data files for a
+MassIVE data set and enables further analyses of this data directly in R.
+
+
+# Installation
+
+The package can be installed from within R with the commands below:
+
+```{r, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
+```
+
+
+# Importing MS Data from MassIVE
+
+Each experiment in MassIVE is identified by a unique accession starting with
+*MSV* followed by a number. The MS data files of a dataset are listed in the
+[GNPS2 database](https://datasetcache.gnps2.org/datasette/database/filename)
+and can be downloaded from MassIVE's FTP server.
+
+Below we list all files from the MassIVE data set with the ID *MSV000080547*.
+
+```{r}
+library(MsBackendMassIVE)
+
+#' List files of a MassIVE data set
+all_files <- massive_list_files("MSV000080547")
+head(all_files)
+```
+
+These files are accessible through the FTP path associated with the MassIVE
+data set. Below we use the `massive_ftp_path()` function to return the FTP path
+for our test data set.
+
+```{r}
+massive_ftp_path("MSV000080547", mustWork = FALSE)
+```
+
+```{r, echo = FALSE}
+Sys.sleep(4)
+```
+
+MS data files in supported formats (mzML, CDF, mzXML) can be directly loaded
+using the `MsBackendMassIVE` backend into R as a `Spectra` object
+(`MsBackendMassIVE` directly extends *Spectra*'s `MsBackendMzR` backend and
+therefore supports import of MS data files in *mzML*, *CDF* or *mzXML*
+formats). By default, all MS data files of the data set would be retrieved, but
+in our example below we restrict to a few data files to reduce the amount of
+data that needs to be downloaded. To this end we define a pattern matching the
+file name of only some data files using the `filePattern` parameter.
+
+```{r}
+library(Spectra)
+
+#' Load MS data files of one data set
+s <- Spectra("MSV000080547", filePattern = "1.mzML$",
+             source = MsBackendMassIVE())
+s
+```
+
+This call downloaded the files to the local cache and loaded them as a `Spectra`
+object. The downloading and caching of the data is handled by Bioconductor's
+`r Biocpkg("BiocFileCache")`. The local cache can thus be managed directly using
+functionality from that package. Any subsequent loading of the same data files
+will load the locally cached versions avoiding thus repetitive download of the
+same data.
+
+The `Spectra` object with the MS data files of the MassIVE data set enables now
+any subsequent analysis of the data in R. On top of the spectra variables and
+mass peak data values that are provided by the MS data files also additional
+information related to the MassIVE data set are available as specific *spectra
+variables*. We list all available spectra variables of the data set below.
+
+```{r}
+spectraVariables(s)
+```
+
+The MassIVE-specific variables are `"massive_id"` and `"data_file"` providing
+the MassIVE ID of the data set and the original data file name on the MassIVE
+FTP server for each individual spectrum.
+
+```{r}
+spectraData(s, c("massive_id", "data_file"))
+```
+
+The `massive_sync()` function can be used to *synchronize* the local content of
+a `MsBackendMassIVE`. This function checks if all data files of the backend are
+available locally and eventually downloads and caches missing files.
+
+```{r, echo = FALSE}
+Sys.sleep(4)
+```
+
+```{r}
+massive_sync(s@backend)
+```
+
+Also, it is possible to *manually* cache and download data files from MassIVE
+using the `massive_sync_data_files()` function. This function evaluates if the
+respective data files are already cached and, if so, does not download them
+again. Below we use this to retrieve the local storage information on one of the
+data files of the MassIVE data set *MSV000080547*:
+
+```{r}
+res <- massive_sync_data_files("MSV000080547",
+                               fileName = "AG_spiked_sample11.mzML")
+res
+```
+
+The `massive_cached_data_files()` function can be used to inspect and list
+locally cached MassIVE data files. This function does not require an active
+internet connection since only local content is queried. With the default
+settings, a `data.frame` with all available data files is returned.
+
+```{r}
+massive_cached_data_files()
+```
+
+Locally cached files for a MassIVE data set can be removed using the
+`massive_delete_cache()` function providing the ID of the MassIVE data set for
+which local data files should be removed.
+
+# Session information
+
+```{r}
+sessionInfo()
+```
