@@ -2,11 +2,11 @@
 
 export(MsBackendMassIVE)
 export(massive_cached_data_files)
-export(massive_data_download)
 export(massive_delete_cache)
+export(massive_download_file)
 export(massive_ftp_path)
 export(massive_list_files)
-export(massive_param_file_parse)
+export(massive_param_file)
 export(massive_sync)
 export(massive_sync_data_files)
 export(retry)

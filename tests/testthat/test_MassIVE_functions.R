@@ -134,33 +134,29 @@ test_that("massive_delete_cache works", {
     expect_true(!any(i$massive_id %in% "MSV000080547"))
 })
 
-test_that("massive_data_download works", {
-    expect_error(massive_data_download(), "No MassIVE data set ID")
+test_that("massive_download_file works", {
+    expect_error(massive_download_file(), "No MassIVE data set ID")
 
-    expect_error(massive_data_download(massiveId = "A"), "Failed to connect")
-    expect_error(massive_data_download(massiveId = c("A", "B")), "single ID")
+    expect_error(massive_download_file(massiveId = "A"), "Failed to connect")
+    expect_error(massive_download_file(massiveId = c("A", "B")), "single ID")
 
-    expect_error(massive_data_download(massiveId = "MSV000065798"),
+    expect_error(massive_download_file(massiveId = "MSV000065798"),
                  "No MS data files found")
 
-    expect_error(massive_data_download(massiveId = "MSV000080547",
+    expect_error(massive_download_file(massiveId = "MSV000080547",
                                        pattern = "nonexistentpattern"),
                  "No files matching")
 
-    expect_error(massive_data_download(massiveId = "MSV000080547",
+    expect_error(massive_download_file(massiveId = "MSV000080547",
                                        fileName = "nonexistentfile"),
         "None of the 'fileName'")
 
     ## Test creation directory
     tmp <- file.path(tempdir(), paste0("test_", sample(1e6, 1)))
     on.exit(unlink(tmp, recursive = TRUE))
-    expect_message(
-        suppressWarnings(
-            massive_data_download(massiveId = "MSV000080547",
-                                  fileName = "params.xml", path = tmp)
-        ),
-        "Created directory"
-    )
+    suppressWarnings(
+        massive_download_file(massiveId = "MSV000080547",
+                              fileName = "params.xml", path = tmp))
     expect_true(dir.exists(tmp))
     expect_true(file.exists(paste0(tmp, "/params.xml")))
 
@@ -169,7 +165,7 @@ test_that("massive_data_download works", {
     Sys.sleep(1)
     expect_message(
         suppressWarnings(
-            massive_data_download(massiveId = "MSV000080547",
+            massive_download_file(massiveId = "MSV000080547",
                                   fileName = "params.xml", path = tmp)
         ),
         "already exists"
@@ -180,7 +176,7 @@ test_that("massive_data_download works", {
     ## Test overwrite = TRUE: file should be re-downloaded
     Sys.sleep(1)
     suppressWarnings(
-        massive_data_download(massiveId = "MSV000080547",
+        massive_download_file(massiveId = "MSV000080547",
                               fileName = "params.xml", path = tmp,
                               overwrite = TRUE)
     )
@@ -189,31 +185,31 @@ test_that("massive_data_download works", {
 })
 
 
-test_that("massive_param_file_parse works", {
-    expect_error(massive_param_file_parse(), "No MassIVE data set ID")
+test_that("massive_param_file works", {
+    expect_error(massive_param_file(), "No MassIVE data set ID")
 
-    expect_error(massive_param_file_parse(massiveId = "A"), "Failed to connect")
-    expect_error(massive_param_file_parse(massiveId = c("A", "B")), "single ID")
+    expect_error(massive_param_file(massiveId = "A"), "Failed to connect")
+    expect_error(massive_param_file(massiveId = c("A", "B")), "single ID")
 
-    expect_error(massive_param_file_parse(massiveId = "MSV000065798"),
+    expect_error(massive_param_file(massiveId = "MSV000065798"),
                  "No MS data files found")
 
-    expect_error(massive_param_file_parse(massiveId = "MSV000080547",
+    expect_error(massive_param_file(massiveId = "MSV000080547",
                                           fileName = "nonexistentfile"),
                  "found in data set")
 
-    expect_error(massive_param_file_parse(massiveId = "MSV000073742"),
+    expect_error(massive_param_file(massiveId = "MSV000073742"),
                  "found in data set")
 
-    expect_message(massive_param_file_parse(massiveId = "MSV000085609"),
+    expect_message(massive_param_file(massiveId = "MSV000085609"),
                    "Multiple ")
 
     ## Single params.xml
-    res <- massive_param_file_parse(massiveId = "MSV000080547")
+    res <- massive_param_file(massiveId = "MSV000080547")
     expect_true(is.data.frame(res))
 
     ## Multiple params.xml
-    res <- massive_param_file_parse(massiveId = "MSV000085609")
+    res <- massive_param_file(massiveId = "MSV000085609")
     expect_true(length(res) == 2)
 
 })

@@ -1,14 +1,14 @@
 # MsBackendMassIVE 0.1.2
 
-- Add `massive_param_file_parse()` to parse params.xml file.
+- Add `massive_param_file()` to parse params.xml file.
 - Add additional test for `massive_list_files()` and `.massive_data_files()`
 
 # MsBackendMassIVE 0.1.1
 
 - Add package vignette.
 - Replace interactive `readline()` with `overwrite` parameter in
-  `massive_data_download()`.
-- Replace `cat()` with `message()` in `massive_data_download()`.
+  `massive_download_file()`.
+- Replace `cat()` with `message()` in `massive_download_file()`.
 
 # MsBackendMassIVE 0.1.0
 
