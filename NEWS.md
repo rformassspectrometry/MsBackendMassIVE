@@ -1,3 +1,8 @@
+# MsBackendMassIVE 0.1.2
+
+- Add `massive_param_file_parse()` to parse params.xml file.
+- Add additional test for `massive_list_files()` and `.massive_data_files()`
+
 # MsBackendMassIVE 0.1.1
 
 - Add package vignette.

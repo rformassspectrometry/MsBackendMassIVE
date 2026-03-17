@@ -52,11 +52,16 @@
 #'   Parameter `fileName` allows to specify names of selected data files to
 #'   sync.
 #'
-#' - `massive_data_download()`: Download files from the MassIVE repository for a
+#' - `massive_data_download()`: download files from the MassIVE repository for a
 #'   specified MassIVE dataset. Use `pattern` to filter files by name using a
 #'   regular expression (downloads all files by default). Use `fileName` to
 #'   specify one or more exact file names to download. Use `path` to set the
 #'   destination directory for downloaded files.
+#'
+#' - `massive_param_file_parse()`: download and parse the `params.xml` files of
+#'   the data set. The function return a data.frame or a list of data.frame with
+#'   2 columns (Parameter Name, Value). Use `fileName` to parse additional `xml`
+#'   files in the data.set.
 #'
 #' - `massive_delete_cache()`: removes all local content for the MassIVE
 #'   data set with ID `massiveId`. This will delete eventually present
@@ -206,7 +211,8 @@ massive_list_files <- function(x = character(), pattern = NULL) {
 
     if (length(pattern))
         fls[grepl(pattern, fls)]
-    else fls
+    else
+        fls
 }
 
 #' @rdname MassIVE-utils
@@ -271,6 +277,62 @@ massive_data_download <- function(massiveId = character(), pattern = "*",
             retry(download.file(url = z, destfile = dest, mode = "wb"),
                   sleep_mult = .sleep_mult()))))
     })
+}
+
+#' @rdname MassIVE-utils
+#'
+#' @importFrom progress progress_bar
+#'
+#' @importFrom xml2 read_xml xml_find_all xml_attrs xml_text
+#'
+#' @export
+massive_param_file_parse <- function(massiveId = character(),
+                                     fileName = "params.xml") {
+    if (!length(massiveId))
+        stop("No MassIVE data set ID provided with parameter 'massiveId'")
+
+    fpath <- massive_ftp_path(massiveId, mustWork = FALSE)
+    dfiles <- massive_list_files(massiveId)
+    if (!length(dfiles)) {
+        stop("No files found for MassIVE data set ", massiveId, ".",
+             call. = FALSE)
+    }
+
+    if (length(fileName)) {
+        keep <- basename(dfiles) == fileName
+        if (!any(keep))
+            stop("No '", fileName, "' found in data set \"", massiveId, "\"")
+        dfiles <- dfiles[keep]
+    }
+
+    if (length(dfiles) > 1) {
+        message("Multiple '", fileName, "' found in the data set. ",
+                "Downloading all.\n\t- ", paste0(dfiles, collapse = "\n\t- "))
+    }
+
+    ## Prepare ftp link
+    ffiles <- paste0(fpath, dfiles)
+
+    pb <- progress_bar$new(format = paste0("[:bar] :current/:",
+                                           "total (:percent) in ",
+                                           ":elapsed"),
+                           total = length(ffiles), clear = FALSE)
+    res <- lapply(ffiles, function(z) {
+        pb$tick()
+        ## Get and parse the xml file
+        xml <- retry(read_xml(z), sleep_mult = .sleep_mult())
+        xml_parsed <- xml_find_all(xml, "//parameter")
+        df <- data.frame("ParameterName" = unlist(xml_attrs(xml_parsed)),
+                         "Value" = xml_text(xml_parsed))
+        df
+    })
+
+    names(res) <- dfiles
+
+    if (length(res) == 1)
+        res <- res[[1]]
+
+    return(res)
 }
 
 

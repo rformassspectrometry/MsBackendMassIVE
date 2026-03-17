@@ -12,9 +12,10 @@ test_that(".massive_data_files and .massive_data_files_offline works", {
                  "Failed to connect")
 
     massive_delete_cache("MSV000080547")
-    ## bfc <- BiocFileCache::BiocFileCache()
-    ## BiocFileCache::cleanbfc(bfc, days = -10, ask = FALSE)
-    ## BiocFileCache::bfcmetaremove(bfc, "MSV")
+
+    expect_error(.massive_data_files(massiveId = "MSV000080547",
+                                     pattern = "nonexistentpattern"),
+                 "No files matching")
 
     ## Error if no cache available
     with_mocked_bindings(
@@ -98,6 +99,21 @@ test_that("massive_ftp_path works", {
 })
 
 test_that("massive_list_files works", {
+    query_args <- NULL
+    mock_GET <- function(url, query) {
+        query_args <<- list(url = url, query = query)
+        stop("simulated GET failure")
+    }
+
+    with_mocked_bindings("GET" = mock_GET, {
+        expect_error(massive_list_files("MSV000123456"),
+                     "Failed to connect to GNPS2 dataset")
+    })
+
+    expect_equal(query_args$url,
+                 "https://datasetcache.gnps2.org/datasette/database.csv")
+    expect_match(query_args$query$sql, 'WHERE dataset = "MSV000123456"')
+
     Sys.sleep(4)
     res <- massive_list_files("MSV000080547", pattern = "1.mzML$")
     expect_true(length(res) == 2)
@@ -170,4 +186,34 @@ test_that("massive_data_download works", {
     )
     mtime_overwritten <- file.info(file.path(tmp, "params.xml"))$mtime
     expect_true(mtime_overwritten > mtime_before)
+})
+
+
+test_that("massive_param_file_parse works", {
+    expect_error(massive_param_file_parse(), "No MassIVE data set ID")
+
+    expect_error(massive_param_file_parse(massiveId = "A"), "Failed to connect")
+    expect_error(massive_param_file_parse(massiveId = c("A", "B")), "single ID")
+
+    expect_error(massive_param_file_parse(massiveId = "MSV000065798"),
+                 "No MS data files found")
+
+    expect_error(massive_param_file_parse(massiveId = "MSV000080547",
+                                          fileName = "nonexistentfile"),
+                 "found in data set")
+
+    expect_error(massive_param_file_parse(massiveId = "MSV000073742"),
+                 "found in data set")
+
+    expect_message(massive_param_file_parse(massiveId = "MSV000085609"),
+                   "Multiple ")
+
+    ## Single params.xml
+    res <- massive_param_file_parse(massiveId = "MSV000080547")
+    expect_true(is.data.frame(res))
+
+    ## Multiple params.xml
+    res <- massive_param_file_parse(massiveId = "MSV000085609")
+    expect_true(length(res) == 2)
+
 })
