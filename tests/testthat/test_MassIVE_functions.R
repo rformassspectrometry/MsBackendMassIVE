@@ -32,7 +32,7 @@ test_that(".massive_data_files and .massive_data_files_offline works", {
     expect_true(nrow(a) == 2)
     expect_true(all(a$massive_id == "MSV000080547"))
     ## Re-call function the data.
-    Sys.sleep(4)
+    Sys.sleep(1)
     b <- .massive_data_files("MSV000080547", pattern = "1.mzML$")
     expect_true(is.data.frame(b))
     expect_true(nrow(b) == 2)
@@ -99,28 +99,8 @@ test_that("massive_ftp_path works", {
 })
 
 test_that("massive_list_files works", {
-    query_args <- NULL
-    mock_GET <- function(url, query) {
-        query_args <<- list(url = url, query = query)
-        stop("simulated GET failure")
-    }
-
-    with_mocked_bindings("GET" = mock_GET, {
-        expect_error(massive_list_files("MSV000123456"),
-                     "Failed to connect to GNPS2 dataset")
-    })
-
-    expect_equal(query_args$url,
-                 "https://datasetcache.gnps2.org/datasette/database.csv")
-    expect_match(query_args$query$sql, 'WHERE dataset = "MSV000123456"')
-
-    Sys.sleep(4)
-    res <- massive_list_files("MSV000080547", pattern = "1.mzML$")
-    expect_true(length(res) == 2)
-    expect_error(massive_list_files("AAA"), "No MS data files found")
-
-    expect_error(massive_list_files("MSV000065798"),
-                 "No MS data files found")
+    expect_error(massive_list_files(c("MSV000083058", "MSV000080547")),
+                 "Provide a single MassIVE ID")
 })
 
 test_that("massive_delete_cache works", {

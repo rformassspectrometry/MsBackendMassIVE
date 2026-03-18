@@ -1,3 +1,8 @@
+# MsBackendMassIVE 0.1.3
+
+- Separate GNPS2 function from `massive_list_files()`
+- Remove repetitive error
+
 # MsBackendMassIVE 0.1.2
 
 - Add `massive_param_file()` to parse params.xml file.
