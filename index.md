@@ -4,7 +4,7 @@
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![R-CMD-check-bioc](https://github.com/RforMassSpectrometry/MsBackendMassIVE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RforMassSpectrometry/MsBackendMassIVE/actions?query=workflow%3AR-CMD-check-bioc)
-[![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE/graph/badge.svg?token=jpxt7OlA2k)](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE)
+[![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE/graph/badge.svg?token=P1mTOnS0RE)](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE)
 [![:name status
 badge](https://rformassspectrometry.r-universe.dev/badges/:name)](https://rformassspectrometry.r-universe.dev/)
 [![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)

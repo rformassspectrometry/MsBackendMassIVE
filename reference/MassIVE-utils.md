@@ -50,6 +50,17 @@ data set/experiment from MassIVE.
   Parameter `fileName` allows to specify names of selected data files to
   sync.
 
+- `massive_download_file()`: download files from the MassIVE repository
+  for a specified MassIVE dataset. Use `pattern` to filter files by name
+  using a regular expression (downloads all files by default). Use
+  `fileName` to specify one or more exact file names to download. Use
+  `path` to set the destination directory for downloaded files.
+
+- `massive_param_file()`: download and parse the `params.xml` files of
+  the data set. The function return a `data.frame` or a `list` of
+  `data.frame` with 2 columns (Parameter Name, Value). Use `fileName` to
+  parse additional `xml` files in the data.set.
+
 - `massive_delete_cache()`: removes all local content for the MassIVE
   data set with ID `massiveId`. This will delete eventually present
   locally cached data files for the specified data set. This does not
@@ -61,6 +72,16 @@ data set/experiment from MassIVE.
 massive_ftp_path(x = character(), mustWork = TRUE)
 
 massive_list_files(x = character(), pattern = NULL)
+
+massive_download_file(
+  massiveId = character(),
+  pattern = "*",
+  fileName = character(),
+  path = "./",
+  overwrite = FALSE
+)
+
+massive_param_file(massiveId = character(), fileName = "params.xml")
 
 massive_sync_data_files(
   massiveId = character(),
@@ -110,6 +131,17 @@ massive_delete_cache(massiveId = character())
   for `massive_sync_data_files()` and `massive_cached_data_files()`:
   optional `character` defining the names of specific data files of a
   data set that should be downloaded and cached.
+
+- path:
+
+  for `massive_download_file()`: optional `character` defining the
+  directory where download the files.
+
+- overwrite:
+
+  for `massive_download_file()`: `logical(1)` whether existing files
+  should be overwritten. Defaults to `FALSE`, in which case files that
+  already exist in `path` are skipped.
 
 ## Value
 
@@ -221,4 +253,8 @@ mzMLfiles
 #> [18] "peak/Quant_assesment_QQQ/AG_spiked_sample7.mzML" 
 #> [19] "peak/Quant_assesment_QQQ/AG_spiked_sample8.mzML" 
 #> [20] "peak/Quant_assesment_QQQ/AG_spiked_sample9.mzML" 
+
+## Download parameter file for the data set MSV000080547
+massive_download_file("MSV000080547", pattern = "params.xml",
+                      path = tempdir())
 ```
