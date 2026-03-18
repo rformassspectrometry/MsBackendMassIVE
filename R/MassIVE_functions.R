@@ -52,6 +52,17 @@
 #'   Parameter `fileName` allows to specify names of selected data files to
 #'   sync.
 #'
+#' - `massive_download_file()`: download files from the MassIVE repository for a
+#'   specified MassIVE dataset. Use `pattern` to filter files by name using a
+#'   regular expression (downloads all files by default). Use `fileName` to
+#'   specify one or more exact file names to download. Use `path` to set the
+#'   destination directory for downloaded files.
+#'
+#' - `massive_param_file()`: download and parse the `params.xml` files of
+#'   the data set. The function return a `data.frame` or a `list` of
+#'   `data.frame` with 2 columns (Parameter Name, Value). Use `fileName` to
+#'   parse additional `xml` files in the data.set.
+#'
 #' - `massive_delete_cache()`: removes all local content for the MassIVE
 #'   data set with ID `massiveId`. This will delete eventually present
 #'   locally cached data files for the specified data set. This does not
@@ -99,6 +110,13 @@
 #'     defining the names of specific data files of a data set that should be
 #'     downloaded and cached.
 #'
+#' @param path for `massive_download_file()`: optional `character` defining the
+#'     directory where download the files.
+#'
+#' @param overwrite for `massive_download_file()`: `logical(1)` whether
+#'     existing files should be overwritten. Defaults to `FALSE`, in which
+#'     case files that already exist in `path` are skipped.
+#'
 #' @return
 #'
 #' - For `massive_ftp_path()`: `character(1)` with the ftp path to the specified
@@ -122,6 +140,10 @@
 #' ## Retrieve the available .mzML files.
 #' mzMLfiles <- massive_list_files("MSV000080547", pattern = "mzML$")
 #' mzMLfiles
+#'
+#' ## Download parameter file for the data set MSV000080547
+#' massive_download_file("MSV000080547", pattern = "params.xml",
+#'                       path = tempdir())
 #'
 NULL
 
@@ -189,7 +211,127 @@ massive_list_files <- function(x = character(), pattern = NULL) {
 
     if (length(pattern))
         fls[grepl(pattern, fls)]
-    else fls
+    else
+        fls
+}
+
+#' @rdname MassIVE-utils
+#'
+#' @importFrom progress progress_bar
+#'
+#' @importFrom utils capture.output URLencode download.file
+#'
+#' @export
+massive_download_file <- function(massiveId = character(), pattern = "*",
+                                  fileName = character(), path = "./",
+                                  overwrite = FALSE){
+    if (!length(massiveId))
+        stop("No MassIVE data set ID provided with parameter 'massiveId'")
+
+    fpath <- massive_ftp_path(massiveId, mustWork = FALSE)
+    dfiles <- massive_list_files(massiveId, pattern = pattern)
+    if (!length(dfiles)) {
+        stop("No files matching the provided file pattern found for ",
+             "MassIVE data set ", massiveId, ".", call. = FALSE)
+    }
+
+    if (length(fileName)) {
+        keep <- basename(dfiles) %in% fileName
+        if (!any(keep))
+            stop("None of the 'fileName' found in data set \"", massiveId, "\"")
+        dfiles <- dfiles[keep]
+    }
+
+    ## Create dir if not exist
+    if (!dir.exists(path)) {
+        dir.create(path, recursive = TRUE)
+    }
+
+    ## Update the Volume if files are in ccms_peak folder
+    ## ccms_peak is in volume z01 for all the project
+    api_z_volume = "ftp://massive-ftp.ucsd.edu/z01/"
+    ffiles <- vapply(dfiles,
+                     function(f) {
+                         u <- ifelse(grepl("^ccms_peak", f),
+                                     paste0(api_z_volume, massiveId, "/", f),
+                                     paste0(fpath, f))
+                         ## URLencode for file name with spaces
+                         URLencode(u)
+                     }, FUN.VALUE = character(1), USE.NAMES = FALSE)
+
+    ## Save files in the folder
+    pb <- progress_bar$new(format = paste0("[:bar] :current/:",
+                                           "total (:percent) in ",
+                                           ":elapsed"),
+                           total = length(ffiles), clear = FALSE)
+    res <- lapply(ffiles, function(z) {
+        pb$tick()
+        dest <- file.path(path, basename(z))
+        if (file.exists(dest) && !overwrite) {
+            message("File '", basename(z), "' already exists in '",
+                    path, "'. Skipping. Use 'overwrite = TRUE' to replace.")
+            return(invisible(NULL))
+        }
+        invisible(capture.output(suppressMessages(
+            retry(download.file(url = z, destfile = dest, mode = "wb"),
+                  sleep_mult = .sleep_mult()))))
+    })
+}
+
+#' @rdname MassIVE-utils
+#'
+#' @importFrom progress progress_bar
+#'
+#' @importFrom xml2 read_xml xml_find_all xml_attrs xml_text
+#'
+#' @export
+massive_param_file <- function(massiveId = character(),
+                                     fileName = "params.xml") {
+    if (!length(massiveId))
+        stop("No MassIVE data set ID provided with parameter 'massiveId'")
+
+    fpath <- massive_ftp_path(massiveId, mustWork = FALSE)
+    dfiles <- massive_list_files(massiveId)
+    if (!length(dfiles)) {
+        stop("No files found for MassIVE data set ", massiveId, ".",
+             call. = FALSE)
+    }
+
+    if (length(fileName)) {
+        keep <- basename(dfiles) == fileName
+        if (!any(keep))
+            stop("No '", fileName, "' found in data set \"", massiveId, "\"")
+        dfiles <- dfiles[keep]
+    }
+
+    if (length(dfiles) > 1) {
+        message("Multiple '", fileName, "' found in the data set. ",
+                "Downloading all.\n\t- ", paste0(dfiles, collapse = "\n\t- "))
+    }
+
+    ## Prepare ftp link
+    ffiles <- paste0(fpath, dfiles)
+
+    pb <- progress_bar$new(format = paste0("[:bar] :current/:",
+                                           "total (:percent) in ",
+                                           ":elapsed"),
+                           total = length(ffiles), clear = FALSE)
+    res <- lapply(ffiles, function(z) {
+        pb$tick()
+        ## Get and parse the xml file
+        xml <- retry(read_xml(z), sleep_mult = .sleep_mult())
+        xml_parsed <- xml_find_all(xml, "//parameter")
+        df <- data.frame("ParameterName" = unlist(xml_attrs(xml_parsed)),
+                         "Value" = xml_text(xml_parsed))
+        df
+    })
+
+    names(res) <- dfiles
+
+    if (length(res) == 1)
+        res <- res[[1]]
+
+    return(res)
 }
 
 
@@ -354,3 +496,4 @@ massive_delete_cache <- function(massiveId = character()) {
         }
     }
 }
+
