@@ -2,18 +2,27 @@
 % Please edit documentation in R/GNPS2_functions.R
 \name{GNPS2-utils}
 \alias{GNPS2-utils}
-\alias{massive_gnps2_query}
+\alias{gnps2_query}
 \title{Utility functions for querying GNPS2 dataset metadata}
 \usage{
-massive_gnps2_query(x = character())
+gnps2_query(id = character(), usi_pattern = "*", filepath_pattern = "*")
 }
 \arguments{
-\item{x}{\code{character(1)} with the ID of the MassIVE data set (usually
-starting with a \emph{MSV} followed by a number).}
+\item{id}{\code{character} with the IDs of the MassIVE data set.}
+
+\item{usi_pattern}{\code{character(1)} defining a pattern to filter the \code{USI},
+such as \code{usi_pattern = ".mzML"} to retrieve the \code{USI} of all files of the
+data set (i.e., files with extension \code{".mzML"}). This parameter is passed
+to the \code{\link[=grepl]{grepl()}} function.}
+
+\item{filepath_pattern}{\code{character(1)} defining a pattern to filter the
+\code{filepath}, such as \code{filepath_pattern = "metadata"} to retrieve the
+\code{filepath} of all files of the data set (i.e., files with matadata info).
+This parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 }
 \value{
 \itemize{
-\item For \code{massive_gnps2_query()}: a \code{data.frame} with the all information in
+\item For \code{gnps2_query()}: a \code{data.frame} with the all information in
 GNPS2 database for the MassIVE IDs provided.
 }
 }
@@ -23,19 +32,20 @@ to map MassIVE dataset IDs to available files and dataset metadata.
 GNPS2 is an indexed database of public MassIVE (MSV) datasets and their
 file listings, exposed through a Datasette API. The functions here are
 used primarily to query GNPS2 for file listings for a given MassIVE ID,
-and to return that metadata as an R data.frame.
+and to return that metadata as an R data.frame. The Datasette API enforces
+a maximum limit of 50,000 rows per query.
 
 In this package, GNPS2 queries are used as the first step to determine the
 remote files available for a dataset and to support downstream MassIVE
 dataset download and caching functions.
 \itemize{
-\item \code{massive_gnps2_query()}: query GNPS2 DB for dataset file metadata using
+\item \code{gnps2_query()}: query GNPS2 DB for dataset file metadata using
 the provided MassIVE dataset IDs. Returns a data.frame with one row per
 file entry from the \code{filename} table.
 }
 }
 \details{
-The \code{massive_gnps2_query()} function queries the GNPS2 Datasette API
+The \code{gnps2_query()} function queries the GNPS2 Datasette API
 at \verb{https://datasetcache.gnps2.org/datasette/database.csv} by executing a
 SQL query on the \code{filename} table filtered by dataset IDs. It returns all
 matching file metadata records. This metadata is used by downstream
@@ -44,7 +54,7 @@ functions to compute FTP paths and to download files.
 \examples{
 
 ## Get the GNPS2 table to the data set MSV000080547
-massive_gnps2_query("MSV000080547")
+gnps2_query("MSV000080547")
 
 }
 \author{

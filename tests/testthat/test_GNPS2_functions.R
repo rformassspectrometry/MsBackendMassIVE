@@ -6,7 +6,7 @@
 ## MSV000065798: MassIVE ID in MassIVE website but not in GNPS2 database. In
 ##               MasssIVE it has only a .tar.gz file.
 
-test_that("massive_gnps2_query works", {
+test_that("gnps2_query works", {
     query_args <- NULL
     mock_GET <- function(url, query) {
         query_args <<- list(url = url, query = query)
@@ -14,7 +14,7 @@ test_that("massive_gnps2_query works", {
     }
 
     with_mocked_bindings("GET" = mock_GET, {
-        expect_error(massive_gnps2_query("MSV000123456"),
+        expect_error(gnps2_query("MSV000123456"),
                      "Failed to connect to GNPS2 dataset")
     })
 
@@ -25,15 +25,27 @@ test_that("massive_gnps2_query works", {
                  fixed = TRUE)
 
     Sys.sleep(1)
-    res <- massive_gnps2_query("MSV000080547")
+    res <- gnps2_query("MSV000080547")
     expect_true(is.data.frame(res))
 
     Sys.sleep(1)
-    res <- massive_gnps2_query(c("MSV000083058", "MSV000080547"))
+    res <- gnps2_query(c("MSV000083058", "MSV000080547"))
     expect_true(is.data.frame(res))
 
-    expect_error(massive_list_files("AAA"), "No MS data files found")
+    expect_error(gnps2_query("AAA"), "No MS data files found")
 
-    expect_error(massive_list_files("MSV000065798"),
+    expect_error(gnps2_query("MSV000065798"),
                  "No MS data files found")
+
+    expect_error(gnps2_query("MSV000083058",
+                             usi_pattern = "nonexistentpattern"),
+                 "No files found")
+
+    expect_error(gnps2_query("MSV000083058",
+                             filepath_pattern = "nonexistentpattern"),
+                 "No files found")
+
+    res <- gnps2_query("MSV000100512", filepath_pattern = "metadata")
+    expect_true(is.data.frame(res))
+    expect_true(nrow(res) == 2)
 })

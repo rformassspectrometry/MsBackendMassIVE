@@ -183,7 +183,7 @@ massive_list_files <- function(x = character(), pattern = NULL) {
     if(length(x) > 1)
         stop("Provide a single MassIVE ID")
 
-    project_annotation <- massive_gnps2_query(x)
+    project_annotation <- gnps2_query(x)
     fls <- project_annotation$filepath
 
     if (length(pattern))
