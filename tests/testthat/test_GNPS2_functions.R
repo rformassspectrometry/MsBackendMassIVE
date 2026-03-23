@@ -49,3 +49,40 @@ test_that("gnps2_query works", {
     expect_true(is.data.frame(res))
     expect_true(nrow(res) == 2)
 })
+
+test_that("gnps2_usi_download_link works", {
+    expect_error(gnps2_usi_download_link(), "Provide 1 USI ID")
+    expect_error(gnps2_usi_download_link(
+        usi = c("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML",
+                "mzspec:ST002115:HT1080_DMSO_02_HILIC.mzXML")),
+        "Provide 1 USI ID")
+
+
+    query_args <- NULL
+    mock_GET <- function(usi) {
+        query_args <<- list(usi = usi)
+        stop("simulated GET failure")
+    }
+
+    with_mocked_bindings("GET" = mock_GET, {
+        expect_error(gnps2_query("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
+                     "Failed to connect to GNPS2 dataset")
+    })
+
+    expect_error(gnps2_usi_download_link("notexistUsi"),
+                 "Link not retrieved")
+
+    ## MWB
+    res <- gnps2_usi_download_link("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML")
+    expect_true(grepl("^https://www.metabolomicsworkbench.org", res))
+
+    ## MassIVE
+    res <- gnps2_usi_download_link(
+        "mzspec:MSV000080547:peak/Quant_assesment_QE/AG_spiked_sample1.mzXML")
+    expect_true(grepl("^https://massiveproxy.gnps2.org", res))
+
+    ## Metabolights
+    res <- gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
+    expect_true(grepl("^https://www.ebi.ac.uk", res))
+
+})

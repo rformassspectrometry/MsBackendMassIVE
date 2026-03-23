@@ -2,6 +2,7 @@
 
 export(MsBackendMassIVE)
 export(gnps2_query)
+export(gnps2_usi_download_link)
 export(massive_cached_data_files)
 export(massive_delete_cache)
 export(massive_download_file)

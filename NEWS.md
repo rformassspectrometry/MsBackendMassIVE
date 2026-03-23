@@ -1,3 +1,7 @@
+# MsBackendMassIVE 0.1.4
+
+- Add `gnps2_usi_download_link()` to get download link for a USI
+
 # MsBackendMassIVE 0.1.3
 
 - Separate GNPS2 function from `massive_list_files()`
