@@ -11,17 +11,17 @@ gnps2_query(id = character(), usi_pattern = "*", filepath_pattern = "*")
 gnps2_usi_download_link(usi = character())
 }
 \arguments{
-\item{id}{for \code{gnps2_query}: \code{character} with the IDs of the MassIVE data
-set.}
+\item{id}{for \code{gnps2_query()}: \code{character} with the ID(s) of the MassIVE data
+set(s).}
 
-\item{usi_pattern}{for \code{gnps2_query}: \code{character(1)} defining a pattern to
+\item{usi_pattern}{for \code{gnps2_query()}: \code{character(1)} defining a pattern to
 filter the \code{USI}, such as \code{usi_pattern = ".mzML"} to retrieve the \code{USI}
 of all files of the data set (i.e., files with extension \code{".mzML"}). This
 parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 
-\item{filepath_pattern}{for \code{gnps2_query}: \code{character(1)} defining a pattern
-to filter the \code{filepath}, such as \code{filepath_pattern = "metadata"} to
-retrieve the \code{filepath} of all files of the data set (i.e., files with
+\item{filepath_pattern}{for \code{gnps2_query()}: \code{character(1)} defining a
+pattern to filter the \code{filepath}, such as \code{filepath_pattern = "metadata"}
+to retrieve the \code{filepath} of all files of the data set (i.e., files with
 matadata info). This parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 
 \item{usi}{for \code{gnps2_usi_download_link()}: \code{character(1)} with the USI of a
@@ -36,22 +36,14 @@ the USI.
 }
 }
 \description{
-These functions provide utilities to query the GNPS2 dataset cache and
-to map MetaboLights, MassIVE, Metabolomics Workbench dataset IDs to available
-files and dataset metadata. GNPS2 is an indexed database of public datasets
-and their file listings, exposed through a Datasette API. The functions here
-are used primarily to query GNPS2 for file listings for a given dataset ID,
-or get the download link for a given USI ID. The Datasette API enforces
-a maximum limit of 50,000 rows per query. Via the GNSP2 dashboard
-
 In this package, GNPS2 queries are used as the first step to determine the
 remote files available for a dataset and to support downstream dataset
 download and caching functions.
 \itemize{
 \item \code{gnps2_query()}: query GNPS2 DB for dataset file metadata using
-the provided MassIVE dataset IDs. Returns a data.frame with one row per
+the provided MassIVE dataset IDs. Returns a \code{data.frame} with one row per
 file entry from the \code{filename} table.
-\item \code{gnps2_usi_donwload_link()}: query GNPS2 DB to get the download link for
+\item \code{gnps2_usi_download_link()}: query GNPS2 DB to get the download link for
 a specific USI. Return a \code{character(1)} containing the link.
 }
 }
@@ -61,8 +53,12 @@ at \verb{https://datasetcache.gnps2.org/datasette/database.csv} by executing a
 SQL query on the \code{filename} table filtered by dataset IDs. It returns all
 matching file metadata records. This metadata is used by downstream
 functions to compute FTP paths and to download files. The
-\code{gnps2_usi_donwload_link()} made a GET request to the GNPS2 dashboard to get
+\code{gnps2_usi_download_link()} made a GET request to the GNPS2 dashboard to get
 the download link of a specific USI.
+}
+\note{
+The Datasette API enforces a maximum limit of 50,000 rows per query. Longer
+results will thus be truncated.
 }
 \examples{
 
@@ -74,5 +70,5 @@ gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
 
 }
 \author{
-Johannes Rainer, Philippine Louail, Gabriele Tomè
+Gabriele Tomè
 }

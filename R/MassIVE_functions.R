@@ -305,7 +305,7 @@ massive_param_file <- function(massiveId = character(),
     if (length(res) == 1)
         res <- res[[1]]
 
-    return(res)
+    res
 }
 
 

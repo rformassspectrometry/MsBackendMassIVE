@@ -4,23 +4,15 @@
 #'
 #' @description
 #'
-#' These functions provide utilities to query the GNPS2 dataset cache and
-#' to map MetaboLights, MassIVE, Metabolomics Workbench dataset IDs to available
-#' files and dataset metadata. GNPS2 is an indexed database of public datasets
-#' and their file listings, exposed through a Datasette API. The functions here
-#' are used primarily to query GNPS2 for file listings for a given dataset ID,
-#' or get the download link for a given USI ID. The Datasette API enforces
-#' a maximum limit of 50,000 rows per query. Via the GNSP2 dashboard
-#'
 #' In this package, GNPS2 queries are used as the first step to determine the
 #' remote files available for a dataset and to support downstream dataset
 #' download and caching functions.
 #'
 #' - `gnps2_query()`: query GNPS2 DB for dataset file metadata using
-#'   the provided MassIVE dataset IDs. Returns a data.frame with one row per
+#'   the provided MassIVE dataset IDs. Returns a `data.frame` with one row per
 #'   file entry from the `filename` table.
 #'
-#' - `gnps2_usi_donwload_link()`: query GNPS2 DB to get the download link for
+#' - `gnps2_usi_download_link()`: query GNPS2 DB to get the download link for
 #'   a specific USI. Return a `character(1)` containing the link.
 #'
 #' @details
@@ -30,20 +22,25 @@
 #' SQL query on the `filename` table filtered by dataset IDs. It returns all
 #' matching file metadata records. This metadata is used by downstream
 #' functions to compute FTP paths and to download files. The
-#' `gnps2_usi_donwload_link()` made a GET request to the GNPS2 dashboard to get
+#' `gnps2_usi_download_link()` made a GET request to the GNPS2 dashboard to get
 #' the download link of a specific USI.
 #'
-#' @param id for `gnps2_query`: `character` with the IDs of the MassIVE data
-#'     set.
+#' @note
 #'
-#' @param usi_pattern for `gnps2_query`: `character(1)` defining a pattern to
+#' The Datasette API enforces a maximum limit of 50,000 rows per query. Longer
+#' results will thus be truncated.
+#'
+#' @param id for `gnps2_query()`: `character` with the ID(s) of the MassIVE data
+#'     set(s).
+#'
+#' @param usi_pattern for `gnps2_query()`: `character(1)` defining a pattern to
 #'     filter the `USI`, such as `usi_pattern = ".mzML"` to retrieve the `USI`
 #'     of all files of the data set (i.e., files with extension `".mzML"`). This
 #'     parameter is passed to the [grepl()] function.
 #'
-#' @param filepath_pattern for `gnps2_query`: `character(1)` defining a pattern
-#'     to filter the `filepath`, such as `filepath_pattern = "metadata"` to
-#'     retrieve the `filepath` of all files of the data set (i.e., files with
+#' @param filepath_pattern for `gnps2_query()`: `character(1)` defining a
+#'     pattern to filter the `filepath`, such as `filepath_pattern = "metadata"`
+#'     to retrieve the `filepath` of all files of the data set (i.e., files with
 #'     matadata info). This parameter is passed to the [grepl()] function.
 #'
 #' @param usi for `gnps2_usi_download_link()`: `character(1)` with the USI of a
@@ -56,7 +53,7 @@
 #' - For `gnps2_usi_download_link()`: a `character(1)` with the downlaod link of
 #'   the USI.
 #'
-#' @author Johannes Rainer, Philippine Louail, Gabriele Tomè
+#' @author Gabriele Tomè
 #'
 #' @examples
 #'
@@ -82,8 +79,8 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
                   "_sort" = "filepath",
                   "_size" = "max",
                   "sql" = paste0('SELECT * FROM filename ',
-                                 'WHERE dataset IN ("',
-                                 paste0(id, collapse = "\",\""), '")'))
+                                 'WHERE dataset IN (',
+                                 paste0("\"", id, "\"", collapse = ","), ')'))
     tryCatch({
         res <- retry(
             GET(api, query = params),
@@ -112,7 +109,7 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
     if(!nrow(project_anno))
         stop("No files found with corresponding `filepath` pattern.")
 
-    return(project_anno)
+    project_anno
 }
 
 
@@ -142,5 +139,5 @@ gnps2_usi_download_link <- function(usi = character()) {
     if(!grepl("^http|^ftp", link))
         stop("Link not retrieved. Does the USI ", usi, " exist?")
 
-    return(link)
+    link
 }
