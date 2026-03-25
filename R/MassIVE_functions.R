@@ -176,44 +176,22 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
 }
 
 
-#' @importFrom httr GET content
-#'
-#' @importFrom utils read.csv
-#'
 #' @rdname MassIVE-utils
 #'
 #' @export
 massive_list_files <- function(x = character(), pattern = NULL) {
+    if(length(x) > 1)
+        stop("Provide a single MassIVE ID")
 
-    api = "https://datasetcache.gnps2.org/datasette/database.csv"
-    params = list("_stream" = "on",
-                  "_sort" = "filepath",
-                  "_size" = "max",
-                  "sql" = paste0('SELECT * FROM filename ',
-                                 'WHERE dataset = "', x, '"'))
-    tryCatch({
-        res <- retry(
-            GET(api, query = params),
-            sleep_mult = .sleep_mult())
-    }, error = function(e) {
-        stop("Failed to connect to GNPS2 dataset. No internet connection? - ",
-             e$message,
-             call. = FALSE)
-    })
-    project_annotation <- retry(read.csv(text = content(res, as = "text")),
-                                sleep_mult = .sleep_mult())
+    project_annotation <- gnps2_query(x)
     fls <- project_annotation$filepath
-
-    ## Check query as a correct id
-    if(!length(fls))
-        stop("No MS data files found in GNPS2 dataset. Does the data set \"", x,
-             "\" have them?", call. = FALSE)
 
     if (length(pattern))
         fls[grepl(pattern, fls)]
     else
         fls
 }
+
 
 #' @rdname MassIVE-utils
 #'
@@ -286,16 +264,12 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
 #'
 #' @export
 massive_param_file <- function(massiveId = character(),
-                                     fileName = "params.xml") {
+                               fileName = "params.xml") {
     if (!length(massiveId))
         stop("No MassIVE data set ID provided with parameter 'massiveId'")
 
     fpath <- massive_ftp_path(massiveId, mustWork = FALSE)
     dfiles <- massive_list_files(massiveId)
-    if (!length(dfiles)) {
-        stop("No files found for MassIVE data set ", massiveId, ".",
-             call. = FALSE)
-    }
 
     if (length(fileName)) {
         keep <- basename(dfiles) == fileName
@@ -331,7 +305,7 @@ massive_param_file <- function(massiveId = character(),
     if (length(res) == 1)
         res <- res[[1]]
 
-    return(res)
+    res
 }
 
 
