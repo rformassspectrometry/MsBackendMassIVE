@@ -165,6 +165,32 @@ Locally cached files for a MassIVE data set can be removed using the
 `massive_delete_cache()` function providing the ID of the MassIVE data set for
 which local data files should be removed.
 
+# Download data from MassIVE
+
+Other than cache the MS data, it is possible to download any file from an 
+experiment using the `massive_download_file()` function and save them to a 
+specific directory.
+
+```{r}
+massive_download_file(massiveId = "MSV000080547", 
+                      fileName = "params.xml", 
+                      path = tempdir())
+```
+
+# Parse the parameter file
+
+In almost all MassIVE experiment is present a `params.xml` file that provide 
+some information regarding the repository. The `massive_param_file()` function
+parse the xml file and it give in output as a data.frame with 2 columns, the
+first with the parameter name, the second with the associated value. If in the 
+experiment are present multiple `params.xml` files, the output is a `list` of
+`data.frame`.
+
+```{r}
+massive_param_file("MSV000080547")
+```
+
+
 # Session information
 
 ```{r}
