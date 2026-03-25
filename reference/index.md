@@ -2,6 +2,9 @@
 
 ## All functions
 
+- [`gnps2_query()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+  [`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+  : Utility functions for querying GNPS2 dataset
 - [`massive_ftp_path()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
   [`massive_list_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
   [`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)

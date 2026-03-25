@@ -1,5 +1,17 @@
 # Changelog
 
+## MsBackendMassIVE 0.1.4
+
+- Add
+  [`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+  to get download link for a USI
+
+## MsBackendMassIVE 0.1.3
+
+- Separate GNPS2 function from
+  [`massive_list_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+- Remove repetitive error
+
 ## MsBackendMassIVE 0.1.2
 
 - Add

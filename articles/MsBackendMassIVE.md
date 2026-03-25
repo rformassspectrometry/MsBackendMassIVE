@@ -6,8 +6,8 @@
 <https://orcid.org/0000-0002-3976-6068>), Philippine Louail \[aut\]
 (ORCID: <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer
 \[aut\] (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-03-18 07:45:10.043802\
-**Compiled**: Wed Mar 18 08:23:59 2026
+**Last modified:** 2026-03-25 13:27:48.369703\
+**Compiled**: Wed Mar 25 14:14:59 2026
 
 ## Introduction
 
@@ -266,6 +266,148 @@ Locally cached files for a MassIVE data set can be removed using the
 function providing the ID of the MassIVE data set for which local data
 files should be removed.
 
+## Download data from MassIVE
+
+Other than cache the MS data, it is possible to download any file from
+an experiment using the
+[`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+function and save them to a specific directory.
+
+``` r
+
+massive_download_file(massiveId = "MSV000080547", 
+                      fileName = "params.xml", 
+                      path = tempdir())
+```
+
+## Parse the parameter file
+
+In almost all MassIVE experiment is present a `params.xml` file that
+provide some information regarding the repository. The
+[`massive_param_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+function parse the xml file and it give in output as a data.frame with 2
+columns, the first with the parameter name, the second with the
+associated value. If in the experiment are present multiple `params.xml`
+files, the output is a `list` of `data.frame`.
+
+``` r
+
+massive_param_file("MSV000080547")
+```
+
+    ##           ParameterName
+    ## 1      dataset.comments
+    ## 2    dataset.instrument
+    ## 3      dataset.keywords
+    ## 4  dataset.modification
+    ## 5      dataset.password
+    ## 6            dataset.pi
+    ## 7       dataset.species
+    ## 8       default.license
+    ## 9                  desc
+    ## 10                email
+    ## 11      peak_list_files
+    ## 12                 task
+    ## 13  upload_file_mapping
+    ## 14  upload_file_mapping
+    ## 15  upload_file_mapping
+    ## 16  upload_file_mapping
+    ## 17  upload_file_mapping
+    ## 18  upload_file_mapping
+    ## 19  upload_file_mapping
+    ## 20  upload_file_mapping
+    ## 21  upload_file_mapping
+    ## 22  upload_file_mapping
+    ## 23  upload_file_mapping
+    ## 24  upload_file_mapping
+    ## 25  upload_file_mapping
+    ## 26  upload_file_mapping
+    ## 27  upload_file_mapping
+    ## 28  upload_file_mapping
+    ## 29  upload_file_mapping
+    ## 30  upload_file_mapping
+    ## 31  upload_file_mapping
+    ## 32  upload_file_mapping
+    ## 33  upload_file_mapping
+    ## 34  upload_file_mapping
+    ## 35  upload_file_mapping
+    ## 36  upload_file_mapping
+    ## 37  upload_file_mapping
+    ## 38  upload_file_mapping
+    ## 39  upload_file_mapping
+    ## 40  upload_file_mapping
+    ## 41  upload_file_mapping
+    ## 42  upload_file_mapping
+    ## 43  upload_file_mapping
+    ## 44  upload_file_mapping
+    ## 45  upload_file_mapping
+    ## 46  upload_file_mapping
+    ## 47  upload_file_mapping
+    ## 48  upload_file_mapping
+    ## 49  upload_file_mapping
+    ## 50  upload_file_mapping
+    ## 51  upload_file_mapping
+    ## 52  upload_file_mapping
+    ## 53                 user
+    ## 54                 uuid
+    ## 55             workflow
+    ##                                                                      Value
+    ## 1  Quantity assessment experiment for one sample two metabolomics workflow
+    ## 2                                                    MS:1001911;MS:1000644
+    ## 3                                             Standards;quantity assesment
+    ## 4                                                            PRIDE:0000398
+    ## 5                                                                        a
+    ## 6                                                          P Dorrestein|||
+    ## 7                                                           NCBITaxon:9606
+    ## 8                                                                       on
+    ## 9                                                               Banchmark2
+    ## 10                                                   alexvmelnik@gmail.com
+    ## 11             d.amelnik/Quant_assesment_QE;d.amelnik/Quant_assesment_QQQ;
+    ## 12                                        812309736acb46c68b49ebaf3bb3b02a
+    ## 13    PEAK-00000.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample11.mzXML
+    ## 14    PEAK-00001.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample10.mzXML
+    ## 15     PEAK-00002.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample1.mzXML
+    ## 16     PEAK-00003.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample2.mzXML
+    ## 17    PEAK-00004.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample13.mzXML
+    ## 18    PEAK-00005.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample12.mzXML
+    ## 19     PEAK-00006.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample3.mzXML
+    ## 20     PEAK-00007.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample8.mzXML
+    ## 21    PEAK-00008.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample19.mzXML
+    ## 22    PEAK-00009.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample15.mzXML
+    ## 23     PEAK-00010.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample4.mzXML
+    ## 24    PEAK-00011.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample18.mzXML
+    ## 25     PEAK-00012.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample9.mzXML
+    ## 26     PEAK-00013.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample5.mzXML
+    ## 27    PEAK-00014.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample14.mzXML
+    ## 28    PEAK-00015.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample17.mzXML
+    ## 29     PEAK-00016.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample6.mzXML
+    ## 30    PEAK-00017.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample20.mzXML
+    ## 31     PEAK-00018.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample7.mzXML
+    ## 32    PEAK-00019.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample16.mzXML
+    ## 33     PEAK-00020.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample12.mzML
+    ## 34      PEAK-00021.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample3.mzML
+    ## 35     PEAK-00022.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample16.mzML
+    ## 36      PEAK-00023.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample7.mzML
+    ## 37     PEAK-00024.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample13.mzML
+    ## 38      PEAK-00025.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample2.mzML
+    ## 39     PEAK-00026.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample17.mzML
+    ## 40      PEAK-00027.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample6.mzML
+    ## 41      PEAK-00028.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample8.mzML
+    ## 42     PEAK-00029.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample19.mzML
+    ## 43     PEAK-00030.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample20.mzML
+    ## 44     PEAK-00031.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample11.mzML
+    ## 45      PEAK-00032.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample4.mzML
+    ## 46     PEAK-00033.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample15.mzML
+    ## 47      PEAK-00034.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample1.mzML
+    ## 48     PEAK-00035.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample10.mzML
+    ## 49      PEAK-00036.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample5.mzML
+    ## 50     PEAK-00037.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample14.mzML
+    ## 51      PEAK-00038.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample9.mzML
+    ## 52     PEAK-00039.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample18.mzML
+    ## 53                                                                 amelnik
+    ## 54                                    1DF12E8D-0A9D-0001-6386-16B01160A9F0
+    ## 55                                                        MASSIVE-COMPLETE
+
 ## Session information
 
 ``` r
@@ -273,7 +415,7 @@ files should be removed.
 sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-03-15 r89629)
+    ## R Under development (unstable) (2026-03-22 r89674)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 
@@ -297,13 +439,13 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.1.2 Spectra_1.21.5         BiocParallel_1.45.0   
+    ## [1] MsBackendMassIVE_0.1.4 Spectra_1.21.5         BiocParallel_1.45.0   
     ## [4] S4Vectors_0.49.0       BiocGenerics_0.57.0    generics_0.1.4        
     ## [7] BiocStyle_2.39.0      
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] xfun_0.56              bslib_0.10.0           httr2_1.2.2           
-    ##  [4] htmlwidgets_1.6.4      Biobase_2.71.0         vctrs_0.7.1           
+    ##  [1] xfun_0.57              bslib_0.10.0           httr2_1.2.2           
+    ##  [4] htmlwidgets_1.6.4      Biobase_2.71.0         vctrs_0.7.2           
     ##  [7] tools_4.6.0            curl_7.0.0             parallel_4.6.0        
     ## [10] tibble_3.3.1           RSQLite_2.4.6          cluster_2.1.8.2       
     ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.2.1   
@@ -320,10 +462,10 @@ sessionInfo()
     ## [46] withr_3.0.2            prettyunits_1.2.0      filelock_1.0.3        
     ## [49] rappdirs_0.3.4         bit64_4.6.0-1          rmarkdown_2.30        
     ## [52] httr_1.4.8             bit_4.6.0              otel_0.2.0            
-    ## [55] ragg_1.5.1             hms_1.1.4              memoise_2.0.1         
+    ## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
     ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.45.0        
     ## [61] BiocFileCache_3.1.0    rlang_1.1.7            Rcpp_1.1.1            
-    ## [64] glue_1.8.0             DBI_1.3.0              mzR_2.45.0            
+    ## [64] glue_1.8.0             DBI_1.3.0              mzR_2.45.1            
     ## [67] selectr_0.5-1          xml2_1.5.2             BiocManager_1.30.27   
     ## [70] jsonlite_2.0.0         R6_2.6.1               systemfonts_1.3.2     
-    ## [73] fs_1.6.7               ProtGenerics_1.43.0    MsCoreUtils_1.23.6
+    ## [73] fs_2.0.1               ProtGenerics_1.43.0    MsCoreUtils_1.23.6
