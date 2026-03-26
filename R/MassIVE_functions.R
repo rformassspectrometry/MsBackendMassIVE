@@ -470,4 +470,3 @@ massive_delete_cache <- function(massiveId = character()) {
         }
     }
 }
-
