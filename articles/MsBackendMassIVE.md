@@ -6,28 +6,30 @@
 <https://orcid.org/0000-0002-3976-6068>), Philippine Louail \[aut\]
 (ORCID: <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer
 \[aut\] (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-03-25 13:27:48.369703\
-**Compiled**: Wed Mar 25 14:14:59 2026
+**Last modified:** 2026-03-26 11:43:54.726429\
+**Compiled**: Thu Mar 26 12:28:43 2026
 
 ## Introduction
 
-The *[Spectra](https://bioconductor.org/packages/3.23/Spectra)* package
-provides a central infrastructure for the handling of Mass Spectrometry
-(MS) data in Bioconductor. The package supports interchangeable use of
-different *backends* to import and represent MS data from a variety of
-sources and data formats. The *MsBackendMassIVE* package allows to
-retrieve MS data files directly from the
+Metabolomics experiments and results including mass spectrometry (MS)
+data can be deposited in several public repositories, such as
 [MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp) (Mass
-Spectrometry Interactive Virtual Environment) repository. MassIVE is a
-community resource developed by the NIH-funded Center for Computational
-Mass Spectrometry at UC San Diego to promote the global, free exchange
-of mass spectrometry data. MassIVE supports deposition of both
-proteomics and metabolomics experiments and is a full member of the
-[ProteomeXchange](http://www.proteomexchange.org/) consortium.
-
-The *MsBackendMassIVE* package downloads and locally caches MS data
-files for a MassIVE data set and enables further analyses of this data
-directly in R.
+Spectrometry Interactive Virtual Environment). MassIVE is a community
+resource developed by the NIH-funded Center for Computational Mass
+Spectrometry at UC San Diego to promote the global, free exchange of
+mass spectrometry data. MassIVE supports deposition of both proteomics
+and metabolomics experiments and is a full member of the
+[ProteomeXchange](http://www.proteomexchange.org/) consortium. While
+data is available, manual lookup and download is cumbersome hampering
+the re-analysis of public data and replication of results. The
+*MsBackendMassIVE* package closes this gap by providing functionality to
+query, retrieve and cache MS data from MassIVE directly from R hence
+enabling a direct and seamless integration of MS data from MassIVE into
+R-based analysis workflows. *MsBackendMassIVE* leverages on
+Bioconductor’s `r Biocpkg("BiocFileCache")` for caching remote data
+locally and provides a *MS data backend* for the
+*[Spectra](https://bioconductor.org/packages/3.23/Spectra)* package to
+enable loading and integrating cached MS data directly into R.
 
 ## Installation
 
@@ -44,10 +46,13 @@ BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
 ## Importing MS Data from MassIVE
 
 Each experiment in MassIVE is identified by a unique accession starting
-with *MSV* followed by a number. The MS data files of a dataset are
-listed in the [GNPS2
-database](https://datasetcache.gnps2.org/datasette/database/filename)
-and can be downloaded from MassIVE’s FTP server.
+with *MSV* followed by a number. While the [MassIVE web
+page](https://massive.ucsd.edu/ProteoSAFe/) allows only a manual, non
+programmatic, lookup of data and experiments, a separate, central
+registry of data files and experiments is hosted on GNPS2. This
+[datasetcache](https://datasetcache.gnps2.org/datasette/database/filename)
+registry allows programmatic access and is used by *MsBackendMassIVE* to
+query information on MassIVE experiments.
 
 Below we list all files from the MassIVE data set with the ID
 *MSV000080547*.
@@ -90,12 +95,12 @@ massive_ftp_path("MSV000080547", mustWork = FALSE)
 MS data files in supported formats (mzML, CDF, mzXML) can be directly
 loaded using the `MsBackendMassIVE` backend into R as a `Spectra` object
 (`MsBackendMassIVE` directly extends *Spectra*’s `MsBackendMzR` backend
-and therefore supports import of MS data files in *mzML*, *CDF* or
-*mzXML* formats). By default, all MS data files of the data set would be
-retrieved, but in our example below we restrict to a few data files to
-reduce the amount of data that needs to be downloaded. To this end we
-define a pattern matching the file name of only some data files using
-the `filePattern` parameter.
+and therefore supports import of MS data files in these formats). By
+default, all MS data files of the data set would be retrieved, but in
+our example below we restrict to a few data files to reduce the amount
+of data that needs to be downloaded. To this end we define a pattern
+matching the file name of only some data files using the `filePattern`
+parameter.
 
 ``` r
 
@@ -127,14 +132,14 @@ s
     ## AG_spiked_sample1.mzML
     ## AG_spiked_sample11.mzML
 
-This call downloaded the files to the local cache and loaded them as a
-`Spectra` object. The downloading and caching of the data is handled by
-Bioconductor’s
+This call downloaded 2 files from the experiment into the local cache
+and loaded them as a `Spectra` object. The downloading and caching of
+the data is handled by Bioconductor’s
 *[BiocFileCache](https://bioconductor.org/packages/3.23/BiocFileCache)*.
-The local cache can thus be managed directly using functionality from
-that package. Any subsequent loading of the same data files will load
-the locally cached versions avoiding thus repetitive download of the
-same data.
+The local cache can thus also be managed directly using functionality
+from that package. Any subsequent loading of the same data files will
+load the locally cached versions avoiding thus repetitive download of
+the same data.
 
 The `Spectra` object with the MS data files of the MassIVE data set
 enables now any subsequent analysis of the data in R. On top of the
@@ -170,7 +175,7 @@ spectraVariables(s)
 
 The MassIVE-specific variables are `"massive_id"` and `"data_file"`
 providing the MassIVE ID of the data set and the original data file name
-on the MassIVE FTP server for each individual spectrum.
+in the MassIVE FTP server for each individual spectrum.
 
 ``` r
 
@@ -192,12 +197,20 @@ spectraData(s, c("massive_id", "data_file"))
     ## 4321 MSV000080547 peak/Quant_assesment..
     ## 4322 MSV000080547 peak/Quant_assesment..
 
+``` r
+
+basename(s$data_file) |> head()
+```
+
+    ## [1] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"
+    ## [4] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"
+
 The
 [`massive_sync()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
 function can be used to *synchronize* the local content of a
-`MsBackendMassIVE`. This function checks if all data files of the
-backend are available locally and eventually downloads and caches
-missing files.
+`MsBackendMassIVE` and is useful if, for example, locally cached files
+were deleted. The function checks if all data files of the backend are
+available locally and eventually downloads and caches missing files.
 
 ``` r
 
@@ -224,13 +237,15 @@ massive_sync(s@backend)
     ## AG_spiked_sample1.mzML
     ## AG_spiked_sample11.mzML
 
-Also, it is possible to *manually* cache and download data files from
-MassIVE using the
+In addition, it is also possible to *manually* cache and download
+selected files from MassIVE using the
 [`massive_sync_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
-function. This function evaluates if the respective data files are
-already cached and, if so, does not download them again. Below we use
-this to retrieve the local storage information on one of the data files
-of the MassIVE data set *MSV000080547*:
+function. Before downloading, this function first evaluates if the
+respective data files are already cached and only downloads them if
+needed. As a result, the function returns a `data.frame` with the
+storage location and other information of the cached file(s). Below we
+use this function to retrieve the local storage information on one of
+the data files of the MassIVE data set *MSV000080547*:
 
 ``` r
 
@@ -246,7 +261,7 @@ res
 
 The
 [`massive_cached_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
-function can be used to inspect and list locally cached MassIVE data
+function can be used to inspect and list all locally cached MassIVE data
 files. This function does not require an active internet connection
 since only local content is queried. With the default settings, a
 `data.frame` with all available data files is returned.
@@ -266,147 +281,122 @@ Locally cached files for a MassIVE data set can be removed using the
 function providing the ID of the MassIVE data set for which local data
 files should be removed.
 
-## Download data from MassIVE
+## General use and information retrieval from MassIVE
 
-Other than cache the MS data, it is possible to download any file from
-an experiment using the
-[`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
-function and save them to a specific directory.
+Next to the `MsBackendMassIVE` backend for `Spectra` objects, the
+*MsBackendMassIVE* package provides also various utility functions to
+query and retrieve information from MassIVE or GNPS2’s *datasetcache*.
+
+The
+[`massive_param_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+function reads the parameter file from a MassIVE data set that provides
+general, experiment-specific information. These are retrieved as a
+two-column `data.frame` with the first column containing the names of
+the data set properties, and the second their values.
 
 ``` r
 
-massive_download_file(massiveId = "MSV000080547", 
-                      fileName = "params.xml", 
+prm <- massive_param_file("MSV000080547")
+head(prm)
+```
+
+    ##          ParameterName
+    ## 1     dataset.comments
+    ## 2   dataset.instrument
+    ## 3     dataset.keywords
+    ## 4 dataset.modification
+    ## 5     dataset.password
+    ## 6           dataset.pi
+    ##                                                                     Value
+    ## 1 Quantity assessment experiment for one sample two metabolomics workflow
+    ## 2                                                   MS:1001911;MS:1000644
+    ## 3                                            Standards;quantity assesment
+    ## 4                                                           PRIDE:0000398
+    ## 5                                                                       a
+    ## 6                                                         P Dorrestein|||
+
+The
+[`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+function allows to download any file of an experiment (directly, i.e.,
+without caching). As an example we download below a docx file to a
+temporary folder.
+
+``` r
+
+massive_list_files("MSV000083058") |> head()
+```
+
+    ## [1] "ccms_parameters/params.xml"            
+    ## [2] "ccms_statistics/statistics.tsv"        
+    ## [3] "methods/README_Histones_P108_VS3.docx" 
+    ## [4] "other/Table 1 SAINT3788_TripleTOF.xlsx"
+    ## [5] "other/Table 2 SAINT3788_TripleTOF.xlsx"
+    ## [6] "other/Table 3 SAINT3788_TripleTOF.xlsx"
+
+``` r
+
+massive_download_file("MSV000083058",
+                      fileName = "README_Histones_P108_VS3.docx",
                       path = tempdir())
 ```
 
-## Parse the parameter file
+*MsBackendMassIVE* provides also two utility functions to query the
+GNPS2 *datasetcache*,
+[`gnps2_query()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+and
+[`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md).
 
-In almost all MassIVE experiment is present a `params.xml` file that
-provide some information regarding the repository. The
-[`massive_param_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
-function parse the xml file and it give in output as a data.frame with 2
-columns, the first with the parameter name, the second with the
-associated value. If in the experiment are present multiple `params.xml`
-files, the output is a `list` of `data.frame`.
+Below we use
+[`gnps2_query()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+to retrieve all information for a MassIVE data set from the
+datasetcache.
 
 ``` r
 
-massive_param_file("MSV000080547")
+res <- gnps2_query("MSV000083058")
+head(res)
 ```
 
-    ##           ParameterName
-    ## 1      dataset.comments
-    ## 2    dataset.instrument
-    ## 3      dataset.keywords
-    ## 4  dataset.modification
-    ## 5      dataset.password
-    ## 6            dataset.pi
-    ## 7       dataset.species
-    ## 8       default.license
-    ## 9                  desc
-    ## 10                email
-    ## 11      peak_list_files
-    ## 12                 task
-    ## 13  upload_file_mapping
-    ## 14  upload_file_mapping
-    ## 15  upload_file_mapping
-    ## 16  upload_file_mapping
-    ## 17  upload_file_mapping
-    ## 18  upload_file_mapping
-    ## 19  upload_file_mapping
-    ## 20  upload_file_mapping
-    ## 21  upload_file_mapping
-    ## 22  upload_file_mapping
-    ## 23  upload_file_mapping
-    ## 24  upload_file_mapping
-    ## 25  upload_file_mapping
-    ## 26  upload_file_mapping
-    ## 27  upload_file_mapping
-    ## 28  upload_file_mapping
-    ## 29  upload_file_mapping
-    ## 30  upload_file_mapping
-    ## 31  upload_file_mapping
-    ## 32  upload_file_mapping
-    ## 33  upload_file_mapping
-    ## 34  upload_file_mapping
-    ## 35  upload_file_mapping
-    ## 36  upload_file_mapping
-    ## 37  upload_file_mapping
-    ## 38  upload_file_mapping
-    ## 39  upload_file_mapping
-    ## 40  upload_file_mapping
-    ## 41  upload_file_mapping
-    ## 42  upload_file_mapping
-    ## 43  upload_file_mapping
-    ## 44  upload_file_mapping
-    ## 45  upload_file_mapping
-    ## 46  upload_file_mapping
-    ## 47  upload_file_mapping
-    ## 48  upload_file_mapping
-    ## 49  upload_file_mapping
-    ## 50  upload_file_mapping
-    ## 51  upload_file_mapping
-    ## 52  upload_file_mapping
-    ## 53                 user
-    ## 54                 uuid
-    ## 55             workflow
-    ##                                                                      Value
-    ## 1  Quantity assessment experiment for one sample two metabolomics workflow
-    ## 2                                                    MS:1001911;MS:1000644
-    ## 3                                             Standards;quantity assesment
-    ## 4                                                            PRIDE:0000398
-    ## 5                                                                        a
-    ## 6                                                          P Dorrestein|||
-    ## 7                                                           NCBITaxon:9606
-    ## 8                                                                       on
-    ## 9                                                               Banchmark2
-    ## 10                                                   alexvmelnik@gmail.com
-    ## 11             d.amelnik/Quant_assesment_QE;d.amelnik/Quant_assesment_QQQ;
-    ## 12                                        812309736acb46c68b49ebaf3bb3b02a
-    ## 13    PEAK-00000.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample11.mzXML
-    ## 14    PEAK-00001.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample10.mzXML
-    ## 15     PEAK-00002.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample1.mzXML
-    ## 16     PEAK-00003.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample2.mzXML
-    ## 17    PEAK-00004.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample13.mzXML
-    ## 18    PEAK-00005.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample12.mzXML
-    ## 19     PEAK-00006.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample3.mzXML
-    ## 20     PEAK-00007.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample8.mzXML
-    ## 21    PEAK-00008.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample19.mzXML
-    ## 22    PEAK-00009.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample15.mzXML
-    ## 23     PEAK-00010.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample4.mzXML
-    ## 24    PEAK-00011.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample18.mzXML
-    ## 25     PEAK-00012.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample9.mzXML
-    ## 26     PEAK-00013.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample5.mzXML
-    ## 27    PEAK-00014.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample14.mzXML
-    ## 28    PEAK-00015.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample17.mzXML
-    ## 29     PEAK-00016.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample6.mzXML
-    ## 30    PEAK-00017.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample20.mzXML
-    ## 31     PEAK-00018.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample7.mzXML
-    ## 32    PEAK-00019.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample16.mzXML
-    ## 33     PEAK-00020.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample12.mzML
-    ## 34      PEAK-00021.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample3.mzML
-    ## 35     PEAK-00022.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample16.mzML
-    ## 36      PEAK-00023.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample7.mzML
-    ## 37     PEAK-00024.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample13.mzML
-    ## 38      PEAK-00025.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample2.mzML
-    ## 39     PEAK-00026.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample17.mzML
-    ## 40      PEAK-00027.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample6.mzML
-    ## 41      PEAK-00028.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample8.mzML
-    ## 42     PEAK-00029.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample19.mzML
-    ## 43     PEAK-00030.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample20.mzML
-    ## 44     PEAK-00031.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample11.mzML
-    ## 45      PEAK-00032.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample4.mzML
-    ## 46     PEAK-00033.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample15.mzML
-    ## 47      PEAK-00034.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample1.mzML
-    ## 48     PEAK-00035.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample10.mzML
-    ## 49      PEAK-00036.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample5.mzML
-    ## 50     PEAK-00037.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample14.mzML
-    ## 51      PEAK-00038.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample9.mzML
-    ## 52     PEAK-00039.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample18.mzML
-    ## 53                                                                 amelnik
-    ## 54                                    1DF12E8D-0A9D-0001-6386-16B01160A9F0
-    ## 55                                                        MASSIVE-COMPLETE
+    ##                                                          usi
+    ## 1             mzspec:MSV000083058:ccms_parameters/params.xml
+    ## 2         mzspec:MSV000083058:ccms_statistics/statistics.tsv
+    ## 3  mzspec:MSV000083058:methods/README_Histones_P108_VS3.docx
+    ## 4 mzspec:MSV000083058:other/Table 1 SAINT3788_TripleTOF.xlsx
+    ## 5 mzspec:MSV000083058:other/Table 2 SAINT3788_TripleTOF.xlsx
+    ## 6 mzspec:MSV000083058:other/Table 3 SAINT3788_TripleTOF.xlsx
+    ##                                 filepath      dataset collection is_update
+    ## 1             ccms_parameters/params.xml MSV000083058                    0
+    ## 2         ccms_statistics/statistics.tsv MSV000083058                    0
+    ## 3  methods/README_Histones_P108_VS3.docx MSV000083058                    0
+    ## 4 other/Table 1 SAINT3788_TripleTOF.xlsx MSV000083058                    0
+    ## 5 other/Table 2 SAINT3788_TripleTOF.xlsx MSV000083058                    0
+    ## 6 other/Table 3 SAINT3788_TripleTOF.xlsx MSV000083058                    0
+    ##   update_name                create_time   size size_mb sample_type spectra_ms1
+    ## 1          NA 2024-04-11 02:34:07.431000   8619       0     MASSIVE           0
+    ## 2          NA 2024-01-23 14:53:43.404000      0       0     MASSIVE           0
+    ## 3          NA 2024-03-28 13:07:48.624000  31495       0     MASSIVE           0
+    ## 4          NA 2024-04-23 08:04:41.282000  10783       0     MASSIVE           0
+    ## 5          NA 2024-04-02 13:03:41.877000 931530       0     MASSIVE           0
+    ## 6          NA 2024-03-28 13:07:48.754000 152547       0     MASSIVE           0
+    ##   spectra_ms2 instrument_vendor instrument_model file_processed
+    ## 1           0                NA               NA             No
+    ## 2           0                NA               NA             No
+    ## 3           0                NA               NA             No
+    ## 4           0                NA               NA             No
+    ## 5           0                NA               NA             No
+    ## 6           0                NA               NA             No
+
+The
+[`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+returns a fully qualified link to a data file (listed in the GNPS2
+datasetcache), based on it’s USI.
+
+``` r
+
+gnps2_usi_download_link(res$usi[4])
+```
+
+    ## [1] "https://massiveproxy.gnps2.org/massiveproxy/MSV000083058/other/Table%201%20SAINT3788_TripleTOF.xlsx"
 
 ## Session information
 
@@ -439,7 +429,7 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.1.4 Spectra_1.21.5         BiocParallel_1.45.0   
+    ## [1] MsBackendMassIVE_0.1.5 Spectra_1.21.5         BiocParallel_1.45.0   
     ## [4] S4Vectors_0.49.0       BiocGenerics_0.57.0    generics_0.1.4        
     ## [7] BiocStyle_2.39.0      
     ## 

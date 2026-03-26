@@ -1,15 +1,17 @@
-# Utility functions for querying GNPS2 dataset
+# Query the GNPS2 datasetchache resource
 
-In this package, GNPS2 queries are used as the first step to determine
-the remote files available for a dataset and to support downstream
-dataset download and caching functions.
+The GNPS2 *datasetcache* collects and provides general information on
+data sets/experiments with their related MS data files for various
+repositories including MassIVE and MetaboLights. The resource is updated
+on a regular basis. *MsBackendMassIVE* provides utility functions to
+retrieve information from this resource directly in R:
 
-- `gnps2_query()`: query GNPS2 DB for dataset file metadata using the
-  provided MassIVE dataset IDs. Returns a `data.frame` with one row per
-  file entry from the `filename` table.
+- `gnps2_query()`: query the datasetcache for metadata of data sets with
+  the provided (MassIVE) dataset ID(s). Returns a `data.frame` with one
+  row per file entry from the *filename* table.
 
-- `gnps2_usi_download_link()`: query GNPS2 DB to get the download link
-  for a specific USI. Return a `character(1)` containing the link.
+- `gnps2_usi_download_link()`: retrieve the download link for a specific
+  USI. Returns a `character(1)` with the link.
 
 ## Usage
 
@@ -29,7 +31,7 @@ gnps2_usi_download_link(usi = character())
 - usi_pattern:
 
   for `gnps2_query()`: `character(1)` defining a pattern to filter the
-  `USI`, such as `usi_pattern = ".mzML"` to retrieve the `USI` of all
+  *USI*, such as `usi_pattern = ".mzML"` to retrieve the USI of all
   files of the data set (i.e., files with extension `".mzML"`). This
   parameter is passed to the
   [`grepl()`](https://rdrr.io/r/base/grep.html) function.
@@ -38,7 +40,7 @@ gnps2_usi_download_link(usi = character())
 
   for `gnps2_query()`: `character(1)` defining a pattern to filter the
   `filepath`, such as `filepath_pattern = "metadata"` to retrieve the
-  `filepath` of all files of the data set (i.e., files with matadata
+  `filepath` of all files of the data set (i.e., files with metadata
   info). This parameter is passed to the
   [`grepl()`](https://rdrr.io/r/base/grep.html) function.
 
@@ -49,8 +51,8 @@ gnps2_usi_download_link(usi = character())
 
 ## Value
 
-- For `gnps2_query()`: a `data.frame` with the all information in GNPS2
-  database for the MassIVE IDs provided.
+- For `gnps2_query()`: a `data.frame` with the all information in the
+  GNPS2 datasetcache database for the data set IDs provided.
 
 - For `gnps2_usi_download_link()`: a `character(1)` with the downlaod
   link of the USI.
@@ -59,11 +61,11 @@ gnps2_usi_download_link(usi = character())
 
 The `gnps2_query()` function queries the GNPS2 Datasette API at
 `https://datasetcache.gnps2.org/datasette/database.csv` by executing a
-SQL query on the `filename` table filtered by dataset IDs. It returns
+SQL query on the *filename* table filtered by dataset IDs. It returns
 all matching file metadata records. This metadata is used by downstream
-functions to compute FTP paths and to download files. The
-`gnps2_usi_download_link()` made a GET request to the GNPS2 dashboard to
-get the download link of a specific USI.
+functions to determine the FTP paths and to download files. The
+`gnps2_usi_download_link()` makes a GET request to the GNPS2 dashboard
+to get the download link of a specific USI.
 
 ## Note
 

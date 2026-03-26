@@ -1,18 +1,24 @@
 # Changelog
 
-## MsBackendMassIVE 0.1.4
+## MsBackendMassIVE 0.1
+
+### Changes in 0.1.5
+
+- Add examples for MassIVE and GNPS2 utility functions to the vignette.
+
+### Changes in 0.1.4
 
 - Add
   [`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
   to get download link for a USI
 
-## MsBackendMassIVE 0.1.3
+### Changes in 0.1.3
 
 - Separate GNPS2 function from
   [`massive_list_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
 - Remove repetitive error
 
-## MsBackendMassIVE 0.1.2
+### Changes in 0.1.2
 
 - Add
   [`massive_param_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -21,7 +27,7 @@
   [`massive_list_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
   and `.massive_data_files()`
 
-## MsBackendMassIVE 0.1.1
+### Changes in 0.1.1
 
 - Add package vignette.
 - Replace interactive
@@ -32,7 +38,7 @@
   [`message()`](https://rdrr.io/r/base/message.html) in
   [`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
 
-## MsBackendMassIVE 0.1.0
+### Changes in 0.1.0
 
 - Add MassIVE utilities.
 - Add functionality to download and cache MS data files from MassIVE.

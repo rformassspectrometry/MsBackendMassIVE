@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MsBackendMassIVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,27 +73,28 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script><p><strong>Package</strong>: <em><a href="https://bioconductor.org/packages/3.23/MsBackendMassIVE" class="external-link">MsBackendMassIVE</a></em><br><strong>Authors</strong>: Gabriele Tomè [aut, cre] (ORCID: <a href="https://orcid.org/0000-0002-3976-6068" class="external-link uri">https://orcid.org/0000-0002-3976-6068</a>), Philippine
 Louail [aut] (ORCID: <a href="https://orcid.org/0009-0007-5429-6846" class="external-link uri">https://orcid.org/0009-0007-5429-6846</a>), Johannes Rainer
-[aut] (ORCID: <a href="https://orcid.org/0000-0002-6977-7147" class="external-link uri">https://orcid.org/0000-0002-6977-7147</a>)<br><strong>Last modified:</strong> 2026-03-25 13:27:48.369703<br><strong>Compiled</strong>: Wed Mar 25 14:14:59 2026</p>
+[aut] (ORCID: <a href="https://orcid.org/0000-0002-6977-7147" class="external-link uri">https://orcid.org/0000-0002-6977-7147</a>)<br><strong>Last modified:</strong> 2026-03-26 11:43:54.726429<br><strong>Compiled</strong>: Thu Mar 26 12:28:43 2026</p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <em><a href="https://bioconductor.org/packages/3.23/Spectra" class="external-link">Spectra</a></em>
-package provides a central infrastructure for the handling of Mass
-Spectrometry (MS) data in Bioconductor. The package supports
-interchangeable use of different <em>backends</em> to import and
-represent MS data from a variety of sources and data formats. The
-<em>MsBackendMassIVE</em> package allows to retrieve MS data files
-directly from the <a href="https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp" class="external-link">MassIVE</a>
-(Mass Spectrometry Interactive Virtual Environment) repository. MassIVE
-is a community resource developed by the NIH-funded Center for
-Computational Mass Spectrometry at UC San Diego to promote the global,
-free exchange of mass spectrometry data. MassIVE supports deposition of
-both proteomics and metabolomics experiments and is a full member of the
-<a href="http://www.proteomexchange.org/" class="external-link">ProteomeXchange</a>
-consortium.</p>
-<p>The <em>MsBackendMassIVE</em> package downloads and locally caches MS
-data files for a MassIVE data set and enables further analyses of this
-data directly in R.</p>
+<p>Metabolomics experiments and results including mass spectrometry (MS)
+data can be deposited in several public repositories, such as <a href="https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp" class="external-link">MassIVE</a>
+(Mass Spectrometry Interactive Virtual Environment). MassIVE is a
+community resource developed by the NIH-funded Center for Computational
+Mass Spectrometry at UC San Diego to promote the global, free exchange
+of mass spectrometry data. MassIVE supports deposition of both
+proteomics and metabolomics experiments and is a full member of the <a href="http://www.proteomexchange.org/" class="external-link">ProteomeXchange</a> consortium.
+While data is available, manual lookup and download is cumbersome
+hampering the re-analysis of public data and replication of results. The
+<em>MsBackendMassIVE</em> package closes this gap by providing
+functionality to query, retrieve and cache MS data from MassIVE directly
+from R hence enabling a direct and seamless integration of MS data from
+MassIVE into R-based analysis workflows. <em>MsBackendMassIVE</em>
+leverages on Bioconductor’s <code>r Biocpkg("BiocFileCache")</code> for
+caching remote data locally and provides a <em>MS data backend</em> for
+the <em><a href="https://bioconductor.org/packages/3.23/Spectra" class="external-link">Spectra</a></em>
+package to enable loading and integrating cached MS data directly into
+R.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -110,9 +111,13 @@ below:</p>
 <h2 id="importing-ms-data-from-massive">Importing MS Data from MassIVE<a class="anchor" aria-label="anchor" href="#importing-ms-data-from-massive"></a>
 </h2>
 <p>Each experiment in MassIVE is identified by a unique accession
-starting with <em>MSV</em> followed by a number. The MS data files of a
-dataset are listed in the <a href="https://datasetcache.gnps2.org/datasette/database/filename" class="external-link">GNPS2
-database</a> and can be downloaded from MassIVE’s FTP server.</p>
+starting with <em>MSV</em> followed by a number. While the <a href="https://massive.ucsd.edu/ProteoSAFe/" class="external-link">MassIVE web page</a> allows
+only a manual, non programmatic, lookup of data and experiments, a
+separate, central registry of data files and experiments is hosted on
+GNPS2. This <a href="https://datasetcache.gnps2.org/datasette/database/filename" class="external-link">datasetcache</a>
+registry allows programmatic access and is used by
+<em>MsBackendMassIVE</em> to query information on MassIVE
+experiments.</p>
 <p>Below we list all files from the MassIVE data set with the ID
 <em>MSV000080547</em>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -140,12 +145,12 @@ function to return the FTP path for our test data set.</p>
 loaded using the <code>MsBackendMassIVE</code> backend into R as a
 <code>Spectra</code> object (<code>MsBackendMassIVE</code> directly
 extends <em>Spectra</em>’s <code>MsBackendMzR</code> backend and
-therefore supports import of MS data files in <em>mzML</em>,
-<em>CDF</em> or <em>mzXML</em> formats). By default, all MS data files
-of the data set would be retrieved, but in our example below we restrict
-to a few data files to reduce the amount of data that needs to be
-downloaded. To this end we define a pattern matching the file name of
-only some data files using the <code>filePattern</code> parameter.</p>
+therefore supports import of MS data files in these formats). By
+default, all MS data files of the data set would be retrieved, but in
+our example below we restrict to a few data files to reduce the amount
+of data that needs to be downloaded. To this end we define a pattern
+matching the file name of only some data files using the
+<code>filePattern</code> parameter.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span></span>
 <span></span>
@@ -172,13 +177,13 @@ only some data files using the <code>filePattern</code> parameter.</p>
 <span><span class="co">## file(s):</span></span>
 <span><span class="co">## AG_spiked_sample1.mzML</span></span>
 <span><span class="co">## AG_spiked_sample11.mzML</span></span></code></pre>
-<p>This call downloaded the files to the local cache and loaded them as
-a <code>Spectra</code> object. The downloading and caching of the data
-is handled by Bioconductor’s <em><a href="https://bioconductor.org/packages/3.23/BiocFileCache" class="external-link">BiocFileCache</a></em>.
-The local cache can thus be managed directly using functionality from
-that package. Any subsequent loading of the same data files will load
-the locally cached versions avoiding thus repetitive download of the
-same data.</p>
+<p>This call downloaded 2 files from the experiment into the local cache
+and loaded them as a <code>Spectra</code> object. The downloading and
+caching of the data is handled by Bioconductor’s <em><a href="https://bioconductor.org/packages/3.23/BiocFileCache" class="external-link">BiocFileCache</a></em>.
+The local cache can thus also be managed directly using functionality
+from that package. Any subsequent loading of the same data files will
+load the locally cached versions avoiding thus repetitive download of
+the same data.</p>
 <p>The <code>Spectra</code> object with the MS data files of the MassIVE
 data set enables now any subsequent analysis of the data in R. On top of
 the spectra variables and mass peak data values that are provided by the
@@ -208,7 +213,7 @@ available spectra variables of the data set below.</p>
 <span><span class="co">## [37] "data_file"</span></span></code></pre>
 <p>The MassIVE-specific variables are <code>"massive_id"</code> and
 <code>"data_file"</code> providing the MassIVE ID of the data set and
-the original data file name on the MassIVE FTP server for each
+the original data file name in the MassIVE FTP server for each
 individual spectrum.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">spectraData</a></span><span class="op">(</span><span class="va">s</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"massive_id"</span>, <span class="st">"data_file"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -226,12 +231,17 @@ individual spectrum.</p>
 <span><span class="co">## 4320 MSV000080547 peak/Quant_assesment..</span></span>
 <span><span class="co">## 4321 MSV000080547 peak/Quant_assesment..</span></span>
 <span><span class="co">## 4322 MSV000080547 peak/Quant_assesment..</span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">data_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"</span></span>
+<span><span class="co">## [4] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"</span></span></code></pre>
 <p>The <code><a href="../reference/MsBackendMassIVE.html">massive_sync()</a></code> function can be used to
 <em>synchronize</em> the local content of a
-<code>MsBackendMassIVE</code>. This function checks if all data files of
-the backend are available locally and eventually downloads and caches
+<code>MsBackendMassIVE</code> and is useful if, for example, locally
+cached files were deleted. The function checks if all data files of the
+backend are available locally and eventually downloads and caches
 missing files.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/MsBackendMassIVE.html">massive_sync</a></span><span class="op">(</span><span class="va">s</span><span class="op">@</span><span class="va">backend</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## MsBackendMassIVE with 4322 spectra</span></span>
 <span><span class="co">##        msLevel     rtime scanIndex</span></span>
@@ -252,13 +262,16 @@ missing files.</p>
 <span><span class="co">## file(s):</span></span>
 <span><span class="co">## AG_spiked_sample1.mzML</span></span>
 <span><span class="co">## AG_spiked_sample11.mzML</span></span></code></pre>
-<p>Also, it is possible to <em>manually</em> cache and download data
-files from MassIVE using the <code><a href="../reference/MassIVE-utils.html">massive_sync_data_files()</a></code>
-function. This function evaluates if the respective data files are
-already cached and, if so, does not download them again. Below we use
-this to retrieve the local storage information on one of the data files
-of the MassIVE data set <em>MSV000080547</em>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>In addition, it is also possible to <em>manually</em> cache and
+download selected files from MassIVE using the
+<code><a href="../reference/MassIVE-utils.html">massive_sync_data_files()</a></code> function. Before downloading,
+this function first evaluates if the respective data files are already
+cached and only downloads them if needed. As a result, the function
+returns a <code>data.frame</code> with the storage location and other
+information of the cached file(s). Below we use this function to
+retrieve the local storage information on one of the data files of the
+MassIVE data set <em>MSV000080547</em>:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MassIVE-utils.html">massive_sync_data_files</a></span><span class="op">(</span><span class="st">"MSV000080547"</span>,</span>
 <span>                               fileName <span class="op">=</span> <span class="st">"AG_spiked_sample11.mzML"</span><span class="op">)</span></span>
 <span><span class="va">res</span></span></code></pre></div>
@@ -267,11 +280,11 @@ of the MassIVE data set <em>MSV000080547</em>:</p>
 <span><span class="co">##                                                         rpath</span></span>
 <span><span class="co">## 1 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML</span></span></code></pre>
 <p>The <code><a href="../reference/MassIVE-utils.html">massive_cached_data_files()</a></code> function can be used to
-inspect and list locally cached MassIVE data files. This function does
-not require an active internet connection since only local content is
-queried. With the default settings, a <code>data.frame</code> with all
-available data files is returned.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+inspect and list all locally cached MassIVE data files. This function
+does not require an active internet connection since only local content
+is queried. With the default settings, a <code>data.frame</code> with
+all available data files is returned.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_cached_data_files</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     rid   massive_id                                        data_file</span></span>
 <span><span class="co">## 3 BFC12 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
@@ -282,145 +295,96 @@ available data files is returned.</p>
 MassIVE data set for which local data files should be removed.</p>
 </div>
 <div class="section level2">
-<h2 id="download-data-from-massive">Download data from MassIVE<a class="anchor" aria-label="anchor" href="#download-data-from-massive"></a>
+<h2 id="general-use-and-information-retrieval-from-massive">General use and information retrieval from MassIVE<a class="anchor" aria-label="anchor" href="#general-use-and-information-retrieval-from-massive"></a>
 </h2>
-<p>Other than cache the MS data, it is possible to download any file
-from an experiment using the <code><a href="../reference/MassIVE-utils.html">massive_download_file()</a></code>
-function and save them to a specific directory.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_download_file</a></span><span class="op">(</span>massiveId <span class="op">=</span> <span class="st">"MSV000080547"</span>, </span>
-<span>                      fileName <span class="op">=</span> <span class="st">"params.xml"</span>, </span>
+<p>Next to the <code>MsBackendMassIVE</code> backend for
+<code>Spectra</code> objects, the <em>MsBackendMassIVE</em> package
+provides also various utility functions to query and retrieve
+information from MassIVE or GNPS2’s <em>datasetcache</em>.</p>
+<p>The <code><a href="../reference/MassIVE-utils.html">massive_param_file()</a></code> function reads the parameter
+file from a MassIVE data set that provides general, experiment-specific
+information. These are retrieved as a two-column <code>data.frame</code>
+with the first column containing the names of the data set properties,
+and the second their values.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">prm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MassIVE-utils.html">massive_param_file</a></span><span class="op">(</span><span class="st">"MSV000080547"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prm</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          ParameterName</span></span>
+<span><span class="co">## 1     dataset.comments</span></span>
+<span><span class="co">## 2   dataset.instrument</span></span>
+<span><span class="co">## 3     dataset.keywords</span></span>
+<span><span class="co">## 4 dataset.modification</span></span>
+<span><span class="co">## 5     dataset.password</span></span>
+<span><span class="co">## 6           dataset.pi</span></span>
+<span><span class="co">##                                                                     Value</span></span>
+<span><span class="co">## 1 Quantity assessment experiment for one sample two metabolomics workflow</span></span>
+<span><span class="co">## 2                                                   MS:1001911;MS:1000644</span></span>
+<span><span class="co">## 3                                            Standards;quantity assesment</span></span>
+<span><span class="co">## 4                                                           PRIDE:0000398</span></span>
+<span><span class="co">## 5                                                                       a</span></span>
+<span><span class="co">## 6                                                         P Dorrestein|||</span></span></code></pre>
+<p>The <code><a href="../reference/MassIVE-utils.html">massive_download_file()</a></code> function allows to download
+any file of an experiment (directly, i.e., without caching). As an
+example we download below a docx file to a temporary folder.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_list_files</a></span><span class="op">(</span><span class="st">"MSV000083058"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "ccms_parameters/params.xml"            </span></span>
+<span><span class="co">## [2] "ccms_statistics/statistics.tsv"        </span></span>
+<span><span class="co">## [3] "methods/README_Histones_P108_VS3.docx" </span></span>
+<span><span class="co">## [4] "other/Table 1 SAINT3788_TripleTOF.xlsx"</span></span>
+<span><span class="co">## [5] "other/Table 2 SAINT3788_TripleTOF.xlsx"</span></span>
+<span><span class="co">## [6] "other/Table 3 SAINT3788_TripleTOF.xlsx"</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_download_file</a></span><span class="op">(</span><span class="st">"MSV000083058"</span>,</span>
+<span>                      fileName <span class="op">=</span> <span class="st">"README_Histones_P108_VS3.docx"</span>,</span>
 <span>                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="parse-the-parameter-file">Parse the parameter file<a class="anchor" aria-label="anchor" href="#parse-the-parameter-file"></a>
-</h2>
-<p>In almost all MassIVE experiment is present a <code>params.xml</code>
-file that provide some information regarding the repository. The
-<code><a href="../reference/MassIVE-utils.html">massive_param_file()</a></code> function parse the xml file and it
-give in output as a data.frame with 2 columns, the first with the
-parameter name, the second with the associated value. If in the
-experiment are present multiple <code>params.xml</code> files, the
-output is a <code>list</code> of <code>data.frame</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_param_file</a></span><span class="op">(</span><span class="st">"MSV000080547"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##           ParameterName</span></span>
-<span><span class="co">## 1      dataset.comments</span></span>
-<span><span class="co">## 2    dataset.instrument</span></span>
-<span><span class="co">## 3      dataset.keywords</span></span>
-<span><span class="co">## 4  dataset.modification</span></span>
-<span><span class="co">## 5      dataset.password</span></span>
-<span><span class="co">## 6            dataset.pi</span></span>
-<span><span class="co">## 7       dataset.species</span></span>
-<span><span class="co">## 8       default.license</span></span>
-<span><span class="co">## 9                  desc</span></span>
-<span><span class="co">## 10                email</span></span>
-<span><span class="co">## 11      peak_list_files</span></span>
-<span><span class="co">## 12                 task</span></span>
-<span><span class="co">## 13  upload_file_mapping</span></span>
-<span><span class="co">## 14  upload_file_mapping</span></span>
-<span><span class="co">## 15  upload_file_mapping</span></span>
-<span><span class="co">## 16  upload_file_mapping</span></span>
-<span><span class="co">## 17  upload_file_mapping</span></span>
-<span><span class="co">## 18  upload_file_mapping</span></span>
-<span><span class="co">## 19  upload_file_mapping</span></span>
-<span><span class="co">## 20  upload_file_mapping</span></span>
-<span><span class="co">## 21  upload_file_mapping</span></span>
-<span><span class="co">## 22  upload_file_mapping</span></span>
-<span><span class="co">## 23  upload_file_mapping</span></span>
-<span><span class="co">## 24  upload_file_mapping</span></span>
-<span><span class="co">## 25  upload_file_mapping</span></span>
-<span><span class="co">## 26  upload_file_mapping</span></span>
-<span><span class="co">## 27  upload_file_mapping</span></span>
-<span><span class="co">## 28  upload_file_mapping</span></span>
-<span><span class="co">## 29  upload_file_mapping</span></span>
-<span><span class="co">## 30  upload_file_mapping</span></span>
-<span><span class="co">## 31  upload_file_mapping</span></span>
-<span><span class="co">## 32  upload_file_mapping</span></span>
-<span><span class="co">## 33  upload_file_mapping</span></span>
-<span><span class="co">## 34  upload_file_mapping</span></span>
-<span><span class="co">## 35  upload_file_mapping</span></span>
-<span><span class="co">## 36  upload_file_mapping</span></span>
-<span><span class="co">## 37  upload_file_mapping</span></span>
-<span><span class="co">## 38  upload_file_mapping</span></span>
-<span><span class="co">## 39  upload_file_mapping</span></span>
-<span><span class="co">## 40  upload_file_mapping</span></span>
-<span><span class="co">## 41  upload_file_mapping</span></span>
-<span><span class="co">## 42  upload_file_mapping</span></span>
-<span><span class="co">## 43  upload_file_mapping</span></span>
-<span><span class="co">## 44  upload_file_mapping</span></span>
-<span><span class="co">## 45  upload_file_mapping</span></span>
-<span><span class="co">## 46  upload_file_mapping</span></span>
-<span><span class="co">## 47  upload_file_mapping</span></span>
-<span><span class="co">## 48  upload_file_mapping</span></span>
-<span><span class="co">## 49  upload_file_mapping</span></span>
-<span><span class="co">## 50  upload_file_mapping</span></span>
-<span><span class="co">## 51  upload_file_mapping</span></span>
-<span><span class="co">## 52  upload_file_mapping</span></span>
-<span><span class="co">## 53                 user</span></span>
-<span><span class="co">## 54                 uuid</span></span>
-<span><span class="co">## 55             workflow</span></span>
-<span><span class="co">##                                                                      Value</span></span>
-<span><span class="co">## 1  Quantity assessment experiment for one sample two metabolomics workflow</span></span>
-<span><span class="co">## 2                                                    MS:1001911;MS:1000644</span></span>
-<span><span class="co">## 3                                             Standards;quantity assesment</span></span>
-<span><span class="co">## 4                                                            PRIDE:0000398</span></span>
-<span><span class="co">## 5                                                                        a</span></span>
-<span><span class="co">## 6                                                          P Dorrestein|||</span></span>
-<span><span class="co">## 7                                                           NCBITaxon:9606</span></span>
-<span><span class="co">## 8                                                                       on</span></span>
-<span><span class="co">## 9                                                               Banchmark2</span></span>
-<span><span class="co">## 10                                                   alexvmelnik@gmail.com</span></span>
-<span><span class="co">## 11             d.amelnik/Quant_assesment_QE;d.amelnik/Quant_assesment_QQQ;</span></span>
-<span><span class="co">## 12                                        812309736acb46c68b49ebaf3bb3b02a</span></span>
-<span><span class="co">## 13    PEAK-00000.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample11.mzXML</span></span>
-<span><span class="co">## 14    PEAK-00001.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample10.mzXML</span></span>
-<span><span class="co">## 15     PEAK-00002.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample1.mzXML</span></span>
-<span><span class="co">## 16     PEAK-00003.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample2.mzXML</span></span>
-<span><span class="co">## 17    PEAK-00004.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample13.mzXML</span></span>
-<span><span class="co">## 18    PEAK-00005.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample12.mzXML</span></span>
-<span><span class="co">## 19     PEAK-00006.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample3.mzXML</span></span>
-<span><span class="co">## 20     PEAK-00007.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample8.mzXML</span></span>
-<span><span class="co">## 21    PEAK-00008.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample19.mzXML</span></span>
-<span><span class="co">## 22    PEAK-00009.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample15.mzXML</span></span>
-<span><span class="co">## 23     PEAK-00010.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample4.mzXML</span></span>
-<span><span class="co">## 24    PEAK-00011.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample18.mzXML</span></span>
-<span><span class="co">## 25     PEAK-00012.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample9.mzXML</span></span>
-<span><span class="co">## 26     PEAK-00013.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample5.mzXML</span></span>
-<span><span class="co">## 27    PEAK-00014.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample14.mzXML</span></span>
-<span><span class="co">## 28    PEAK-00015.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample17.mzXML</span></span>
-<span><span class="co">## 29     PEAK-00016.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample6.mzXML</span></span>
-<span><span class="co">## 30    PEAK-00017.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample20.mzXML</span></span>
-<span><span class="co">## 31     PEAK-00018.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample7.mzXML</span></span>
-<span><span class="co">## 32    PEAK-00019.mzXML|amelnik/Quant_assesment_QE/AG_spiked_sample16.mzXML</span></span>
-<span><span class="co">## 33     PEAK-00020.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample12.mzML</span></span>
-<span><span class="co">## 34      PEAK-00021.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample3.mzML</span></span>
-<span><span class="co">## 35     PEAK-00022.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample16.mzML</span></span>
-<span><span class="co">## 36      PEAK-00023.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample7.mzML</span></span>
-<span><span class="co">## 37     PEAK-00024.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample13.mzML</span></span>
-<span><span class="co">## 38      PEAK-00025.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample2.mzML</span></span>
-<span><span class="co">## 39     PEAK-00026.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample17.mzML</span></span>
-<span><span class="co">## 40      PEAK-00027.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample6.mzML</span></span>
-<span><span class="co">## 41      PEAK-00028.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample8.mzML</span></span>
-<span><span class="co">## 42     PEAK-00029.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample19.mzML</span></span>
-<span><span class="co">## 43     PEAK-00030.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample20.mzML</span></span>
-<span><span class="co">## 44     PEAK-00031.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
-<span><span class="co">## 45      PEAK-00032.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample4.mzML</span></span>
-<span><span class="co">## 46     PEAK-00033.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample15.mzML</span></span>
-<span><span class="co">## 47      PEAK-00034.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample1.mzML</span></span>
-<span><span class="co">## 48     PEAK-00035.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample10.mzML</span></span>
-<span><span class="co">## 49      PEAK-00036.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample5.mzML</span></span>
-<span><span class="co">## 50     PEAK-00037.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample14.mzML</span></span>
-<span><span class="co">## 51      PEAK-00038.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample9.mzML</span></span>
-<span><span class="co">## 52     PEAK-00039.mzML|amelnik/Quant_assesment_QQQ/AG_spiked_sample18.mzML</span></span>
-<span><span class="co">## 53                                                                 amelnik</span></span>
-<span><span class="co">## 54                                    1DF12E8D-0A9D-0001-6386-16B01160A9F0</span></span>
-<span><span class="co">## 55                                                        MASSIVE-COMPLETE</span></span></code></pre>
+<p><em>MsBackendMassIVE</em> provides also two utility functions to
+query the GNPS2 <em>datasetcache</em>, <code><a href="../reference/GNPS2-utils.html">gnps2_query()</a></code> and
+<code><a href="../reference/GNPS2-utils.html">gnps2_usi_download_link()</a></code>.</p>
+<p>Below we use <code><a href="../reference/GNPS2-utils.html">gnps2_query()</a></code> to retrieve all information
+for a MassIVE data set from the datasetcache.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GNPS2-utils.html">gnps2_query</a></span><span class="op">(</span><span class="st">"MSV000083058"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                                          usi</span></span>
+<span><span class="co">## 1             mzspec:MSV000083058:ccms_parameters/params.xml</span></span>
+<span><span class="co">## 2         mzspec:MSV000083058:ccms_statistics/statistics.tsv</span></span>
+<span><span class="co">## 3  mzspec:MSV000083058:methods/README_Histones_P108_VS3.docx</span></span>
+<span><span class="co">## 4 mzspec:MSV000083058:other/Table 1 SAINT3788_TripleTOF.xlsx</span></span>
+<span><span class="co">## 5 mzspec:MSV000083058:other/Table 2 SAINT3788_TripleTOF.xlsx</span></span>
+<span><span class="co">## 6 mzspec:MSV000083058:other/Table 3 SAINT3788_TripleTOF.xlsx</span></span>
+<span><span class="co">##                                 filepath      dataset collection is_update</span></span>
+<span><span class="co">## 1             ccms_parameters/params.xml MSV000083058                    0</span></span>
+<span><span class="co">## 2         ccms_statistics/statistics.tsv MSV000083058                    0</span></span>
+<span><span class="co">## 3  methods/README_Histones_P108_VS3.docx MSV000083058                    0</span></span>
+<span><span class="co">## 4 other/Table 1 SAINT3788_TripleTOF.xlsx MSV000083058                    0</span></span>
+<span><span class="co">## 5 other/Table 2 SAINT3788_TripleTOF.xlsx MSV000083058                    0</span></span>
+<span><span class="co">## 6 other/Table 3 SAINT3788_TripleTOF.xlsx MSV000083058                    0</span></span>
+<span><span class="co">##   update_name                create_time   size size_mb sample_type spectra_ms1</span></span>
+<span><span class="co">## 1          NA 2024-04-11 02:34:07.431000   8619       0     MASSIVE           0</span></span>
+<span><span class="co">## 2          NA 2024-01-23 14:53:43.404000      0       0     MASSIVE           0</span></span>
+<span><span class="co">## 3          NA 2024-03-28 13:07:48.624000  31495       0     MASSIVE           0</span></span>
+<span><span class="co">## 4          NA 2024-04-23 08:04:41.282000  10783       0     MASSIVE           0</span></span>
+<span><span class="co">## 5          NA 2024-04-02 13:03:41.877000 931530       0     MASSIVE           0</span></span>
+<span><span class="co">## 6          NA 2024-03-28 13:07:48.754000 152547       0     MASSIVE           0</span></span>
+<span><span class="co">##   spectra_ms2 instrument_vendor instrument_model file_processed</span></span>
+<span><span class="co">## 1           0                NA               NA             No</span></span>
+<span><span class="co">## 2           0                NA               NA             No</span></span>
+<span><span class="co">## 3           0                NA               NA             No</span></span>
+<span><span class="co">## 4           0                NA               NA             No</span></span>
+<span><span class="co">## 5           0                NA               NA             No</span></span>
+<span><span class="co">## 6           0                NA               NA             No</span></span></code></pre>
+<p>The <code><a href="../reference/GNPS2-utils.html">gnps2_usi_download_link()</a></code> returns a fully qualified
+link to a data file (listed in the GNPS2 datasetcache), based on it’s
+USI.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/GNPS2-utils.html">gnps2_usi_download_link</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">usi</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "https://massiveproxy.gnps2.org/massiveproxy/MSV000083058/other/Table%201%20SAINT3788_TripleTOF.xlsx"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R Under development (unstable) (2026-03-22 r89674)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
@@ -446,7 +410,7 @@ output is a <code>list</code> of <code>data.frame</code>.</p>
 <span><span class="co">## [8] base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] MsBackendMassIVE_0.1.4 Spectra_1.21.5         BiocParallel_1.45.0   </span></span>
+<span><span class="co">## [1] MsBackendMassIVE_0.1.5 Spectra_1.21.5         BiocParallel_1.45.0   </span></span>
 <span><span class="co">## [4] S4Vectors_0.49.0       BiocGenerics_0.57.0    generics_0.1.4        </span></span>
 <span><span class="co">## [7] BiocStyle_2.39.0      </span></span>
 <span><span class="co">## </span></span>
