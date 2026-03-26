@@ -16,12 +16,12 @@ Authors@R:
              comment = c(ORCID = "0000-0002-6977-7147")))
 Description: MassIVE is one of the main public repositories for storage
              of metabolomics experiments. The MsBackendMassIVE package provides
-	     functionality to retrieve and represent mass spectrometry (MS)
-	     data from MassIVE. Data files are downloaded and cached
-	     locally avoiding repetitive downloads. MS data from metabolomics
-	     experiments can thus be directly and seamlessly integrated into
-	     R-based analysis workflows with the Spectra and
-	     MsBackendMassIVE package.
+	         functionality to retrieve and represent mass spectrometry (MS)
+	         data from MassIVE. Data files are downloaded and cached
+	         locally avoiding repetitive downloads. MS data from metabolomics
+	         experiments can thus be directly and seamlessly integrated into
+	         R-based analysis workflows with the Spectra and
+	         MsBackendMassIVE package.
 Depends:
     R (>= 4.2.0),
     Spectra (>= 1.15.12)

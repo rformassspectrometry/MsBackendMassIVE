@@ -27,22 +27,23 @@ library(BiocStyle)
 
 # Introduction
 
-The `r Biocpkg("Spectra")` package provides a central infrastructure for the
-handling of Mass Spectrometry (MS) data in Bioconductor. The package supports
-interchangeable use of different *backends* to import and represent MS data from
-a variety of sources and data formats. The *MsBackendMassIVE* package allows to
-retrieve MS data files directly from the
+Metabolomics experiments and results including mass spectrometry (MS) data can
+be deposited in several public repositories, such as
 [MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp) (Mass
-Spectrometry Interactive Virtual Environment) repository.
-MassIVE is a community resource developed by the NIH-funded Center for
-Computational Mass Spectrometry at UC San Diego to promote the global, free
-exchange of mass spectrometry data. MassIVE supports deposition of both
-proteomics and metabolomics experiments and is a full member of the
-[ProteomeXchange](http://www.proteomexchange.org/) consortium.
-
-The *MsBackendMassIVE* package downloads and locally caches MS data files for a
-MassIVE data set and enables further analyses of this data directly in R.
-
+Spectrometry Interactive Virtual Environment). MassIVE is a community resource
+developed by the NIH-funded Center for Computational Mass Spectrometry at UC San
+Diego to promote the global, free exchange of mass spectrometry data. MassIVE
+supports deposition of both proteomics and metabolomics experiments and is a
+full member of the [ProteomeXchange](http://www.proteomexchange.org/)
+consortium. While data is available, manual lookup and download is cumbersome
+hampering the re-analysis of public data and replication of results. The
+*MsBackendMassIVE* package closes this gap by providing functionality to query,
+retrieve and cache MS data from MassIVE directly from R hence enabling a direct
+and seamless integration of MS data from MassIVE into R-based analysis
+workflows. *MsBackendMassIVE* leverages on Bioconductor's `r
+Biocpkg("BiocFileCache")` for caching remote data locally and provides a *MS
+data backend* for the `r Biocpkg("Spectra")` package to enable loading and
+integrating cached MS data directly into R.
 
 # Installation
 
@@ -55,13 +56,16 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
 ```
 
-
 # Importing MS Data from MassIVE
 
 Each experiment in MassIVE is identified by a unique accession starting with
-*MSV* followed by a number. The MS data files of a dataset are listed in the
-[GNPS2 database](https://datasetcache.gnps2.org/datasette/database/filename)
-and can be downloaded from MassIVE's FTP server.
+*MSV* followed by a number. While the [MassIVE web
+page](https://massive.ucsd.edu/ProteoSAFe/) allows only a manual, non
+programmatic, lookup of data and experiments, a separate, central registry of
+data files and experiments is hosted on GNPS2. This
+[datasetcache](https://datasetcache.gnps2.org/datasette/database/filename)
+registry allows programmatic access and is used by *MsBackendMassIVE* to query
+information on MassIVE experiments.
 
 Below we list all files from the MassIVE data set with the ID *MSV000080547*.
 
@@ -88,11 +92,11 @@ Sys.sleep(4)
 MS data files in supported formats (mzML, CDF, mzXML) can be directly loaded
 using the `MsBackendMassIVE` backend into R as a `Spectra` object
 (`MsBackendMassIVE` directly extends *Spectra*'s `MsBackendMzR` backend and
-therefore supports import of MS data files in *mzML*, *CDF* or *mzXML*
-formats). By default, all MS data files of the data set would be retrieved, but
-in our example below we restrict to a few data files to reduce the amount of
-data that needs to be downloaded. To this end we define a pattern matching the
-file name of only some data files using the `filePattern` parameter.
+therefore supports import of MS data files in these formats). By default, all MS
+data files of the data set would be retrieved, but in our example below we
+restrict to a few data files to reduce the amount of data that needs to be
+downloaded. To this end we define a pattern matching the file name of only some
+data files using the `filePattern` parameter.
 
 ```{r}
 library(Spectra)
@@ -103,12 +107,12 @@ s <- Spectra("MSV000080547", filePattern = "1.mzML$",
 s
 ```
 
-This call downloaded the files to the local cache and loaded them as a `Spectra`
-object. The downloading and caching of the data is handled by Bioconductor's
-`r Biocpkg("BiocFileCache")`. The local cache can thus be managed directly using
-functionality from that package. Any subsequent loading of the same data files
-will load the locally cached versions avoiding thus repetitive download of the
-same data.
+This call downloaded 2 files from the experiment into the local cache and loaded
+them as a `Spectra` object. The downloading and caching of the data is handled
+by Bioconductor's `r Biocpkg("BiocFileCache")`. The local cache can thus also be
+managed directly using functionality from that package. Any subsequent loading
+of the same data files will load the locally cached versions avoiding thus
+repetitive download of the same data.
 
 The `Spectra` object with the MS data files of the MassIVE data set enables now
 any subsequent analysis of the data in R. On top of the spectra variables and
@@ -121,16 +125,18 @@ spectraVariables(s)
 ```
 
 The MassIVE-specific variables are `"massive_id"` and `"data_file"` providing
-the MassIVE ID of the data set and the original data file name on the MassIVE
+the MassIVE ID of the data set and the original data file name in the MassIVE
 FTP server for each individual spectrum.
 
 ```{r}
 spectraData(s, c("massive_id", "data_file"))
+basename(s$data_file) |> head()
 ```
 
 The `massive_sync()` function can be used to *synchronize* the local content of
-a `MsBackendMassIVE`. This function checks if all data files of the backend are
-available locally and eventually downloads and caches missing files.
+a `MsBackendMassIVE` and is useful if, for example, locally cached files were
+deleted. The function checks if all data files of the backend are available
+locally and eventually downloads and caches missing files.
 
 ```{r, echo = FALSE}
 Sys.sleep(4)
@@ -140,11 +146,13 @@ Sys.sleep(4)
 massive_sync(s@backend)
 ```
 
-Also, it is possible to *manually* cache and download data files from MassIVE
-using the `massive_sync_data_files()` function. This function evaluates if the
-respective data files are already cached and, if so, does not download them
-again. Below we use this to retrieve the local storage information on one of the
-data files of the MassIVE data set *MSV000080547*:
+In addition, it is also possible to *manually* cache and download selected files
+from MassIVE using the `massive_sync_data_files()` function. Before downloading,
+this function first evaluates if the respective data files are already cached
+and only downloads them if needed. As a result, the function returns a
+`data.frame` with the storage location and other information of the cached
+file(s). Below we use this function to retrieve the local storage information on
+one of the data files of the MassIVE data set *MSV000080547*:
 
 ```{r}
 res <- massive_sync_data_files("MSV000080547",
@@ -153,7 +161,7 @@ res
 ```
 
 The `massive_cached_data_files()` function can be used to inspect and list
-locally cached MassIVE data files. This function does not require an active
+all locally cached MassIVE data files. This function does not require an active
 internet connection since only local content is queried. With the default
 settings, a `data.frame` with all available data files is returned.
 
@@ -165,31 +173,50 @@ Locally cached files for a MassIVE data set can be removed using the
 `massive_delete_cache()` function providing the ID of the MassIVE data set for
 which local data files should be removed.
 
-# Download data from MassIVE
+# General use and information retrieval from MassIVE
 
-Other than cache the MS data, it is possible to download any file from an 
-experiment using the `massive_download_file()` function and save them to a 
-specific directory.
+Next to the `MsBackendMassIVE` backend for `Spectra` objects, the
+*MsBackendMassIVE* package provides also various utility functions to query and
+retrieve information from MassIVE or GNPS2's *datasetcache*.
+
+The `massive_param_file()` function reads the parameter file from a MassIVE data
+set that provides general, experiment-specific information. These are retrieved
+as a two-column `data.frame` with the first column containing the names of the
+data set properties, and the second their values.
 
 ```{r}
-massive_download_file(massiveId = "MSV000080547", 
-                      fileName = "params.xml", 
+prm <- massive_param_file("MSV000080547")
+head(prm)
+```
+
+The `massive_download_file()` function allows to download any file of an
+experiment (directly, i.e., without caching). As an example we download below a
+docx file to a temporary folder.
+
+```{r}
+massive_list_files("MSV000083058") |> head()
+massive_download_file("MSV000083058",
+                      fileName = "README_Histones_P108_VS3.docx",
                       path = tempdir())
 ```
 
-# Parse the parameter file
+*MsBackendMassIVE* provides also two utility functions to query the GNPS2
+*datasetcache*, `gnps2_query()` and `gnps2_usi_download_link()`.
 
-In almost all MassIVE experiment is present a `params.xml` file that provide 
-some information regarding the repository. The `massive_param_file()` function
-parse the xml file and it give in output as a data.frame with 2 columns, the
-first with the parameter name, the second with the associated value. If in the 
-experiment are present multiple `params.xml` files, the output is a `list` of
-`data.frame`.
+Below we use `gnps2_query()` to retrieve all information for a MassIVE data set
+from the datasetcache.
 
 ```{r}
-massive_param_file("MSV000080547")
+res <- gnps2_query("MSV000083058")
+head(res)
 ```
 
+The `gnps2_usi_download_link()` returns a fully qualified link to a data file
+(listed in the GNPS2 datasetcache), based on it's USI.
+
+```{r}
+gnps2_usi_download_link(res$usi[4])
+```
 
 # Session information
 
