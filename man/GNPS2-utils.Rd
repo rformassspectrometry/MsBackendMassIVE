@@ -4,7 +4,7 @@
 \alias{GNPS2-utils}
 \alias{gnps2_query}
 \alias{gnps2_usi_download_link}
-\title{Utility functions for querying GNPS2 dataset}
+\title{Query the GNPS2 datasetchache resource}
 \usage{
 gnps2_query(id = character(), usi_pattern = "*", filepath_pattern = "*")
 
@@ -15,45 +15,47 @@ gnps2_usi_download_link(usi = character())
 set(s).}
 
 \item{usi_pattern}{for \code{gnps2_query()}: \code{character(1)} defining a pattern to
-filter the \code{USI}, such as \code{usi_pattern = ".mzML"} to retrieve the \code{USI}
+filter the \emph{USI}, such as \code{usi_pattern = ".mzML"} to retrieve the USI
 of all files of the data set (i.e., files with extension \code{".mzML"}). This
 parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 
 \item{filepath_pattern}{for \code{gnps2_query()}: \code{character(1)} defining a
 pattern to filter the \code{filepath}, such as \code{filepath_pattern = "metadata"}
 to retrieve the \code{filepath} of all files of the data set (i.e., files with
-matadata info). This parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
+metadata info). This parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 
 \item{usi}{for \code{gnps2_usi_download_link()}: \code{character(1)} with the USI of a
 file in GNPS2 DB.}
 }
 \value{
 \itemize{
-\item For \code{gnps2_query()}: a \code{data.frame} with the all information in
-GNPS2 database for the MassIVE IDs provided.
+\item For \code{gnps2_query()}: a \code{data.frame} with the all information in the
+GNPS2 datasetcache database for the data set IDs provided.
 \item For \code{gnps2_usi_download_link()}: a \code{character(1)} with the downlaod link of
 the USI.
 }
 }
 \description{
-In this package, GNPS2 queries are used as the first step to determine the
-remote files available for a dataset and to support downstream dataset
-download and caching functions.
+The GNPS2 \emph{datasetcache} collects and provides general information on data
+sets/experiments with their related MS data files for various repositories
+including MassIVE and MetaboLights. The resource is updated on a regular
+basis. \emph{MsBackendMassIVE} provides utility functions to retrieve information
+from this resource directly in R:
 \itemize{
-\item \code{gnps2_query()}: query GNPS2 DB for dataset file metadata using
-the provided MassIVE dataset IDs. Returns a \code{data.frame} with one row per
-file entry from the \code{filename} table.
-\item \code{gnps2_usi_download_link()}: query GNPS2 DB to get the download link for
-a specific USI. Return a \code{character(1)} containing the link.
+\item \code{gnps2_query()}: query the datasetcache for metadata of data sets with
+the provided (MassIVE) dataset ID(s). Returns a \code{data.frame} with one row
+per file entry from the \emph{filename} table.
+\item \code{gnps2_usi_download_link()}: retrieve the download link for
+a specific USI. Returns a \code{character(1)} with the link.
 }
 }
 \details{
 The \code{gnps2_query()} function queries the GNPS2 Datasette API
 at \verb{https://datasetcache.gnps2.org/datasette/database.csv} by executing a
-SQL query on the \code{filename} table filtered by dataset IDs. It returns all
+SQL query on the \emph{filename} table filtered by dataset IDs. It returns all
 matching file metadata records. This metadata is used by downstream
-functions to compute FTP paths and to download files. The
-\code{gnps2_usi_download_link()} made a GET request to the GNPS2 dashboard to get
+functions to determine the FTP paths and to download files. The
+\code{gnps2_usi_download_link()} makes a GET request to the GNPS2 dashboard to get
 the download link of a specific USI.
 }
 \note{
@@ -67,7 +69,6 @@ gnps2_query("MSV000080547")
 
 ## Get link for an USI
 gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
-
 }
 \author{
 Gabriele Tomè
