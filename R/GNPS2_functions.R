@@ -75,13 +75,13 @@ NULL
 #' @export
 gnps2_query <- function(id = character(), usi_pattern = "*",
                         filepath_pattern = "*") {
-    api = "https://datasetcache.gnps2.org/datasette/database.csv"
-    params = list("_stream" = "on",
-                  "_sort" = "filepath",
-                  "_size" = "max",
-                  "sql" = paste0('SELECT * FROM filename ',
-                                 'WHERE dataset IN (',
-                                 paste0("\"", id, "\"", collapse = ","), ')'))
+    api <- "https://datasetcache.gnps2.org/datasette/database.csv"
+    params <- list("_stream" = "on",
+                   "_sort" = "filepath",
+                   "_size" = "max",
+                   "sql" = paste0('SELECT * FROM filename ',
+                                  'WHERE dataset IN (',
+                                  paste0("\"", id, "\"", collapse = ","), ')'))
     tryCatch({
         res <- retry(
             GET(api, query = params),
@@ -118,8 +118,8 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
 gnps2_usi_download_link <- function(usi = character()) {
     if (length(usi) != 1)
         stop("Provide 1 USI ID.")
-    url = "https://dashboard.gnps2.org/downloadlink"
-    params = list("usi"= usi)
+    url <- "https://dashboard.gnps2.org/downloadlink"
+    params <- list("usi"= usi)
     tryCatch({
         res <- retry(
             GET(url, query = params),
