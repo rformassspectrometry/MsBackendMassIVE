@@ -16,13 +16,13 @@ Source:
 [`DESCRIPTION`](https://github.com/RforMassSpectrometry/MsBackendMassIVE/blob/main/DESCRIPTION)
 
 Tomè G, Louail P, Rainer J (2026). *MsBackendMassIVE: Retrieve Mass
-Spectrometry Data from MassIVE*. R package version 0.1.5,
+Spectrometry Data from MassIVE*. R package version 0.99.0,
 <https://github.com/RforMassSpectrometry/MsBackendMassIVE>.
 
     @Manual{,
       title = {MsBackendMassIVE: Retrieve Mass Spectrometry Data from MassIVE},
       author = {Gabriele Tomè and Philippine Louail and Johannes Rainer},
       year = {2026},
-      note = {R package version 0.1.5},
+      note = {R package version 0.99.0},
       url = {https://github.com/RforMassSpectrometry/MsBackendMassIVE},
     }

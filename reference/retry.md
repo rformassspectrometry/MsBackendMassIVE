@@ -26,6 +26,11 @@ retry(expr, ntimes = 5L, sleep_mult = 0L)
   `numeric(1)` multiplier to define the increasing waiting time (in
   seconds).
 
+## Value
+
+The value of `expr` when it succeeds, for all failures throws the last
+error.
+
 ## Note
 
 Warnings are suppressed.
@@ -33,3 +38,15 @@ Warnings are suppressed.
 ## Author
 
 Johannes Rainer
+
+## Examples
+
+``` r
+a <- function() {
+    if (sample(0:1, 1) == 0)
+        stop("A, got a 0")
+    1
+}
+set.seed(123)
+res <- retry(a(), ntimes = 5L)
+```
