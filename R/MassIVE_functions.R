@@ -227,7 +227,7 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
 
     ## Update the Volume if files are in ccms_peak folder
     ## ccms_peak is in volume z01 for all the project
-    api_z_volume = "ftp://massive-ftp.ucsd.edu/z01/"
+    api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
     ffiles <- vapply(dfiles,
                      function(f) {
                          u <- ifelse(grepl("^ccms_peak", f),
@@ -390,13 +390,13 @@ massive_cached_data_files <- function(massiveId = character(),
 
     ## Update the Volume if files are in ccms_peak folder
     ## ccms_peak is in volume z01 for all the project
-    api_z_volume = "ftp://massive-ftp.ucsd.edu/z01/"
-    ffiles <- sapply(dfiles,
+    api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
+    ffiles <- vapply(dfiles,
                      function(f) {
                          ifelse(grepl("^ccms_peak", f),
                                 paste0(api_z_volume, massiveId, "/", f),
                                 paste0(fpath, f))
-                     }, USE.NAMES = FALSE)
+                     }, FUN.VALUE = character(1), USE.NAMES = FALSE)
 
     ## Cache files
     bfc <- BiocFileCache()

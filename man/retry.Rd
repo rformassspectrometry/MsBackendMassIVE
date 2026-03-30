@@ -14,6 +14,10 @@ retry(expr, ntimes = 5L, sleep_mult = 0L)
 \item{sleep_mult}{\code{numeric(1)} multiplier to define the increasing waiting
 time (in seconds).}
 }
+\value{
+The value of \code{expr} when it succeeds, for all failures throws the
+last error.
+}
 \description{
 \code{retry()} retries, upon failure, the evaluation of an expression \code{exp} for
 \code{ntimes} times waiting an increasing amount of time
@@ -22,6 +26,16 @@ each try \code{i}. If \code{expr} fails for \code{ntimes} times an error will be
 }
 \note{
 Warnings are suppressed.
+}
+\examples{
+a <- function() {
+    if (sample(0:1, 1) == 0)
+        stop("A, got a 0")
+    1
+}
+set.seed(123)
+res <- retry(a(), ntimes = 5L)
+
 }
 \author{
 Johannes Rainer

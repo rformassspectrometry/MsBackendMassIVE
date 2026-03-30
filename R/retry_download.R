@@ -14,6 +14,9 @@
 #' @param sleep_mult `numeric(1)` multiplier to define the increasing waiting
 #'     time (in seconds).
 #'
+#' @return The value of `expr` when it succeeds, for all failures throws the
+#'     last error.
+#'
 #' @note
 #'
 #' Warnings are suppressed.
@@ -21,6 +24,15 @@
 #' @author Johannes Rainer
 #'
 #' @importFrom methods is
+#'
+#' @examples
+#' a <- function() {
+#'     if (sample(0:1, 1) == 0)
+#'         stop("A, got a 0")
+#'     1
+#' }
+#' set.seed(123)
+#' res <- retry(a(), ntimes = 5L)
 #'
 #' @export
 retry <- function(expr, ntimes = 5L, sleep_mult = 0L) {
