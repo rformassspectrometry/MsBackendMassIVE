@@ -1,6 +1,10 @@
 # Changelog
 
-## MsBackendMassIVE 0.1
+## MsBackendMassIVE 0.99
+
+### Changers in 0.99.0
+
+- Fix bug in ftp url encoding.
 
 ### Changes in 0.1.5
 

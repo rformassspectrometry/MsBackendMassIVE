@@ -3,11 +3,14 @@
 **Package**:
 *[MsBackendMassIVE](https://bioconductor.org/packages/3.23/MsBackendMassIVE)*\
 **Authors**: Gabriele Tomè \[aut, cre\] (ORCID:
-<https://orcid.org/0000-0002-3976-6068>), Philippine Louail \[aut\]
-(ORCID: <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer
-\[aut\] (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-03-30 08:34:05.432108\
-**Compiled**: Mon Mar 30 09:11:43 2026
+<https://orcid.org/0000-0002-3976-6068>, fnd: MetaRbolomics4Galaxy
+project (CUP: D53C25001030003) co-funded by the Autonomous Province of
+Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
+Philippine Louail \[aut\] (ORCID:
+<https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
+(ORCID: <https://orcid.org/0000-0002-6977-7147>)\
+**Last modified:** 2026-04-01 07:26:10.837876\
+**Compiled**: Wed Apr 1 08:06:48 2026
 
 ## Introduction
 
