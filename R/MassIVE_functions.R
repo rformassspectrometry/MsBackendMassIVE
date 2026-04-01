@@ -234,7 +234,9 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
                                      paste0(api_z_volume, massiveId, "/", f),
                                      paste0(fpath, f))
                          ## URLencode for file name with spaces
-                         URLencode(u)
+                         gsub("%3A", ":",
+                            gsub("%2F", "/",
+                                URLencode(u, reserved = TRUE)))
                      }, FUN.VALUE = character(1), USE.NAMES = FALSE)
 
     ## Save files in the folder
@@ -368,7 +370,7 @@ massive_cached_data_files <- function(massiveId = character(),
 #'
 #' @importMethodsFrom BiocFileCache bfcrpath bfcmeta<-
 #'
-#' @importFrom utils capture.output
+#' @importFrom utils capture.output URLencode
 #'
 #' @noRd
 .massive_data_files <- function(massiveId = character(),
@@ -393,16 +395,20 @@ massive_cached_data_files <- function(massiveId = character(),
     api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
     ffiles <- vapply(dfiles,
                      function(f) {
-                         ifelse(grepl("^ccms_peak", f),
-                                paste0(api_z_volume, massiveId, "/", f),
-                                paste0(fpath, f))
+                         u <- ifelse(grepl("^ccms_peak", f),
+                                     paste0(api_z_volume, massiveId, "/", f),
+                                     paste0(fpath, f))
+                         ## URLencode for file name with spaces
+                         gsub("%3A", ":",
+                            gsub("%2F", "/",
+                                URLencode(u, reserved = TRUE)))
                      }, FUN.VALUE = character(1), USE.NAMES = FALSE)
 
     ## Cache files
     bfc <- BiocFileCache()
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
-                                           ":elapsed"),
+                                           ":elapsed, :rate"),
                            total = length(ffiles), clear = FALSE)
     lfiles <- unlist(lapply(ffiles, function(z) {
         pb$tick()
