@@ -193,3 +193,7 @@ test_that("massive_param_file works", {
     expect_true(length(res) == 2)
 
 })
+
+test_that(".sleep_mult works", {
+    expect_equal(.sleep_mult(), 7L)
+})
