@@ -166,7 +166,7 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
                          html_elements("input[value^='ftp:']") |>
                          html_attr("value"),
                      sleep_mult = .sleep_mult(),
-                     retry_on = "resolve host name|open the connection")
+                     retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
         stop("Failed to connect to MassIVE. No internet connection? ",
              "Does the data set \"", x, "\" exist?\n - ", e$message,
@@ -260,7 +260,7 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
         invisible(capture.output(suppressMessages(
             retry(download.file(url = z, destfile = dest, mode = "wb"),
                   sleep_mult = .sleep_mult(),
-                  retry_on = "resolve host name|open the connection"))))
+                  retry_on = .RETRY_ON_PATTERN))))
     })
 }
 
@@ -304,7 +304,7 @@ massive_param_file <- function(massiveId = character(),
         pb$tick()
         ## Get and parse the xml file
         xml <- retry(read_xml(z), sleep_mult = .sleep_mult(),
-                     retry_on = "resolve host name|open the connection")
+                     retry_on = .RETRY_ON_PATTERN)
         xml_parsed <- xml_find_all(xml, "//parameter")
         df <- data.frame("ParameterName" = unlist(xml_attrs(xml_parsed)),
                          "Value" = xml_text(xml_parsed))
@@ -426,7 +426,7 @@ massive_cached_data_files <- function(massiveId = character(),
         invisible(capture.output(suppressMessages(
             f <- retry(bfcrpath(bfc, z, fname = "exact"),
                        sleep_mult = .sleep_mult(),
-                       retry_on = "resolve host name|open the connection"))))
+                       retry_on = .RETRY_ON_PATTERN))))
         f
     }))
 
@@ -493,3 +493,8 @@ massive_delete_cache <- function(massiveId = character()) {
 .sleep_mult <- function() {
     as.integer(getOption("massive.sleep_mult", default = 7L))
 }
+
+
+## "resolve"    missing internet connection
+## "connection" server not reachable
+.RETRY_ON_PATTERN <- "resolve|connection"
