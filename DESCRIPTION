@@ -34,6 +34,7 @@ Imports:
     BiocFileCache,
     S4Vectors,
     methods,
+    MsCoreUtils (>= 1.23.9),
     progress
 Suggests:
     testthat,

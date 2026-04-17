@@ -70,6 +70,8 @@ NULL
 #'
 #' @importFrom utils read.csv
 #'
+#' @importFrom MsCoreUtils retry
+#'
 #' @rdname GNPS2-utils
 #'
 #' @export
@@ -85,14 +87,16 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
     tryCatch({
         res <- retry(
             GET(api, query = params),
-            sleep_mult = .sleep_mult())
+            sleep_mult = .sleep_mult(),
+            retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
         stop("Failed to connect to GNPS2 dataset. No internet connection? - ",
              e$message,
              call. = FALSE)
     })
     project_anno <- retry(read.csv(text = content(res, as = "text")),
-                          sleep_mult = .sleep_mult())
+                          sleep_mult = .sleep_mult(),
+                          retry_on = .RETRY_ON_PATTERN)
     ## Check query as a correct id
     if(!nrow(project_anno))
         stop("No MS data files found in GNPS2 dataset. Does the data set \"",
@@ -112,6 +116,8 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
 
 #' @importFrom httr GET content
 #'
+#' @importFrom MsCoreUtils retry
+#'
 #' @rdname GNPS2-utils
 #'
 #' @export
@@ -123,7 +129,8 @@ gnps2_usi_download_link <- function(usi = character()) {
     tryCatch({
         res <- retry(
             GET(url, query = params),
-            sleep_mult = .sleep_mult())
+            sleep_mult = .sleep_mult(),
+            retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
         stop("Failed to connect to GNPS2 dataset. No internet connection? - ",
              e$message,

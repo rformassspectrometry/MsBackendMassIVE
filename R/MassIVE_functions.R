@@ -150,6 +150,8 @@ NULL
 
 #' @importFrom rvest read_html html_elements html_attr
 #'
+#' @importFrom MsCoreUtils retry
+#'
 #' @rdname MassIVE-utils
 #'
 #' @export
@@ -163,7 +165,8 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
         res <- retry(read_html(url) |>
                          html_elements("input[value^='ftp:']") |>
                          html_attr("value"),
-                     sleep_mult = .sleep_mult())
+                     sleep_mult = .sleep_mult(),
+                     retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
         stop("Failed to connect to MassIVE. No internet connection? ",
              "Does the data set \"", x, "\" exist?\n - ", e$message,
@@ -198,6 +201,8 @@ massive_list_files <- function(x = character(), pattern = NULL) {
 #' @importFrom progress progress_bar
 #'
 #' @importFrom utils capture.output URLencode download.file
+#'
+#' @importFrom MsCoreUtils retry
 #'
 #' @export
 massive_download_file <- function(massiveId = character(), pattern = "*",
@@ -254,7 +259,8 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
         }
         invisible(capture.output(suppressMessages(
             retry(download.file(url = z, destfile = dest, mode = "wb"),
-                  sleep_mult = .sleep_mult()))))
+                  sleep_mult = .sleep_mult(),
+                  retry_on = .RETRY_ON_PATTERN))))
     })
 }
 
@@ -263,6 +269,8 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
 #' @importFrom progress progress_bar
 #'
 #' @importFrom xml2 read_xml xml_find_all xml_attrs xml_text
+#'
+#' @importFrom MsCoreUtils retry
 #'
 #' @export
 massive_param_file <- function(massiveId = character(),
@@ -295,7 +303,8 @@ massive_param_file <- function(massiveId = character(),
     res <- lapply(ffiles, function(z) {
         pb$tick()
         ## Get and parse the xml file
-        xml <- retry(read_xml(z), sleep_mult = .sleep_mult())
+        xml <- retry(read_xml(z), sleep_mult = .sleep_mult(),
+                     retry_on = .RETRY_ON_PATTERN)
         xml_parsed <- xml_find_all(xml, "//parameter")
         df <- data.frame("ParameterName" = unlist(xml_attrs(xml_parsed)),
                          "Value" = xml_text(xml_parsed))
@@ -372,6 +381,8 @@ massive_cached_data_files <- function(massiveId = character(),
 #'
 #' @importFrom utils capture.output URLencode
 #'
+#' @importFrom MsCoreUtils retry
+#'
 #' @noRd
 .massive_data_files <- function(massiveId = character(),
                                 pattern = "mzML$|CDF$|mzXML$",
@@ -414,7 +425,8 @@ massive_cached_data_files <- function(massiveId = character(),
         pb$tick()
         invisible(capture.output(suppressMessages(
             f <- retry(bfcrpath(bfc, z, fname = "exact"),
-                       sleep_mult = .sleep_mult()))))
+                       sleep_mult = .sleep_mult(),
+                       retry_on = .RETRY_ON_PATTERN))))
         f
     }))
 
@@ -476,3 +488,13 @@ massive_delete_cache <- function(massiveId = character()) {
         }
     }
 }
+
+#' @noRd
+.sleep_mult <- function() {
+    as.integer(getOption("massive.sleep_mult", default = 7L))
+}
+
+
+## "resolve"    missing internet connection
+## "connection" server not reachable
+.RETRY_ON_PATTERN <- "resolve|connection"
