@@ -18,5 +18,3 @@
   [`backendRequiredSpectraVariables(`*`<MsBackendMassIVE>`*`)`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
   [`massive_sync()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
   : MsBackend representing MS data from MassIVE
-- [`retry()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/retry.md)
-  : Retry expression on failure
