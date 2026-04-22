@@ -27,7 +27,6 @@ Depends:
     R (>= 4.2.0),
     Spectra (>= 1.15.12)
 Imports:
-    rvest,
     httr,
     xml2,
     ProtGenerics,
@@ -35,7 +34,9 @@ Imports:
     S4Vectors,
     methods,
     MsCoreUtils (>= 1.23.9),
-    progress
+    progress,
+    stringr,
+    jsonlite
 Suggests:
     testthat,
     rmarkdown,

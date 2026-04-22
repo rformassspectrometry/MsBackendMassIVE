@@ -83,8 +83,7 @@ test_that("massive_ftp_path works", {
 
     res <- massive_ftp_path("MSV000080547", mustWork = FALSE)
     expect_true(grepl("^ftp://", res))
-    expect_true(grepl("MSV000080547/$", res))
-
+    expect_true(grepl("MSV000080547$", res))
 })
 
 test_that("massive_list_files works", {

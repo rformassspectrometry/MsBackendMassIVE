@@ -63,7 +63,8 @@ test_that("gnps2_usi_download_link works", {
     }
 
     with_mocked_bindings("GET" = mock_GET, {
-        expect_error(gnps2_query("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
+        expect_error(gnps2_usi_download_link(
+                            usi = "mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
                      "Failed to connect to GNPS2 dataset")
     })
 

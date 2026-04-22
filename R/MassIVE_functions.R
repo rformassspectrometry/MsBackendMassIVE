@@ -155,9 +155,11 @@
 NULL
 
 
-#' @importFrom rvest read_html html_elements html_attr
+#' @importFrom jsonlite fromJSON
 #'
 #' @importFrom MsCoreUtils retry
+#'
+#' @importFrom stringr str_replace
 #'
 #' @rdname MassIVE-utils
 #'
@@ -166,20 +168,22 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
     if (length(x) != 1L)
         stop("'x' has to be a single ID.")
 
-    url <- paste0("https://massive.ucsd.edu/ProteoSAFe/",
-                  "dataset.jsp?accession=", x)
+    url <- paste0("https://massive.ucsd.edu/ProteoSAFe/proxi/v0.1/datasets/", x)
     tryCatch({
-        res <- retry(read_html(url) |>
-                         html_elements("input[value^='ftp:']") |>
-                         html_attr("value"),
+        res <- retry(grep("^ftp://", fromJSON(url)$datasetLink$value,
+                          value = TRUE),
                      sleep_mult = .sleep_mult(),
                      retry_on = .RETRY_ON_PATTERN,
-                     ntimes = 3L)
+                     ntimes = 3L, warningsAsErrors = TRUE)
     }, error = function(e) {
         stop("Failed to connect to MassIVE. No internet connection? ",
              "Does the data set \"", x, "\" exist?\n - ", e$message,
              call. = FALSE)
     })
+
+    if (grepl("massive.ucsd.edu", res))
+        res <- str_replace(res, pattern = "massive.ucsd.edu",
+                            replacement = "massive-ftp.ucsd.edu")
 
     if (mustWork)
         massive_list_files(x)
@@ -245,7 +249,7 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
                      function(f) {
                          u <- ifelse(grepl("^ccms_peak", f),
                                      paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, f))
+                                     paste0(fpath, "/", f))
                          ## URLencode for file name with spaces
                          gsub("%3A", ":",
                             gsub("%2F", "/",
@@ -302,7 +306,7 @@ massive_param_file <- function(massiveId = character(),
     }
 
     ## Prepare ftp link
-    ffiles <- paste0(fpath, dfiles)
+    ffiles <- paste0(fpath, "/", dfiles)
 
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
@@ -426,7 +430,7 @@ massive_cached_data_files <- function(massiveId = character(),
                      function(f) {
                          u <- ifelse(grepl("^ccms_peak", f),
                                      paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, f))
+                                     paste0(fpath, "/", f))
                          ## URLencode for file name with spaces
                          gsub("%3A", ":",
                             gsub("%2F", "/",
