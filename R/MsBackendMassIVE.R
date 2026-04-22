@@ -130,7 +130,7 @@
 #' ## files and subsequently load and represent them in R.
 #'
 #' be <- backendInitialize(MsBackendMassIVE(), "MSV000080547",
-#'                         filePattern = "1.mzML$")
+#'                         filePattern = "11.mzML$")
 #' be
 #'
 #' ## The `massive_sync()` function can be used to ensure that all data files

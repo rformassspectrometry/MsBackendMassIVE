@@ -63,6 +63,10 @@
 #'   `data.frame` with 2 columns (Parameter Name, Value). Use `fileName` to
 #'   parse additional `xml` files in the data.set.
 #'
+#' - `massive_number_files()`: return the number of data files in a specified
+#'   MassIVE data set. Use `pattern` to filter files by name using a regular
+#'   expression, default: `pattern = "mzML$|CDF$|cdf$|mzXML$"`.
+#'
 #' - `massive_delete_cache()`: removes all local content for the MassIVE
 #'   data set with ID `massiveId`. This will delete eventually present
 #'   locally cached data files for the specified data set. This does not
@@ -99,16 +103,17 @@
 #'     does not exist or if the folder can not be accessed (e.g. if no internet
 #'     connection is available).
 #'
-#' @param pattern for `massive_list_files()`, `massive_sync_data_files()` and
-#'     `massive_cached_data_files()`: `character(1)` defining a pattern
-#'     to filter the file names, such as `pattern = "mzML$"` to retrieve the
-#'     file names of all files of the data set (i.e., files with extension
-#'     `"mzML"`). This parameter is passed to the [grepl()] function.
+#' @param pattern for `massive_list_files()`, `massive_sync_data_files()`,
+#'     `massive_cached_data_files()`, `massive_donwload_file()`, and
+#'     `massive_number_files()`: `character(1)` defining a pattern to filter
+#'     the file names, such as `pattern = "mzML$"` to retrieve the file names
+#'     of all files of the data set (i.e., files with extension `"mzML"`). This
+#'     parameter is passed to the [grepl()] function.
 #'
-#' @param fileName for `massive_sync_data_files()` and
-#'     `massive_cached_data_files()`: optional `character`
-#'     defining the names of specific data files of a data set that should be
-#'     downloaded and cached.
+#' @param fileName for `massive_sync_data_files()`,
+#'     `massive_cached_data_files()` and `massive_download_file()`: optional
+#'     `character` defining the names of specific data files of a data set that
+#'     should be downloaded and cached.
 #'
 #' @param path for `massive_download_file()`: optional `character` defining the
 #'     directory where download the files.
@@ -125,7 +130,9 @@
 #'   data set's base ftp directory.
 #' - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
 #'   `data.frame` with the MassIVE ID, the name(s) and remote and
-#'   local file names of the synchronized data files.
+#'   local file names of the synchronized data files
+#' - For `massive_number_files()`: `integer(1)` with the number of data files
+#'   in the data set.
 #'
 #' @author Johannes Rainer, Philippine Louail, Gabriele Tomè
 #'
@@ -166,7 +173,8 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
                          html_elements("input[value^='ftp:']") |>
                          html_attr("value"),
                      sleep_mult = .sleep_mult(),
-                     retry_on = .RETRY_ON_PATTERN)
+                     retry_on = .RETRY_ON_PATTERN,
+                     ntimes = 3L)
     }, error = function(e) {
         stop("Failed to connect to MassIVE. No internet connection? ",
              "Does the data set \"", x, "\" exist?\n - ", e$message,
@@ -319,6 +327,16 @@ massive_param_file <- function(massiveId = character(),
     res
 }
 
+#' @rdname MassIVE-utils
+#'
+#' @export
+massive_number_files <- function(massiveId = character(),
+                                 pattern = "mzML$|CDF$|cdf$|mzXML$") {
+    if(length(massiveId) != 1)
+        stop("Provide a single MassIVE ID")
+
+    length(massive_list_files(massiveId, pattern))
+}
 
 ################################################################################
 ##

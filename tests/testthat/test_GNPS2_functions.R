@@ -24,11 +24,9 @@ test_that("gnps2_query works", {
                  'SELECT * FROM filename WHERE dataset IN ("MSV000123456")',
                  fixed = TRUE)
 
-    Sys.sleep(1)
     res <- gnps2_query("MSV000080547")
     expect_true(is.data.frame(res))
 
-    Sys.sleep(1)
     res <- gnps2_query(c("MSV000083058", "MSV000080547"))
     expect_true(is.data.frame(res))
 

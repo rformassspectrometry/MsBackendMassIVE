@@ -85,10 +85,6 @@ for our test data set.
 massive_ftp_path("MSV000080547", mustWork = FALSE)
 ```
 
-```{r, echo = FALSE}
-Sys.sleep(4)
-```
-
 MS data files in supported formats (mzML, CDF, mzXML) can be directly loaded
 using the `MsBackendMassIVE` backend into R as a `Spectra` object
 (`MsBackendMassIVE` directly extends *Spectra*'s `MsBackendMzR` backend and
@@ -138,10 +134,6 @@ a `MsBackendMassIVE` and is useful if, for example, locally cached files were
 deleted. The function checks if all data files of the backend are available
 locally and eventually downloads and caches missing files.
 
-```{r, echo = FALSE}
-Sys.sleep(4)
-```
-
 ```{r}
 massive_sync(s@backend)
 ```
@@ -189,6 +181,15 @@ prm <- massive_param_file("MSV000080547")
 head(prm)
 ```
 
+The `massive_number_files()` function returns the number of files in a MassIVE
+data set. By default, only MS data files (mzML, CDF, mzXML) are counted,
+but this can be changed by providing a different pattern to the `pattern`
+parameter.
+
+```{r}
+massive_number_files("MSV000080547")
+```
+
 The `massive_download_file()` function allows to download any file of an
 experiment (directly, i.e., without caching). As an example we download below a
 docx file to a temporary folder.
@@ -209,6 +210,16 @@ from the datasetcache.
 ```{r}
 res <- gnps2_query("MSV000083058")
 head(res)
+```
+
+Via the `gnps2_query()` function, it is also possible to compute the total size
+of data files in a MassIVE data set. To this end, the `filepath_pattern`
+parameter can be used to restrict the query to specific files.
+
+```{r}
+files_info <- gnps2_query("MSV000083058", filepath_pattern = "mzML$")
+size_gb <- round(sum(files_info$size)/(2^30), 2)
+message("Total size of mzML files in data set MSV000083058: ", size_gb, " GB")
 ```
 
 The `gnps2_usi_download_link()` returns a fully qualified link to a data file
