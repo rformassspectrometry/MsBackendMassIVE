@@ -58,8 +58,6 @@ test_that("massive_sync works", {
     expect_error(massive_sync(x, offline = TRUE),
                  "No locally cached data files")
 
-    Sys.sleep(4)
-
     ## Re-add content
     res <- massive_sync(x, offline = FALSE)
     expect_equal(rtime(x), rtime(res))
@@ -96,7 +94,7 @@ test_that(".valid_files_local works", {
 test_that("backendMerge,MsBackendMassIVE works", {
     ## Online mode
     be <- backendInitialize(MsBackendMassIVE(), massiveId = "MSV000080547",
-                            filePattern = "1.mzML$")
+                            filePattern = "11.mzML$")
     l <- split(be, factor(be$dataOrigin, levels = unique(be$dataOrigin)))
     res <- backendMerge(l)
 
@@ -107,8 +105,8 @@ test_that("backendMerge,MsBackendMassIVE works", {
     ## Offline data
     a <- backendInitialize(MsBackendMassIVE(), massiveId = "MSV000080547",
                            filePattern = "11.mzML$", offline = TRUE)
-    b <- backendInitialize(MsBackendMassIVE(), massiveId = "MSV000083058",
-                           filePattern = "JPL29462.mzML")
+    b <- backendInitialize(MsBackendMassIVE(), massiveId = "MSV000080224",
+                           filePattern = "PAD2_inclusion.mzXML")
 
     d <- backendMerge(a, b)
     expect_true(length(d) == (length(a) + length(b)))

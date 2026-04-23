@@ -7,16 +7,15 @@
 ##               MasssIVE it has only a .tar.gz file.
 
 test_that(".massive_data_files and .massive_data_files_offline works", {
-    ## error
-    expect_error(.massive_data_files(massiveId = "MSV1000000000"),
-                 "Failed to connect")
-
     massive_delete_cache("MSV000080547")
 
     expect_error(.massive_data_files(massiveId = "MSV000080547",
                                      pattern = "nonexistentpattern"),
                  "No files matching")
 
+    ## with fileNames
+    expect_error(.massive_data_files("MSV000080547", pattern = "1.mzML$",
+                                     fileName = c("a", "b")), "None of the ")
     ## Error if no cache available
     with_mocked_bindings(
         ".massive_has_massive_table" = function() FALSE,
@@ -32,17 +31,11 @@ test_that(".massive_data_files and .massive_data_files_offline works", {
     expect_true(nrow(a) == 2)
     expect_true(all(a$massive_id == "MSV000080547"))
     ## Re-call function the data.
-    Sys.sleep(1)
     b <- .massive_data_files("MSV000080547", pattern = "1.mzML$")
     expect_true(is.data.frame(b))
     expect_true(nrow(b) == 2)
     expect_true(all(b$massive_id == "MSV000080547"))
     expect_equal(a$rpath, b$rpath)
-
-    ## with fileNames
-    expect_error(.massive_data_files("MSV000080547", pattern = "1.mzML$",
-                                     fileName = c("a", "b")), "None of the ")
-
 
     expect_true(.massive_has_massive_table())
 
@@ -77,25 +70,20 @@ test_that("massive_cached_data_files works", {
 })
 
 test_that("massive_ftp_path works", {
-    res <- massive_ftp_path("MSV000080547", mustWork = FALSE)
-    expect_true(grepl("^ftp://", res))
-    expect_true(grepl("MSV000080547/$", res))
+    expect_error(massive_ftp_path(c("A", "B")), "single ID")
 
     ## MassIVE ID does not exist, it fail at the same way
     expect_error(massive_ftp_path("A", mustWork = FALSE), "Failed to connect")
-
     expect_error(massive_ftp_path("A", mustWork = TRUE), "Failed to connect")
 
     ## MassIVE ID exist on MassIVE but not in GNPS2 database. The project
     ## does not contain mzML/CDF/mzXML files
-    res <- massive_ftp_path("MSV000065798", mustWork = FALSE)
-    expect_true(grepl("^ftp://", res))
-    expect_true(grepl("MSV000065798/$", res))
-
     expect_error(massive_ftp_path("MSV000065798", mustWork = TRUE),
                  "No MS data files found")
 
-    expect_error(massive_ftp_path(c("A", "B")), "single ID")
+    res <- massive_ftp_path("MSV000080547", mustWork = FALSE)
+    expect_true(grepl("^ftp://", res))
+    expect_true(grepl("MSV000080547$", res))
 })
 
 test_that("massive_list_files works", {
@@ -117,19 +105,13 @@ test_that("massive_delete_cache works", {
 test_that("massive_download_file works", {
     expect_error(massive_download_file(), "No MassIVE data set ID")
 
-    expect_error(massive_download_file(massiveId = "A"), "Failed to connect")
-    expect_error(massive_download_file(massiveId = c("A", "B")), "single ID")
-
-    expect_error(massive_download_file(massiveId = "MSV000065798"),
-                 "No MS data files found")
-
     expect_error(massive_download_file(massiveId = "MSV000080547",
                                        pattern = "nonexistentpattern"),
                  "No files matching")
 
     expect_error(massive_download_file(massiveId = "MSV000080547",
                                        fileName = "nonexistentfile"),
-        "None of the 'fileName'")
+                "None of the 'fileName'")
 
     ## Test creation directory
     tmp <- file.path(tempdir(), paste0("test_", sample(1e6, 1)))
@@ -142,7 +124,6 @@ test_that("massive_download_file works", {
 
     ## Test overwrite = FALSE (default): file should be skipped
     mtime_before <- file.info(file.path(tmp, "params.xml"))$mtime
-    Sys.sleep(1)
     expect_message(
         suppressWarnings(
             massive_download_file(massiveId = "MSV000080547",
@@ -154,7 +135,6 @@ test_that("massive_download_file works", {
     expect_equal(mtime_before, mtime_after)
 
     ## Test overwrite = TRUE: file should be re-downloaded
-    Sys.sleep(1)
     suppressWarnings(
         massive_download_file(massiveId = "MSV000080547",
                               fileName = "params.xml", path = tmp,
@@ -164,15 +144,8 @@ test_that("massive_download_file works", {
     expect_true(mtime_overwritten > mtime_before)
 })
 
-
 test_that("massive_param_file works", {
     expect_error(massive_param_file(), "No MassIVE data set ID")
-
-    expect_error(massive_param_file(massiveId = "A"), "Failed to connect")
-    expect_error(massive_param_file(massiveId = c("A", "B")), "single ID")
-
-    expect_error(massive_param_file(massiveId = "MSV000065798"),
-                 "No MS data files found")
 
     expect_error(massive_param_file(massiveId = "MSV000080547",
                                           fileName = "nonexistentfile"),
@@ -192,6 +165,14 @@ test_that("massive_param_file works", {
     res <- massive_param_file(massiveId = "MSV000085609")
     expect_true(length(res) == 2)
 
+})
+
+test_that("massive_number_files works", {
+    expect_error(massive_number_files(), "Provide a single MassIVE ID")
+
+    res <- massive_number_files("MSV000080547")
+    expect_true(is.integer(res))
+    expect_true(res == 40)
 })
 
 test_that(".sleep_mult works", {

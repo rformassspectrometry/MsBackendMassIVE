@@ -6,6 +6,7 @@
 \alias{massive_list_files}
 \alias{massive_download_file}
 \alias{massive_param_file}
+\alias{massive_number_files}
 \alias{massive_sync_data_files}
 \alias{massive_cached_data_files}
 \alias{massive_delete_cache}
@@ -24,6 +25,11 @@ massive_download_file(
 )
 
 massive_param_file(massiveId = character(), fileName = "params.xml")
+
+massive_number_files(
+  massiveId = character(),
+  pattern = "mzML$|CDF$|cdf$|mzXML$"
+)
 
 massive_sync_data_files(
   massiveId = character(),
@@ -49,19 +55,20 @@ of the path should be verified or not. By default (with
 does not exist or if the folder can not be accessed (e.g. if no internet
 connection is available).}
 
-\item{pattern}{for \code{massive_list_files()}, \code{massive_sync_data_files()} and
-\code{massive_cached_data_files()}: \code{character(1)} defining a pattern
-to filter the file names, such as \code{pattern = "mzML$"} to retrieve the
-file names of all files of the data set (i.e., files with extension
-\code{"mzML"}). This parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
+\item{pattern}{for \code{massive_list_files()}, \code{massive_sync_data_files()},
+\code{massive_cached_data_files()}, \code{massive_donwload_file()}, and
+\code{massive_number_files()}: \code{character(1)} defining a pattern to filter
+the file names, such as \code{pattern = "mzML$"} to retrieve the file names
+of all files of the data set (i.e., files with extension \code{"mzML"}). This
+parameter is passed to the \code{\link[=grepl]{grepl()}} function.}
 
 \item{massiveId}{\code{character(1)} with the ID of a single MassIVE data
 set/experiment.}
 
-\item{fileName}{for \code{massive_sync_data_files()} and
-\code{massive_cached_data_files()}: optional \code{character}
-defining the names of specific data files of a data set that should be
-downloaded and cached.}
+\item{fileName}{for \code{massive_sync_data_files()},
+\code{massive_cached_data_files()} and \code{massive_download_file()}: optional
+\code{character} defining the names of specific data files of a data set that
+should be downloaded and cached.}
 
 \item{path}{for \code{massive_download_file()}: optional \code{character} defining the
 directory where download the files.}
@@ -78,7 +85,9 @@ data set on the MassIVE ftp server.
 data set's base ftp directory.
 \item For \code{massive_sync_data_files()} and \code{massive_cached_data_files()}: a
 \code{data.frame} with the MassIVE ID, the name(s) and remote and
-local file names of the synchronized data files.
+local file names of the synchronized data files
+\item For \code{massive_number_files()}: \code{integer(1)} with the number of data files
+in the data set.
 }
 }
 \description{
@@ -135,6 +144,9 @@ destination directory for downloaded files.
 the data set. The function return a \code{data.frame} or a \code{list} of
 \code{data.frame} with 2 columns (Parameter Name, Value). Use \code{fileName} to
 parse additional \code{xml} files in the data.set.
+\item \code{massive_number_files()}: return the number of data files in a specified
+MassIVE data set. Use \code{pattern} to filter files by name using a regular
+expression, default: \code{pattern = "mzML$|CDF$|cdf$|mzXML$"}.
 \item \code{massive_delete_cache()}: removes all local content for the MassIVE
 data set with ID \code{massiveId}. This will delete eventually present
 locally cached data files for the specified data set. This does not

@@ -63,6 +63,10 @@
 #'   `data.frame` with 2 columns (Parameter Name, Value). Use `fileName` to
 #'   parse additional `xml` files in the data.set.
 #'
+#' - `massive_number_files()`: return the number of data files in a specified
+#'   MassIVE data set. Use `pattern` to filter files by name using a regular
+#'   expression, default: `pattern = "mzML$|CDF$|cdf$|mzXML$"`.
+#'
 #' - `massive_delete_cache()`: removes all local content for the MassIVE
 #'   data set with ID `massiveId`. This will delete eventually present
 #'   locally cached data files for the specified data set. This does not
@@ -99,16 +103,17 @@
 #'     does not exist or if the folder can not be accessed (e.g. if no internet
 #'     connection is available).
 #'
-#' @param pattern for `massive_list_files()`, `massive_sync_data_files()` and
-#'     `massive_cached_data_files()`: `character(1)` defining a pattern
-#'     to filter the file names, such as `pattern = "mzML$"` to retrieve the
-#'     file names of all files of the data set (i.e., files with extension
-#'     `"mzML"`). This parameter is passed to the [grepl()] function.
+#' @param pattern for `massive_list_files()`, `massive_sync_data_files()`,
+#'     `massive_cached_data_files()`, `massive_donwload_file()`, and
+#'     `massive_number_files()`: `character(1)` defining a pattern to filter
+#'     the file names, such as `pattern = "mzML$"` to retrieve the file names
+#'     of all files of the data set (i.e., files with extension `"mzML"`). This
+#'     parameter is passed to the [grepl()] function.
 #'
-#' @param fileName for `massive_sync_data_files()` and
-#'     `massive_cached_data_files()`: optional `character`
-#'     defining the names of specific data files of a data set that should be
-#'     downloaded and cached.
+#' @param fileName for `massive_sync_data_files()`,
+#'     `massive_cached_data_files()` and `massive_download_file()`: optional
+#'     `character` defining the names of specific data files of a data set that
+#'     should be downloaded and cached.
 #'
 #' @param path for `massive_download_file()`: optional `character` defining the
 #'     directory where download the files.
@@ -125,7 +130,9 @@
 #'   data set's base ftp directory.
 #' - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
 #'   `data.frame` with the MassIVE ID, the name(s) and remote and
-#'   local file names of the synchronized data files.
+#'   local file names of the synchronized data files
+#' - For `massive_number_files()`: `integer(1)` with the number of data files
+#'   in the data set.
 #'
 #' @author Johannes Rainer, Philippine Louail, Gabriele Tomè
 #'
@@ -148,9 +155,11 @@
 NULL
 
 
-#' @importFrom rvest read_html html_elements html_attr
+#' @importFrom jsonlite fromJSON
 #'
 #' @importFrom MsCoreUtils retry
+#'
+#' @importFrom stringr str_replace
 #'
 #' @rdname MassIVE-utils
 #'
@@ -159,19 +168,22 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
     if (length(x) != 1L)
         stop("'x' has to be a single ID.")
 
-    url <- paste0("https://massive.ucsd.edu/ProteoSAFe/",
-                  "dataset.jsp?accession=", x)
+    url <- paste0("https://massive.ucsd.edu/ProteoSAFe/proxi/v0.1/datasets/", x)
     tryCatch({
-        res <- retry(read_html(url) |>
-                         html_elements("input[value^='ftp:']") |>
-                         html_attr("value"),
+        res <- retry(grep("^ftp://", fromJSON(url)$datasetLink$value,
+                          value = TRUE),
                      sleep_mult = .sleep_mult(),
-                     retry_on = .RETRY_ON_PATTERN)
+                     retry_on = .RETRY_ON_PATTERN,
+                     ntimes = 3L, warningsAsErrors = TRUE)
     }, error = function(e) {
         stop("Failed to connect to MassIVE. No internet connection? ",
              "Does the data set \"", x, "\" exist?\n - ", e$message,
              call. = FALSE)
     })
+
+    if (grepl("massive.ucsd.edu", res))
+        res <- str_replace(res, pattern = "massive.ucsd.edu",
+                            replacement = "massive-ftp.ucsd.edu")
 
     if (mustWork)
         massive_list_files(x)
@@ -237,7 +249,7 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
                      function(f) {
                          u <- ifelse(grepl("^ccms_peak", f),
                                      paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, f))
+                                     paste0(fpath, "/", f))
                          ## URLencode for file name with spaces
                          gsub("%3A", ":",
                             gsub("%2F", "/",
@@ -294,7 +306,7 @@ massive_param_file <- function(massiveId = character(),
     }
 
     ## Prepare ftp link
-    ffiles <- paste0(fpath, dfiles)
+    ffiles <- paste0(fpath, "/", dfiles)
 
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
@@ -319,6 +331,16 @@ massive_param_file <- function(massiveId = character(),
     res
 }
 
+#' @rdname MassIVE-utils
+#'
+#' @export
+massive_number_files <- function(massiveId = character(),
+                                 pattern = "mzML$|CDF$|cdf$|mzXML$") {
+    if(length(massiveId) != 1)
+        stop("Provide a single MassIVE ID")
+
+    length(massive_list_files(massiveId, pattern))
+}
 
 ################################################################################
 ##
@@ -408,7 +430,7 @@ massive_cached_data_files <- function(massiveId = character(),
                      function(f) {
                          u <- ifelse(grepl("^ccms_peak", f),
                                      paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, f))
+                                     paste0(fpath, "/", f))
                          ## URLencode for file name with spaces
                          gsub("%3A", ":",
                             gsub("%2F", "/",

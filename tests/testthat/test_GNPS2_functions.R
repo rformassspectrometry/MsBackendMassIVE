@@ -24,11 +24,9 @@ test_that("gnps2_query works", {
                  'SELECT * FROM filename WHERE dataset IN ("MSV000123456")',
                  fixed = TRUE)
 
-    Sys.sleep(1)
     res <- gnps2_query("MSV000080547")
     expect_true(is.data.frame(res))
 
-    Sys.sleep(1)
     res <- gnps2_query(c("MSV000083058", "MSV000080547"))
     expect_true(is.data.frame(res))
 
@@ -65,7 +63,8 @@ test_that("gnps2_usi_download_link works", {
     }
 
     with_mocked_bindings("GET" = mock_GET, {
-        expect_error(gnps2_query("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
+        expect_error(gnps2_usi_download_link(
+                            usi = "mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
                      "Failed to connect to GNPS2 dataset")
     })
 
