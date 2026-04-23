@@ -110,6 +110,20 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
                                        project_anno$filepath), ]
     if(!nrow(project_anno))
         stop("No files found with corresponding `filepath` pattern.")
+
+    ## If there are MS duplicated files, keep only the files in "ccms_peak" dir
+    project_anno$filename <- basename(project_anno$filepath)
+    if(any(duplicated(project_anno$filename))) {
+        dup_files <- project_anno[duplicated(project_anno$filename), "filename"]
+        if(any(grepl("^ccms_peak",
+                     project_anno[project_anno$filename %in% dup_files,
+                                  "filepath"]))) {
+            idx <- c(which(!(project_anno$filename %in% dup_files)),
+                     which(grepl("^ccms_peak", project_anno$filepath) &
+                           project_anno$filename %in% dup_files))
+            project_anno <- project_anno[idx, ]
+        }
+    }
     project_anno
 }
 
