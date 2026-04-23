@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-04-17 06:58:57.90974\
-**Compiled**: Fri Apr 17 07:53:01 2026
+**Last modified:** 2026-04-23 06:46:56.468621\
+**Compiled**: Thu Apr 23 07:04:18 2026
 
 ## Introduction
 
@@ -63,13 +63,6 @@ Below we list all files from the MassIVE data set with the ID
 ``` r
 
 library(MsBackendMassIVE)
-```
-
-    ## Registered S3 method overwritten by 'bit64':
-    ##   method          from 
-    ##   print.bitstring tools
-
-``` r
 
 #' List files of a MassIVE data set
 all_files <- massive_list_files("MSV000080547")
@@ -93,7 +86,7 @@ function to return the FTP path for our test data set.
 massive_ftp_path("MSV000080547", mustWork = FALSE)
 ```
 
-    ## [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547/"
+    ## [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547"
 
 MS data files in supported formats (mzML, CDF, mzXML) can be directly
 loaded using the `MsBackendMassIVE` backend into R as a `Spectra` object
@@ -258,7 +251,7 @@ res
 ```
 
     ##     rid   massive_id                                        data_file
-    ## 1 BFC12 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
+    ## 1 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
     ##                                                         rpath
     ## 1 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML
 
@@ -275,7 +268,7 @@ massive_cached_data_files()
 ```
 
     ##     rid   massive_id                                        data_file
-    ## 3 BFC12 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
+    ## 3 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
     ##                                                         rpath
     ## 3 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML
 
@@ -317,6 +310,19 @@ head(prm)
     ## 4                                                           PRIDE:0000398
     ## 5                                                                       a
     ## 6                                                         P Dorrestein|||
+
+The
+[`massive_number_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
+function returns the number of files in a MassIVE data set. By default,
+only MS data files (mzML, CDF, mzXML) are counted, but this can be
+changed by providing a different pattern to the `pattern` parameter.
+
+``` r
+
+massive_number_files("MSV000080547")
+```
+
+    ## [1] 40
 
 The
 [`massive_download_file()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -389,6 +395,21 @@ head(res)
     ## 5           0                NA               NA             No
     ## 6           0                NA               NA             No
 
+Via the
+[`gnps2_query()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
+function, it is also possible to compute the total size of data files in
+a MassIVE data set. To this end, the `filepath_pattern` parameter can be
+used to restrict the query to specific files.
+
+``` r
+
+files_info <- gnps2_query("MSV000083058", filepath_pattern = "mzML$")
+size_gb <- round(sum(files_info$size)/(2^30), 2)
+message("Total size of mzML files in data set MSV000083058: ", size_gb, " GB")
+```
+
+    ## Total size of mzML files in data set MSV000083058: 3.48 GB
+
 The
 [`gnps2_usi_download_link()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
 returns a fully qualified link to a data file (listed in the GNPS2
@@ -408,7 +429,7 @@ gnps2_usi_download_link(res$usi[4])
 sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-04-12 r89873)
+    ## R Under development (unstable) (2026-04-19 r89916)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 
@@ -433,13 +454,13 @@ sessionInfo()
     ## 
     ## other attached packages:
     ## [1] MsBackendMassIVE_0.99.0 Spectra_1.21.7          BiocParallel_1.45.0    
-    ## [4] S4Vectors_0.49.1-1      BiocGenerics_0.57.0     generics_0.1.4         
+    ## [4] S4Vectors_0.49.2        BiocGenerics_0.57.1     generics_0.1.4         
     ## [7] BiocStyle_2.39.0       
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] xfun_0.57              bslib_0.10.0           httr2_1.2.2           
     ##  [4] htmlwidgets_1.6.4      Biobase_2.71.0         vctrs_0.7.3           
-    ##  [7] tools_4.7.0            curl_7.0.0             parallel_4.7.0        
+    ##  [7] tools_4.7.0            curl_7.1.0             parallel_4.7.0        
     ## [10] tibble_3.3.1           RSQLite_2.4.6          cluster_2.1.8.2       
     ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.2.1   
     ## [16] dbplyr_2.5.2           desc_1.4.3             lifecycle_1.0.5       
@@ -448,17 +469,17 @@ sessionInfo()
     ## [25] clue_0.3-68            htmltools_0.5.9        sass_0.4.10           
     ## [28] yaml_2.3.12            pkgdown_2.2.0.9000     pillar_1.11.1         
     ## [31] crayon_1.5.3           jquerylib_0.1.4        MASS_7.3-65           
-    ## [34] cachem_1.1.0           MetaboCoreUtils_1.19.2 rvest_1.0.5           
-    ## [37] tidyselect_1.2.1       digest_0.6.39          stringi_1.8.7         
-    ## [40] purrr_1.2.2            dplyr_1.2.1            bookdown_0.46         
-    ## [43] fastmap_1.2.0          cli_3.6.6              magrittr_2.0.5        
-    ## [46] withr_3.0.2            prettyunits_1.2.0      filelock_1.0.3        
-    ## [49] rappdirs_0.3.4         bit64_4.6.0-1          rmarkdown_2.31        
-    ## [52] httr_1.4.8             bit_4.6.0              otel_0.2.0            
-    ## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
-    ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.45.0        
-    ## [61] BiocFileCache_3.1.0    rlang_1.2.0            Rcpp_1.1.1-1          
-    ## [64] glue_1.8.1             DBI_1.3.0              mzR_2.45.1            
-    ## [67] selectr_0.5-1          xml2_1.5.2             BiocManager_1.30.27   
-    ## [70] jsonlite_2.0.0         R6_2.6.1               systemfonts_1.3.2     
-    ## [73] fs_2.0.1               ProtGenerics_1.43.0    MsCoreUtils_1.23.9
+    ## [34] cachem_1.1.0           MetaboCoreUtils_1.19.3 tidyselect_1.2.1      
+    ## [37] digest_0.6.39          stringi_1.8.7          purrr_1.2.2           
+    ## [40] dplyr_1.2.1            bookdown_0.46          fastmap_1.2.0         
+    ## [43] cli_3.6.6              magrittr_2.0.5         withr_3.0.2           
+    ## [46] prettyunits_1.2.0      filelock_1.0.3         rappdirs_0.3.4        
+    ## [49] bit64_4.8.0            rmarkdown_2.31         httr_1.4.8            
+    ## [52] bit_4.6.0              otel_0.2.0             ragg_1.5.2            
+    ## [55] hms_1.1.4              memoise_2.0.1          evaluate_1.0.5        
+    ## [58] knitr_1.51             IRanges_2.45.0         BiocFileCache_3.1.0   
+    ## [61] rlang_1.2.0            Rcpp_1.1.1-1           glue_1.8.1            
+    ## [64] DBI_1.3.0              mzR_2.45.1             xml2_1.5.2            
+    ## [67] BiocManager_1.30.27    jsonlite_2.0.0         R6_2.6.1              
+    ## [70] systemfonts_1.3.2      fs_2.1.0               ProtGenerics_1.43.0   
+    ## [73] MsCoreUtils_1.23.9

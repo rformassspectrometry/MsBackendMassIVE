@@ -5,6 +5,11 @@
 ### Changers in 0.99.0
 
 - Fix bug in ftp url encoding.
+- Improve performance
+  [`massive_ftp_path()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
+- Add
+  [`massive_number_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
+- Update examples and tests
 
 ### Changes in 0.1.5
 

@@ -207,26 +207,25 @@ massive_list_files("MSV000080547")
 ## files and subsequently load and represent them in R.
 
 be <- backendInitialize(MsBackendMassIVE(), "MSV000080547",
-                        filePattern = "1.mzML$")
+                        filePattern = "11.mzML$")
 be
-#> MsBackendMassIVE with 4322 spectra
+#> MsBackendMassIVE with 2161 spectra
 #>        msLevel     rtime scanIndex
 #>      <integer> <numeric> <integer>
-#> 1            1     0.497         1
-#> 2            1     0.829         2
-#> 3            1     1.159         3
-#> 4            1     1.488         4
-#> 5            1     1.818         5
+#> 1            1     0.515         1
+#> 2            1     0.845         2
+#> 3            1     1.175         3
+#> 4            1     1.513         4
+#> 5            1     1.857         5
 #> ...        ...       ...       ...
-#> 4318         1   718.439      2157
-#> 4319         1   718.769      2158
-#> 4320         1   719.099      2159
-#> 4321         1   719.429      2160
-#> 4322         1   719.759      2161
+#> 2157         1   718.439      2157
+#> 2158         1   718.769      2158
+#> 2159         1   719.099      2159
+#> 2160         1   719.429      2160
+#> 2161         1   719.759      2161
 #>  ... 36 more variables/columns.
 #> 
 #> file(s):
-#> AG_spiked_sample1.mzML
 #> AG_spiked_sample11.mzML
 
 ## The `massive_sync()` function can be used to ensure that all data files

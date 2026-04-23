@@ -61,6 +61,11 @@ data set/experiment from MassIVE.
   `data.frame` with 2 columns (Parameter Name, Value). Use `fileName` to
   parse additional `xml` files in the data.set.
 
+- `massive_number_files()`: return the number of data files in a
+  specified MassIVE data set. Use `pattern` to filter files by name
+  using a regular expression, default:
+  `pattern = "mzML$|CDF$|cdf$|mzXML$"`.
+
 - `massive_delete_cache()`: removes all local content for the MassIVE
   data set with ID `massiveId`. This will delete eventually present
   locally cached data files for the specified data set. This does not
@@ -82,6 +87,11 @@ massive_download_file(
 )
 
 massive_param_file(massiveId = character(), fileName = "params.xml")
+
+massive_number_files(
+  massiveId = character(),
+  pattern = "mzML$|CDF$|cdf$|mzXML$"
+)
 
 massive_sync_data_files(
   massiveId = character(),
@@ -115,11 +125,12 @@ massive_delete_cache(massiveId = character())
 
 - pattern:
 
-  for `massive_list_files()`, `massive_sync_data_files()` and
-  `massive_cached_data_files()`: `character(1)` defining a pattern to
-  filter the file names, such as `pattern = "mzML$"` to retrieve the
-  file names of all files of the data set (i.e., files with extension
-  `"mzML"`). This parameter is passed to the
+  for `massive_list_files()`, `massive_sync_data_files()`,
+  `massive_cached_data_files()`, `massive_donwload_file()`, and
+  `massive_number_files()`: `character(1)` defining a pattern to filter
+  the file names, such as `pattern = "mzML$"` to retrieve the file names
+  of all files of the data set (i.e., files with extension `"mzML"`).
+  This parameter is passed to the
   [`grepl()`](https://rdrr.io/r/base/grep.html) function.
 
 - massiveId:
@@ -128,9 +139,10 @@ massive_delete_cache(massiveId = character())
 
 - fileName:
 
-  for `massive_sync_data_files()` and `massive_cached_data_files()`:
-  optional `character` defining the names of specific data files of a
-  data set that should be downloaded and cached.
+  for `massive_sync_data_files()`, `massive_cached_data_files()` and
+  `massive_download_file()`: optional `character` defining the names of
+  specific data files of a data set that should be downloaded and
+  cached.
 
 - path:
 
@@ -153,7 +165,10 @@ massive_delete_cache(massiveId = character())
 
 - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
   `data.frame` with the MassIVE ID, the name(s) and remote and local
-  file names of the synchronized data files.
+  file names of the synchronized data files
+
+- For `massive_number_files()`: `integer(1)` with the number of data
+  files in the data set.
 
 ## Details
 
@@ -184,7 +199,7 @@ Johannes Rainer, Philippine Louail, Gabriele Tomè
 
 ## Get the FTP path to the data set MSV000080547
 massive_ftp_path("MSV000080547")
-#> [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547/"
+#> [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547"
 
 ## Retrieve available files (and directories) for the data set MSV000080547
 massive_list_files("MSV000080547")

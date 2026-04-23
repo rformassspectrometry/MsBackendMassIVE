@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
 MetaRbolomics4Galaxy project (CUP: D53C25001030003) co-funded by the
 Autonomous Province of Bolzano under the Joint Projects South
 Tyrol–Germany 2025 program.), Philippine Louail [aut] (ORCID: <a href="https://orcid.org/0009-0007-5429-6846" class="external-link uri">https://orcid.org/0009-0007-5429-6846</a>), Johannes Rainer
-[aut] (ORCID: <a href="https://orcid.org/0000-0002-6977-7147" class="external-link uri">https://orcid.org/0000-0002-6977-7147</a>)<br><strong>Last modified:</strong> 2026-04-17 06:58:57.90974<br><strong>Compiled</strong>: Fri Apr 17 07:53:01 2026</p>
+[aut] (ORCID: <a href="https://orcid.org/0000-0002-6977-7147" class="external-link uri">https://orcid.org/0000-0002-6977-7147</a>)<br><strong>Last modified:</strong> 2026-04-23 06:46:56.468621<br><strong>Compiled</strong>: Thu Apr 23 07:04:18 2026</p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -123,12 +123,9 @@ experiments.</p>
 <p>Below we list all files from the MassIVE data set with the ID
 <em>MSV000080547</em>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsBackendMassIVE" class="external-link">MsBackendMassIVE</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Registered S3 method overwritten by 'bit64':</span></span>
-<span><span class="co">##   method          from </span></span>
-<span><span class="co">##   print.bitstring tools</span></span></code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' List files of a MassIVE data set</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/MsBackendMassIVE" class="external-link">MsBackendMassIVE</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#' List files of a MassIVE data set</span></span>
 <span><span class="va">all_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MassIVE-utils.html">massive_list_files</a></span><span class="op">(</span><span class="st">"MSV000080547"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">all_files</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "ccms_parameters/params.xml"                      </span></span>
@@ -140,9 +137,9 @@ experiments.</p>
 <p>These files are accessible through the FTP path associated with the
 MassIVE data set. Below we use the <code><a href="../reference/MassIVE-utils.html">massive_ftp_path()</a></code>
 function to return the FTP path for our test data set.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_ftp_path</a></span><span class="op">(</span><span class="st">"MSV000080547"</span>, mustWork <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547/"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547"</span></span></code></pre>
 <p>MS data files in supported formats (mzML, CDF, mzXML) can be directly
 loaded using the <code>MsBackendMassIVE</code> backend into R as a
 <code>Spectra</code> object (<code>MsBackendMassIVE</code> directly
@@ -153,7 +150,7 @@ our example below we restrict to a few data files to reduce the amount
 of data that needs to be downloaded. To this end we define a pattern
 matching the file name of only some data files using the
 <code>filePattern</code> parameter.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RforMassSpectrometry/Spectra" class="external-link">Spectra</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#' Load MS data files of one data set</span></span>
@@ -192,7 +189,7 @@ the spectra variables and mass peak data values that are provided by the
 MS data files also additional information related to the MassIVE data
 set are available as specific <em>spectra variables</em>. We list all
 available spectra variables of the data set below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">spectraVariables</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "msLevel"                  "rtime"                   </span></span>
 <span><span class="co">##  [3] "acquisitionNum"           "scanIndex"               </span></span>
@@ -217,7 +214,7 @@ available spectra variables of the data set below.</p>
 <code>"data_file"</code> providing the MassIVE ID of the data set and
 the original data file name in the MassIVE FTP server for each
 individual spectrum.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html" class="external-link">spectraData</a></span><span class="op">(</span><span class="va">s</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"massive_id"</span>, <span class="st">"data_file"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## DataFrame with 4322 rows and 2 columns</span></span>
 <span><span class="co">##        massive_id              data_file</span></span>
@@ -233,7 +230,7 @@ individual spectrum.</p>
 <span><span class="co">## 4320 MSV000080547 peak/Quant_assesment..</span></span>
 <span><span class="co">## 4321 MSV000080547 peak/Quant_assesment..</span></span>
 <span><span class="co">## 4322 MSV000080547 peak/Quant_assesment..</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">data_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"</span></span>
 <span><span class="co">## [4] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"</span></span></code></pre>
@@ -243,7 +240,7 @@ individual spectrum.</p>
 cached files were deleted. The function checks if all data files of the
 backend are available locally and eventually downloads and caches
 missing files.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/MsBackendMassIVE.html">massive_sync</a></span><span class="op">(</span><span class="va">s</span><span class="op">@</span><span class="va">backend</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## MsBackendMassIVE with 4322 spectra</span></span>
 <span><span class="co">##        msLevel     rtime scanIndex</span></span>
@@ -273,12 +270,12 @@ returns a <code>data.frame</code> with the storage location and other
 information of the cached file(s). Below we use this function to
 retrieve the local storage information on one of the data files of the
 MassIVE data set <em>MSV000080547</em>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MassIVE-utils.html">massive_sync_data_files</a></span><span class="op">(</span><span class="st">"MSV000080547"</span>,</span>
 <span>                               fileName <span class="op">=</span> <span class="st">"AG_spiked_sample11.mzML"</span><span class="op">)</span></span>
 <span><span class="va">res</span></span></code></pre></div>
 <pre><code><span><span class="co">##     rid   massive_id                                        data_file</span></span>
-<span><span class="co">## 1 BFC12 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
+<span><span class="co">## 1 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
 <span><span class="co">##                                                         rpath</span></span>
 <span><span class="co">## 1 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML</span></span></code></pre>
 <p>The <code><a href="../reference/MassIVE-utils.html">massive_cached_data_files()</a></code> function can be used to
@@ -286,10 +283,10 @@ inspect and list all locally cached MassIVE data files. This function
 does not require an active internet connection since only local content
 is queried. With the default settings, a <code>data.frame</code> with
 all available data files is returned.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_cached_data_files</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     rid   massive_id                                        data_file</span></span>
-<span><span class="co">## 3 BFC12 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
+<span><span class="co">## 3 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML</span></span>
 <span><span class="co">##                                                         rpath</span></span>
 <span><span class="co">## 3 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML</span></span></code></pre>
 <p>Locally cached files for a MassIVE data set can be removed using the
@@ -308,7 +305,7 @@ file from a MassIVE data set that provides general, experiment-specific
 information. These are retrieved as a two-column <code>data.frame</code>
 with the first column containing the names of the data set properties,
 and the second their values.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MassIVE-utils.html">massive_param_file</a></span><span class="op">(</span><span class="st">"MSV000080547"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">prm</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          ParameterName</span></span>
@@ -325,6 +322,13 @@ and the second their values.</p>
 <span><span class="co">## 4                                                           PRIDE:0000398</span></span>
 <span><span class="co">## 5                                                                       a</span></span>
 <span><span class="co">## 6                                                         P Dorrestein|||</span></span></code></pre>
+<p>The <code><a href="../reference/MassIVE-utils.html">massive_number_files()</a></code> function returns the number
+of files in a MassIVE data set. By default, only MS data files (mzML,
+CDF, mzXML) are counted, but this can be changed by providing a
+different pattern to the <code>pattern</code> parameter.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/MassIVE-utils.html">massive_number_files</a></span><span class="op">(</span><span class="st">"MSV000080547"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 40</span></span></code></pre>
 <p>The <code><a href="../reference/MassIVE-utils.html">massive_download_file()</a></code> function allows to download
 any file of an experiment (directly, i.e., without caching). As an
 example we download below a docx file to a temporary folder.</p>
@@ -376,19 +380,28 @@ for a MassIVE data set from the datasetcache.</p>
 <span><span class="co">## 4           0                NA               NA             No</span></span>
 <span><span class="co">## 5           0                NA               NA             No</span></span>
 <span><span class="co">## 6           0                NA               NA             No</span></span></code></pre>
+<p>Via the <code><a href="../reference/GNPS2-utils.html">gnps2_query()</a></code> function, it is also possible to
+compute the total size of data files in a MassIVE data set. To this end,
+the <code>filepath_pattern</code> parameter can be used to restrict the
+query to specific files.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">files_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GNPS2-utils.html">gnps2_query</a></span><span class="op">(</span><span class="st">"MSV000083058"</span>, filepath_pattern <span class="op">=</span> <span class="st">"mzML$"</span><span class="op">)</span></span>
+<span><span class="va">size_gb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">files_info</span><span class="op">$</span><span class="va">size</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="fl">2</span><span class="op">^</span><span class="fl">30</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Total size of mzML files in data set MSV000083058: "</span>, <span class="va">size_gb</span>, <span class="st">" GB"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Total size of mzML files in data set MSV000083058: 3.48 GB</span></span></code></pre>
 <p>The <code><a href="../reference/GNPS2-utils.html">gnps2_usi_download_link()</a></code> returns a fully qualified
 link to a data file (listed in the GNPS2 datasetcache), based on it’s
 USI.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/GNPS2-utils.html">gnps2_usi_download_link</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">usi</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://massiveproxy.gnps2.org/massiveproxy/MSV000083058/other/Table%201%20SAINT3788_TripleTOF.xlsx"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R Under development (unstable) (2026-04-12 r89873)</span></span>
+<pre><code><span><span class="co">## R Under development (unstable) (2026-04-19 r89916)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>
@@ -413,13 +426,13 @@ USI.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">## [1] MsBackendMassIVE_0.99.0 Spectra_1.21.7          BiocParallel_1.45.0    </span></span>
-<span><span class="co">## [4] S4Vectors_0.49.1-1      BiocGenerics_0.57.0     generics_0.1.4         </span></span>
+<span><span class="co">## [4] S4Vectors_0.49.2        BiocGenerics_0.57.1     generics_0.1.4         </span></span>
 <span><span class="co">## [7] BiocStyle_2.39.0       </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] xfun_0.57              bslib_0.10.0           httr2_1.2.2           </span></span>
 <span><span class="co">##  [4] htmlwidgets_1.6.4      Biobase_2.71.0         vctrs_0.7.3           </span></span>
-<span><span class="co">##  [7] tools_4.7.0            curl_7.0.0             parallel_4.7.0        </span></span>
+<span><span class="co">##  [7] tools_4.7.0            curl_7.1.0             parallel_4.7.0        </span></span>
 <span><span class="co">## [10] tibble_3.3.1           RSQLite_2.4.6          cluster_2.1.8.2       </span></span>
 <span><span class="co">## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.2.1   </span></span>
 <span><span class="co">## [16] dbplyr_2.5.2           desc_1.4.3             lifecycle_1.0.5       </span></span>
@@ -428,20 +441,20 @@ USI.</p>
 <span><span class="co">## [25] clue_0.3-68            htmltools_0.5.9        sass_0.4.10           </span></span>
 <span><span class="co">## [28] yaml_2.3.12            pkgdown_2.2.0.9000     pillar_1.11.1         </span></span>
 <span><span class="co">## [31] crayon_1.5.3           jquerylib_0.1.4        MASS_7.3-65           </span></span>
-<span><span class="co">## [34] cachem_1.1.0           MetaboCoreUtils_1.19.2 rvest_1.0.5           </span></span>
-<span><span class="co">## [37] tidyselect_1.2.1       digest_0.6.39          stringi_1.8.7         </span></span>
-<span><span class="co">## [40] purrr_1.2.2            dplyr_1.2.1            bookdown_0.46         </span></span>
-<span><span class="co">## [43] fastmap_1.2.0          cli_3.6.6              magrittr_2.0.5        </span></span>
-<span><span class="co">## [46] withr_3.0.2            prettyunits_1.2.0      filelock_1.0.3        </span></span>
-<span><span class="co">## [49] rappdirs_0.3.4         bit64_4.6.0-1          rmarkdown_2.31        </span></span>
-<span><span class="co">## [52] httr_1.4.8             bit_4.6.0              otel_0.2.0            </span></span>
-<span><span class="co">## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         </span></span>
-<span><span class="co">## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.45.0        </span></span>
-<span><span class="co">## [61] BiocFileCache_3.1.0    rlang_1.2.0            Rcpp_1.1.1-1          </span></span>
-<span><span class="co">## [64] glue_1.8.1             DBI_1.3.0              mzR_2.45.1            </span></span>
-<span><span class="co">## [67] selectr_0.5-1          xml2_1.5.2             BiocManager_1.30.27   </span></span>
-<span><span class="co">## [70] jsonlite_2.0.0         R6_2.6.1               systemfonts_1.3.2     </span></span>
-<span><span class="co">## [73] fs_2.0.1               ProtGenerics_1.43.0    MsCoreUtils_1.23.9</span></span></code></pre>
+<span><span class="co">## [34] cachem_1.1.0           MetaboCoreUtils_1.19.3 tidyselect_1.2.1      </span></span>
+<span><span class="co">## [37] digest_0.6.39          stringi_1.8.7          purrr_1.2.2           </span></span>
+<span><span class="co">## [40] dplyr_1.2.1            bookdown_0.46          fastmap_1.2.0         </span></span>
+<span><span class="co">## [43] cli_3.6.6              magrittr_2.0.5         withr_3.0.2           </span></span>
+<span><span class="co">## [46] prettyunits_1.2.0      filelock_1.0.3         rappdirs_0.3.4        </span></span>
+<span><span class="co">## [49] bit64_4.8.0            rmarkdown_2.31         httr_1.4.8            </span></span>
+<span><span class="co">## [52] bit_4.6.0              otel_0.2.0             ragg_1.5.2            </span></span>
+<span><span class="co">## [55] hms_1.1.4              memoise_2.0.1          evaluate_1.0.5        </span></span>
+<span><span class="co">## [58] knitr_1.51             IRanges_2.45.0         BiocFileCache_3.1.0   </span></span>
+<span><span class="co">## [61] rlang_1.2.0            Rcpp_1.1.1-1           glue_1.8.1            </span></span>
+<span><span class="co">## [64] DBI_1.3.0              mzR_2.45.1             xml2_1.5.2            </span></span>
+<span><span class="co">## [67] BiocManager_1.30.27    jsonlite_2.0.0         R6_2.6.1              </span></span>
+<span><span class="co">## [70] systemfonts_1.3.2      fs_2.1.0               ProtGenerics_1.43.0   </span></span>
+<span><span class="co">## [73] MsCoreUtils_1.23.9</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
