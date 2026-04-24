@@ -41,4 +41,4 @@ This work was co-funded by *MetaRbolomics4Galaxy* project (CUP: D53C25001030003)
 financed by Autonomous Province of Bolzano under the framework of the *Joint
 Projects South Tyrol–Germany 2025* funding program.
 
-[funding](https://github.com/rformassspectrometry/MsBackendMassIVE/raw/main/man/figures/SuedDFG-60.png)
+![funding](https://github.com/rformassspectrometry/MsBackendMassIVE/raw/main/man/figures/SuedDFG-60.png)
