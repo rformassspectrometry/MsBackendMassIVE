@@ -9,6 +9,7 @@
   [`massive_ftp_path()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
 - Add
   [`massive_number_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
+- Fix bug handling duplicates files.
 - Update examples and tests
 
 ### Changes in 0.1.5

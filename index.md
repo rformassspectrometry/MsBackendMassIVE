@@ -36,3 +36,14 @@ guidelines](https://rformassspectrometry.github.io/RforMassSpectrometry/articles
 Also, please check the coding style guidelines in the
 [RforMassSpectrometry
 vignette](https://rformassspectrometry.github.io/RforMassSpectrometry/articles/RforMassSpectrometry.html).
+
+# Funding information
+
+This work was co-funded by *MetaRbolomics4Galaxy* project (CUP:
+D53C25001030003) financed by Autonomous Province of Bolzano under the
+framework of the *Joint Projects South Tyrol–Germany 2025* funding
+program.
+
+![funding](https://github.com/rformassspectrometry/MsBackendMassIVE/raw/main/man/figures/SuedDFG-60.png)
+
+funding

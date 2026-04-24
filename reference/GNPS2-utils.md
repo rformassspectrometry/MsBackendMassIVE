@@ -250,48 +250,48 @@ gnps2_query("MSV000080547")
 #> 39   3370409       3     MASSIVE           0           0                NA
 #> 40   3370378       3     MASSIVE           0           0                NA
 #> 41   3371940       3     MASSIVE           0           0                NA
-#>    instrument_model file_processed
-#> 1                NA             No
-#> 2                NA             No
-#> 3                NA             No
-#> 4                NA             No
-#> 5                NA             No
-#> 6                NA             No
-#> 7                NA             No
-#> 8                NA             No
-#> 9                NA             No
-#> 10               NA             No
-#> 11               NA             No
-#> 12               NA             No
-#> 13               NA             No
-#> 14               NA             No
-#> 15               NA             No
-#> 16               NA             No
-#> 17               NA             No
-#> 18               NA             No
-#> 19               NA             No
-#> 20               NA             No
-#> 21               NA             No
-#> 22               NA             No
-#> 23               NA             No
-#> 24               NA             No
-#> 25               NA             No
-#> 26               NA             No
-#> 27               NA             No
-#> 28               NA             No
-#> 29               NA             No
-#> 30               NA             No
-#> 31               NA             No
-#> 32               NA             No
-#> 33               NA             No
-#> 34               NA             No
-#> 35               NA             No
-#> 36               NA             No
-#> 37               NA             No
-#> 38               NA             No
-#> 39               NA             No
-#> 40               NA             No
-#> 41               NA             No
+#>    instrument_model file_processed                 filename
+#> 1                NA             No               params.xml
+#> 2                NA             No  AG_spiked_sample1.mzXML
+#> 3                NA             No AG_spiked_sample10.mzXML
+#> 4                NA             No AG_spiked_sample11.mzXML
+#> 5                NA             No AG_spiked_sample12.mzXML
+#> 6                NA             No AG_spiked_sample13.mzXML
+#> 7                NA             No AG_spiked_sample14.mzXML
+#> 8                NA             No AG_spiked_sample15.mzXML
+#> 9                NA             No AG_spiked_sample16.mzXML
+#> 10               NA             No AG_spiked_sample17.mzXML
+#> 11               NA             No AG_spiked_sample18.mzXML
+#> 12               NA             No AG_spiked_sample19.mzXML
+#> 13               NA             No  AG_spiked_sample2.mzXML
+#> 14               NA             No AG_spiked_sample20.mzXML
+#> 15               NA             No  AG_spiked_sample3.mzXML
+#> 16               NA             No  AG_spiked_sample4.mzXML
+#> 17               NA             No  AG_spiked_sample5.mzXML
+#> 18               NA             No  AG_spiked_sample6.mzXML
+#> 19               NA             No  AG_spiked_sample7.mzXML
+#> 20               NA             No  AG_spiked_sample8.mzXML
+#> 21               NA             No  AG_spiked_sample9.mzXML
+#> 22               NA             No   AG_spiked_sample1.mzML
+#> 23               NA             No  AG_spiked_sample10.mzML
+#> 24               NA             No  AG_spiked_sample11.mzML
+#> 25               NA             No  AG_spiked_sample12.mzML
+#> 26               NA             No  AG_spiked_sample13.mzML
+#> 27               NA             No  AG_spiked_sample14.mzML
+#> 28               NA             No  AG_spiked_sample15.mzML
+#> 29               NA             No  AG_spiked_sample16.mzML
+#> 30               NA             No  AG_spiked_sample17.mzML
+#> 31               NA             No  AG_spiked_sample18.mzML
+#> 32               NA             No  AG_spiked_sample19.mzML
+#> 33               NA             No   AG_spiked_sample2.mzML
+#> 34               NA             No  AG_spiked_sample20.mzML
+#> 35               NA             No   AG_spiked_sample3.mzML
+#> 36               NA             No   AG_spiked_sample4.mzML
+#> 37               NA             No   AG_spiked_sample5.mzML
+#> 38               NA             No   AG_spiked_sample6.mzML
+#> 39               NA             No   AG_spiked_sample7.mzML
+#> 40               NA             No   AG_spiked_sample8.mzML
+#> 41               NA             No   AG_spiked_sample9.mzML
 
 ## Get link for an USI
 gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")

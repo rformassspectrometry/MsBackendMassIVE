@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-04-24 08:40:55.695678\
-**Compiled**: Fri Apr 24 08:55:29 2026
+**Last modified:** 2026-04-24 11:08:16.109483\
+**Compiled**: Fri Apr 24 11:22:01 2026
 
 ## Introduction
 
@@ -394,6 +394,13 @@ head(res)
     ## 4           0                NA               NA             No
     ## 5           0                NA               NA             No
     ## 6           0                NA               NA             No
+    ##                           filename
+    ## 1                       params.xml
+    ## 2                   statistics.tsv
+    ## 3    README_Histones_P108_VS3.docx
+    ## 4 Table 1 SAINT3788_TripleTOF.xlsx
+    ## 5 Table 2 SAINT3788_TripleTOF.xlsx
+    ## 6 Table 3 SAINT3788_TripleTOF.xlsx
 
 Via the
 [`gnps2_query()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)
