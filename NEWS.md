@@ -5,6 +5,7 @@
 - Fix bug in ftp url encoding.
 - Improve performance `massive_ftp_path()`.
 - Add `massive_number_files()`.
+- Fix bug handling duplicates files.
 - Update examples and tests
 
 ## Changes in 0.1.5

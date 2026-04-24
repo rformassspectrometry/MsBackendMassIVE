@@ -89,6 +89,8 @@ test_that("massive_ftp_path works", {
 test_that("massive_list_files works", {
     expect_error(massive_list_files(c("MSV000083058", "MSV000080547")),
                  "Provide a single MassIVE ID")
+    res <- massive_list_files("MSV000093072")
+    expect_true(length(res) == 97)
 })
 
 test_that("massive_delete_cache works", {
