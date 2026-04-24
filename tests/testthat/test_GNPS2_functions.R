@@ -48,7 +48,7 @@ test_that("gnps2_query works", {
     expect_true(nrow(res) == 2)
 
     expect_warning(gnps2_query("MSV000093072"), "duplicated files")
-    res <- gnps2_query("MSV000093072")
+    res <- suppressWarnings(gnps2_query("MSV000093072"))
     expect_true(nrow(res) == 97)
 })
 
