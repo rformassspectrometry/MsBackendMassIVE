@@ -167,6 +167,7 @@ jobs:
 
           ## Manually install required packages
           BiocManager::install("mzR", dependencies = TRUE, ask = FALSE, update = FALSE)
+          BiocManager::install("RforMassSpectrometry/MsCoreUtils")
 
           message(paste('****', Sys.time(), 'force installation of selected packages ****'))
           BiocManager::install(c("BiocStyle", "rmarkdown", "magick", "Spectra"))
