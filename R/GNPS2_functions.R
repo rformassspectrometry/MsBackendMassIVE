@@ -118,6 +118,8 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
         if(any(grepl("^ccms_peak",
                      project_anno[project_anno$filename %in% dup_files,
                                   "filepath"]))) {
+            warning("Found ", length(dup_files), " duplicated files. Keep ",
+                    "only the duplicated files in 'ccms_peak' folder.")
             idx <- c(which(!(project_anno$filename %in% dup_files)),
                      which(grepl("^ccms_peak", project_anno$filepath) &
                            project_anno$filename %in% dup_files))

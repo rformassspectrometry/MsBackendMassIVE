@@ -46,6 +46,10 @@ test_that("gnps2_query works", {
     res <- gnps2_query("MSV000100512", filepath_pattern = "metadata")
     expect_true(is.data.frame(res))
     expect_true(nrow(res) == 2)
+
+    expect_warning(gnps2_query("MSV000093072"), "duplicated files")
+    res <- gnps2_query("MSV000093072")
+    expect_true(nrow(res) == 97)
 })
 
 test_that("gnps2_usi_download_link works", {
