@@ -59,7 +59,7 @@ data from proteomics and metabolomics experiments stored in the
 (Mass Spectrometry Interactive Virtual Environment) repository, a
 community resource developed by the NIH-funded Center for Computational
 Mass Spectrometry at UC San Diego. The backend directly extends the
-\link[Spectra:MsBackend]{Spectra::MsBackendMzR} backend from the \emph{Spectra} package and hence
+\link[Spectra:MsBackendMzR]{Spectra::MsBackendMzR} backend from the \emph{Spectra} package and hence
 supports MS data in mzML, netCDF and mzXML format. Data in other formats
 can not be loaded with \code{MsBackendMassIVE}.
 Upon initialization with the \code{backendInitialize()} method, the

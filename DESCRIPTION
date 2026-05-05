@@ -36,7 +36,8 @@ Imports:
     MsCoreUtils (>= 1.23.9),
     progress,
     stringr,
-    jsonlite
+    jsonlite,
+    rvest
 Suggests:
     testthat,
     rmarkdown,
@@ -50,4 +51,4 @@ BugReports: https://github.com/RforMassSpectrometry/MsBackendMassIVE/issues
 URL: https://github.com/RforMassSpectrometry/MsBackendMassIVE
 biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport, Proteomics
 Roxygen: list(markdown=TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
