@@ -1,7 +1,7 @@
 # Retrieve and Use Mass Spectrometry Data from MassIVE
 
 **Package**:
-*[MsBackendMassIVE](https://bioconductor.org/packages/3.23/MsBackendMassIVE)*\
+*[MsBackendMassIVE](https://bioconductor.org/packages/3.24/MsBackendMassIVE)*\
 **Authors**: Gabriele Tomè \[aut, cre\] (ORCID:
 <https://orcid.org/0000-0002-3976-6068>, fnd: MetaRbolomics4Galaxy
 project (CUP: D53C25001030003) co-funded by the Autonomous Province of
@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-04-24 11:08:16.109483\
-**Compiled**: Fri Apr 24 11:22:01 2026
+**Last modified:** 2026-05-14 13:28:45.494837\
+**Compiled**: Thu May 14 13:46:04 2026
 
 ## Introduction
 
@@ -31,7 +31,7 @@ enabling a direct and seamless integration of MS data from MassIVE into
 R-based analysis workflows. *MsBackendMassIVE* leverages on
 Bioconductor’s `r Biocpkg("BiocFileCache")` for caching remote data
 locally and provides a *MS data backend* for the
-*[Spectra](https://bioconductor.org/packages/3.23/Spectra)* package to
+*[Spectra](https://bioconductor.org/packages/3.24/Spectra)* package to
 enable loading and integrating cached MS data directly into R.
 
 ## Installation
@@ -131,7 +131,7 @@ s
 This call downloaded 2 files from the experiment into the local cache
 and loaded them as a `Spectra` object. The downloading and caching of
 the data is handled by Bioconductor’s
-*[BiocFileCache](https://bioconductor.org/packages/3.23/BiocFileCache)*.
+*[BiocFileCache](https://bioconductor.org/packages/3.24/BiocFileCache)*.
 The local cache can thus also be managed directly using functionality
 from that package. Any subsequent loading of the same data files will
 load the locally cached versions avoiding thus repetitive download of
@@ -436,7 +436,7 @@ gnps2_usi_download_link(res$usi[4])
 sessionInfo()
 ```
 
-    ## R Under development (unstable) (2026-04-19 r89916)
+    ## R version 4.6.0 (2026-04-24)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 
@@ -460,33 +460,33 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.99.0 Spectra_1.21.7          BiocParallel_1.45.0    
-    ## [4] S4Vectors_0.49.2        BiocGenerics_0.57.1     generics_0.1.4         
-    ## [7] BiocStyle_2.39.0       
+    ## [1] MsBackendMassIVE_0.99.0 Spectra_1.23.0          BiocParallel_1.47.0    
+    ## [4] S4Vectors_0.51.1        BiocGenerics_0.59.0     generics_0.1.4         
+    ## [7] BiocStyle_2.41.0       
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] xfun_0.57              bslib_0.10.0           httr2_1.2.2           
-    ##  [4] htmlwidgets_1.6.4      Biobase_2.71.0         vctrs_0.7.3           
-    ##  [7] tools_4.7.0            curl_7.1.0             parallel_4.7.0        
-    ## [10] tibble_3.3.1           RSQLite_2.4.6          cluster_2.1.8.2       
-    ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.2.1   
+    ##  [4] htmlwidgets_1.6.4      Biobase_2.73.1         vctrs_0.7.3           
+    ##  [7] tools_4.6.0            curl_7.1.0             parallel_4.6.0        
+    ## [10] tibble_3.3.1           RSQLite_3.52.0         cluster_2.1.8.2       
+    ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.4     
     ## [16] dbplyr_2.5.2           desc_1.4.3             lifecycle_1.0.5       
-    ## [19] stringr_1.6.0          compiler_4.7.0         textshaping_1.0.5     
+    ## [19] stringr_1.6.0          compiler_4.6.0         textshaping_1.0.5     
     ## [22] progress_1.2.3         codetools_0.2-20       ncdf4_1.24            
     ## [25] clue_0.3-68            htmltools_0.5.9        sass_0.4.10           
     ## [28] yaml_2.3.12            pkgdown_2.2.0.9000     pillar_1.11.1         
     ## [31] crayon_1.5.3           jquerylib_0.1.4        MASS_7.3-65           
-    ## [34] cachem_1.1.0           MetaboCoreUtils_1.19.3 tidyselect_1.2.1      
-    ## [37] digest_0.6.39          stringi_1.8.7          purrr_1.2.2           
-    ## [40] dplyr_1.2.1            bookdown_0.46          fastmap_1.2.0         
-    ## [43] cli_3.6.6              magrittr_2.0.5         withr_3.0.2           
-    ## [46] prettyunits_1.2.0      filelock_1.0.3         rappdirs_0.3.4        
-    ## [49] bit64_4.8.0            rmarkdown_2.31         httr_1.4.8            
-    ## [52] bit_4.6.0              otel_0.2.0             ragg_1.5.2            
-    ## [55] hms_1.1.4              memoise_2.0.1          evaluate_1.0.5        
-    ## [58] knitr_1.51             IRanges_2.45.0         BiocFileCache_3.1.0   
-    ## [61] rlang_1.2.0            Rcpp_1.1.1-1.1         glue_1.8.1            
-    ## [64] DBI_1.3.0              mzR_2.45.1             xml2_1.5.2            
-    ## [67] BiocManager_1.30.27    jsonlite_2.0.0         R6_2.6.1              
-    ## [70] systemfonts_1.3.2      fs_2.1.0               ProtGenerics_1.43.0   
-    ## [73] MsCoreUtils_1.23.10
+    ## [34] cachem_1.1.0           MetaboCoreUtils_1.21.1 rvest_1.0.5           
+    ## [37] tidyselect_1.2.1       digest_0.6.39          stringi_1.8.7         
+    ## [40] purrr_1.2.2            dplyr_1.2.1            bookdown_0.46         
+    ## [43] fastmap_1.2.0          cli_3.6.6              magrittr_2.0.5        
+    ## [46] withr_3.0.2            prettyunits_1.2.0      filelock_1.0.3        
+    ## [49] rappdirs_0.3.4         bit64_4.8.0            rmarkdown_2.31        
+    ## [52] httr_1.4.8             bit_4.6.0              otel_0.2.0            
+    ## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
+    ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.47.0        
+    ## [61] BiocFileCache_3.3.0    rlang_1.2.0            Rcpp_1.1.1-1.1        
+    ## [64] glue_1.8.1             DBI_1.3.0              mzR_2.47.0            
+    ## [67] xml2_1.5.2             BiocManager_1.30.27    jsonlite_2.0.0        
+    ## [70] R6_2.6.1               systemfonts_1.3.2      fs_2.1.0              
+    ## [73] ProtGenerics_1.45.0    MsCoreUtils_1.25.4
