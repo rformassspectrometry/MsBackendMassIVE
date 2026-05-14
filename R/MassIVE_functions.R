@@ -161,6 +161,8 @@ NULL
 #'
 #' @importFrom stringr str_replace
 #'
+#' @importFrom rvest read_html html_elements html_attr
+#'
 #' @rdname MassIVE-utils
 #'
 #' @export
@@ -168,22 +170,37 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
     if (length(x) != 1L)
         stop("'x' has to be a single ID.")
 
+    ## Method 1
     url <- paste0("https://massive.ucsd.edu/ProteoSAFe/proxi/v0.1/datasets/", x)
-    tryCatch({
-        res <- retry(grep("^ftp://", fromJSON(url)$datasetLink$value,
-                          value = TRUE),
-                     sleep_mult = .sleep_mult(),
-                     retry_on = .RETRY_ON_PATTERN,
-                     ntimes = 3L, warningsAsErrors = TRUE)
-    }, error = function(e) {
-        stop("Failed to connect to MassIVE. No internet connection? ",
-             "Does the data set \"", x, "\" exist?\n - ", e$message,
-             call. = FALSE)
-    })
+    res <- tryCatch({
+        retry(grep("^ftp://", fromJSON(url)$datasetLink$value,
+                value = TRUE),
+            sleep_mult = .sleep_mult(),
+            retry_on = .RETRY_ON_PATTERN,
+            ntimes = 3L, warningsAsErrors = TRUE)
+    }, error = function(e) {NULL})
 
-    if (grepl("massive.ucsd.edu", res))
-        res <- str_replace(res, pattern = "massive.ucsd.edu",
+    if (!is.null(res)) {
+        if (grepl("massive.ucsd.edu", res))
+            res <- str_replace(res, pattern = "massive.ucsd.edu",
                             replacement = "massive-ftp.ucsd.edu")
+    } else {
+        ## Method 2
+        url <- paste0("https://massive.ucsd.edu/ProteoSAFe/",
+                      "dataset.jsp?accession=", x)
+        tryCatch({
+            res <- retry(read_html(url) |>
+                            html_elements("input[value^='ftp:']") |>
+                            html_attr("value"),
+                        sleep_mult = .sleep_mult(),
+                        retry_on = .RETRY_ON_PATTERN,
+                        ntimes = 3L)
+        }, error = function(e) {
+            stop("Failed to connect to MassIVE. No internet connection? ",
+                "Does the data set \"", x, "\" exist?\n - ", e$message,
+                call. = FALSE)
+        })
+    }
 
     if (mustWork)
         massive_list_files(x)

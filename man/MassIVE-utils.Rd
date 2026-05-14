@@ -165,7 +165,7 @@ from the project-specific one to volume \code{z01}, which contains the
 \code{ccms_peak} folder for all projects. Each file is then downloaded from the
 MassIVE FTP server and cached locally. Files already present in the cache
 are not re-downloaded. Third, the cached local paths are passed to
-\code{\link[Spectra:MsBackend]{Spectra::MsBackendMzR()}} to read and index the spectral data. Two
+\code{\link[Spectra:MsBackendMzR]{Spectra::MsBackendMzR()}} to read and index the spectral data. Two
 additional per-spectrum variables are populated: \code{"massive_id"} and
 \code{"data_file"}. When \code{offline = TRUE}, the remote query is skipped and
 only previously cached content is used.
