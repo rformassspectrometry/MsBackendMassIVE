@@ -287,7 +287,14 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
             return(invisible(NULL))
         }
         invisible(capture.output(suppressMessages(
-            retry(download.file(url = z, destfile = dest, mode = "wb"),
+            retry(download.file(url = z, destfile = dest,
+                                method  = "curl",
+                                extra   = paste(
+                                "--ssl-reqd",
+                                "--ftp-pasv",
+                                "--insecure",
+                                "--connect-timeout 30"
+                                )),
                   sleep_mult = .sleep_mult(),
                   retry_on = .RETRY_ON_PATTERN))))
     })
@@ -298,6 +305,8 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
 #' @importFrom progress progress_bar
 #'
 #' @importFrom xml2 read_xml xml_find_all xml_attrs xml_text
+#'
+#' @importFrom httr2 request req_options req_perform resp_body_raw
 #'
 #' @importFrom MsCoreUtils retry
 #'
@@ -332,7 +341,13 @@ massive_param_file <- function(massiveId = character(),
     res <- lapply(ffiles, function(z) {
         pb$tick()
         ## Get and parse the xml file
-        xml <- retry(read_xml(z), sleep_mult = .sleep_mult(),
+        invisible(capture.output(suppressMessages(
+            res <- request(z) |>
+                    req_options(use_ssl = 3L, ftp_use_epsv = 1L,
+                                ssl_verifypeer = 0L, ssl_verifyhost = 0L,
+                                connecttimeout = 30L, timeout = 300L) |>
+                    req_perform())))
+        xml <- retry(read_xml(resp_body_raw(res)), sleep_mult = .sleep_mult(),
                      retry_on = .RETRY_ON_PATTERN)
         xml_parsed <- xml_find_all(xml, "//parameter")
         df <- data.frame("ParameterName" = unlist(xml_attrs(xml_parsed)),
@@ -455,6 +470,8 @@ massive_cached_data_files <- function(massiveId = character(),
                      }, FUN.VALUE = character(1), USE.NAMES = FALSE)
 
     ## Cache files
+    ssl_opts <- list(use_ssl = 3L, ftp_use_epsv = 1L, ssl_verifypeer = 0L,
+                     ssl_verifyhost = 0L, connecttimeout = 30L, timeout = 300L)
     bfc <- BiocFileCache()
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
@@ -463,7 +480,7 @@ massive_cached_data_files <- function(massiveId = character(),
     lfiles <- unlist(lapply(ffiles, function(z) {
         pb$tick()
         invisible(capture.output(suppressMessages(
-            f <- retry(bfcrpath(bfc, z, fname = "exact"),
+            f <- retry(bfcrpath(bfc, z, fname = "exact", config = ssl_opts),
                        sleep_mult = .sleep_mult(),
                        retry_on = .RETRY_ON_PATTERN))))
         f

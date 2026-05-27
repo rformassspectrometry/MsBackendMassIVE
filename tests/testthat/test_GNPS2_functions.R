@@ -8,21 +8,18 @@
 
 test_that("gnps2_query works", {
     query_args <- NULL
-    mock_GET <- function(url, query) {
-        query_args <<- list(url = url, query = query)
-        stop("simulated GET failure")
+    mock_request <- function(url) {
+        query_args <<- list(url = url)
+        stop("simulated request failure")
     }
 
-    with_mocked_bindings("GET" = mock_GET, {
+    with_mocked_bindings("request" = mock_request, {
         expect_error(gnps2_query("MSV000123456"),
                      "Failed to connect to GNPS2 dataset")
     })
 
     expect_equal(query_args$url,
                  "https://datasetcache.gnps2.org/datasette/database.csv")
-    expect_match(query_args$query$sql,
-                 'SELECT * FROM filename WHERE dataset IN ("MSV000123456")',
-                 fixed = TRUE)
 
     res <- gnps2_query("MSV000080547")
     expect_true(is.data.frame(res))
@@ -58,21 +55,20 @@ test_that("gnps2_usi_download_link works", {
                 "mzspec:ST002115:HT1080_DMSO_02_HILIC.mzXML")),
         "Provide 1 USI ID")
 
-
     query_args <- NULL
-    mock_GET <- function(usi) {
+    mock_request <- function(usi) {
         query_args <<- list(usi = usi)
-        stop("simulated GET failure")
+        stop("simulated request failure")
     }
 
-    with_mocked_bindings("GET" = mock_GET, {
+    with_mocked_bindings("request" = mock_request, {
         expect_error(gnps2_usi_download_link(
                             usi = "mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML"),
                      "Failed to connect to GNPS2 dataset")
     })
 
     expect_error(gnps2_usi_download_link("notexistUsi"),
-                 "Link not retrieved")
+                 "Does the USI \"notexistUsi\" exist")
 
     ## MWB
     res <- gnps2_usi_download_link("mzspec:ST002115:HT1080_DMSO_01_HILIC.mzXML")

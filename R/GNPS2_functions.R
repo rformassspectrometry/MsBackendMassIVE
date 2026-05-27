@@ -66,7 +66,8 @@
 #' gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
 NULL
 
-#' @importFrom httr GET content
+
+#' @importFrom httr2 request req_url_query req_perform resp_body_string
 #'
 #' @importFrom utils read.csv
 #'
@@ -85,8 +86,9 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
                                   'WHERE dataset IN (',
                                   paste0("\"", id, "\"", collapse = ","), ')'))
     tryCatch({
+        req <- request(api) |> req_url_query(!!!params)
         res <- retry(
-            GET(api, query = params),
+            req_perform(req),
             sleep_mult = .sleep_mult(),
             retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
@@ -94,7 +96,7 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
              e$message,
              call. = FALSE)
     })
-    project_anno <- retry(read.csv(text = content(res, as = "text")),
+    project_anno <- retry(read.csv(text = resp_body_string(res)),
                           sleep_mult = .sleep_mult(),
                           retry_on = .RETRY_ON_PATTERN)
     ## Check query as a correct id
@@ -130,7 +132,7 @@ gnps2_query <- function(id = character(), usi_pattern = "*",
 }
 
 
-#' @importFrom httr GET content
+#' @importFrom httr2 request req_url_query req_perform resp_body_string
 #'
 #' @importFrom MsCoreUtils retry
 #'
@@ -143,16 +145,16 @@ gnps2_usi_download_link <- function(usi = character()) {
     url <- "https://dashboard.gnps2.org/downloadlink"
     params <- list("usi"= usi)
     tryCatch({
+        req <- request(url) |> req_url_query(!!!params)
         res <- retry(
-            GET(url, query = params),
+            req_perform(req),
             sleep_mult = .sleep_mult(),
             retry_on = .RETRY_ON_PATTERN)
     }, error = function(e) {
-        stop("Failed to connect to GNPS2 dataset. No internet connection? - ",
-             e$message,
-             call. = FALSE)
+        stop("Failed to connect to GNPS2 dataset. No internet connection? ",
+             "Does the USI \"", usi, "\" exist? - ", e$message, call. = FALSE)
     })
-    link <- content(res, as = "text")
+    link <- resp_body_string(res)
     if(!grepl("^http|^ftp", link))
         stop("Link not retrieved. Does the USI ", usi, " exist?")
     link
