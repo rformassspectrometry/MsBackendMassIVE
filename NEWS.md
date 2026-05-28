@@ -1,6 +1,11 @@
 # MsBackendMassIVE 0.99
 
-## Changers in 0.99.0
+## Changes in 0.99.1
+
+- Update from `httr` to `httr2`.
+- Update Curl query to address the new policies of MassIVE based on FTP SSL.
+
+## Changes in 0.99.0
 
 - Fix bug in ftp url encoding.
 - Improve performance `massive_ftp_path()`.

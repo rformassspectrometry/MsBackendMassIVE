@@ -1,6 +1,6 @@
 Package: MsBackendMassIVE
 Title: Retrieve Mass Spectrometry Data from MassIVE
-Version: 0.99.0
+Version: 0.99.1
 Authors@R:
     c(person(given = "Gabriele", family = "Tomè",
              email = "gabriele.tome@eurac.edu",
@@ -27,7 +27,7 @@ Depends:
     R (>= 4.2.0),
     Spectra (>= 1.15.12)
 Imports:
-    httr,
+    httr2,
     xml2,
     ProtGenerics,
     BiocFileCache,
