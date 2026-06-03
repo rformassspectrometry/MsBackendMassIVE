@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-05-28 13:25:47.018482\
-**Compiled**: Thu May 28 13:45:39 2026
+**Last modified:** 2026-06-03 06:49:35.107599\
+**Compiled**: Wed Jun 3 07:06:52 2026
 
 ## Introduction
 
@@ -461,11 +461,11 @@ sessionInfo()
     ## 
     ## other attached packages:
     ## [1] MsBackendMassIVE_0.99.1 Spectra_1.23.0          BiocParallel_1.47.0    
-    ## [4] S4Vectors_0.51.2        BiocGenerics_0.59.3     generics_0.1.4         
+    ## [4] S4Vectors_0.51.3        BiocGenerics_0.59.6     generics_0.1.4         
     ## [7] BiocStyle_2.41.0       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] xfun_0.57              bslib_0.11.0           httr2_1.2.2           
+    ##  [1] xfun_0.58              bslib_0.11.0           httr2_1.2.2           
     ##  [4] htmlwidgets_1.6.4      Biobase_2.73.1         vctrs_0.7.3           
     ##  [7] tools_4.6.0            curl_7.1.0             parallel_4.6.0        
     ## [10] tibble_3.3.1           RSQLite_3.53.1         cluster_2.1.8.2       
@@ -484,7 +484,7 @@ sessionInfo()
     ## [49] rappdirs_0.3.4         bit64_4.8.2            httr_1.4.8            
     ## [52] rmarkdown_2.31         bit_4.6.0              otel_0.2.0            
     ## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
-    ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.47.1        
+    ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.47.2        
     ## [61] BiocFileCache_3.3.0    rlang_1.2.0            Rcpp_1.1.1-1.1        
     ## [64] glue_1.8.1             DBI_1.3.0              mzR_2.47.0            
     ## [67] xml2_1.5.2             BiocManager_1.30.27    jsonlite_2.0.0        

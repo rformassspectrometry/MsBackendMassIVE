@@ -407,6 +407,7 @@ only previously cached content is used.</p>
 <span class="r-in"><span><span class="co">## Download parameter file for the data set MSV000080547</span></span></span>
 <span class="r-in"><span><span class="fu">massive_download_file</span><span class="op">(</span><span class="st">"MSV000080547"</span>, pattern <span class="op">=</span> <span class="st">"params.xml"</span>,</span></span>
 <span class="r-in"><span>                      path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in download.file(url = z, destfile = dest, method = "curl", extra = paste("--ssl-reqd",     "--ftp-pasv", "--insecure", "--connect-timeout 30")):</span> 'curl' call had nonzero exit status</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
