@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-06-03 06:49:35.107599\
-**Compiled**: Wed Jun 3 07:06:52 2026
+**Last modified:** 2026-06-08 07:45:02.869002\
+**Compiled**: Mon Jun 8 08:02:11 2026
 
 ## Introduction
 
@@ -460,7 +460,7 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.99.1 Spectra_1.23.0          BiocParallel_1.47.0    
+    ## [1] MsBackendMassIVE_0.99.0 Spectra_1.23.2          BiocParallel_1.47.0    
     ## [4] S4Vectors_0.51.3        BiocGenerics_0.59.6     generics_0.1.4         
     ## [7] BiocStyle_2.41.0       
     ## 

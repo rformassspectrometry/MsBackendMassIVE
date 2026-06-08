@@ -2,12 +2,6 @@
 
 ## MsBackendMassIVE 0.99
 
-### Changes in 0.99.1
-
-- Update from `httr` to `httr2`.
-- Update Curl query to address the new policies of MassIVE based on FTP
-  SSL.
-
 ### Changes in 0.99.0
 
 - Fix bug in ftp url encoding.
@@ -16,6 +10,9 @@
 - Add
   [`massive_number_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md).
 - Fix bug handling duplicates files.
+- Update from `httr` to `httr2`.
+- Update Curl query to address the new policies of MassIVE based on FTP
+  SSL.
 - Update examples and tests
 
 ### Changes in 0.1.5

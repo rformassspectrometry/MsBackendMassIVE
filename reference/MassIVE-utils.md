@@ -272,5 +272,4 @@ mzMLfiles
 ## Download parameter file for the data set MSV000080547
 massive_download_file("MSV000080547", pattern = "params.xml",
                       path = tempdir())
-#> Error in download.file(url = z, destfile = dest, method = "curl", extra = paste("--ssl-reqd",     "--ftp-pasv", "--insecure", "--connect-timeout 30")): 'curl' call had nonzero exit status
 ```
