@@ -2,7 +2,7 @@
 
 ## Changes in 0.99.1
 
-- Fix bug caching files with same filename. Use unique random filename.
+- Fix bug caching files with same filename. Append MassIVE id to filename.
 
 ## Changes in 0.99.0
 
