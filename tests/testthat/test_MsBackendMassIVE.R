@@ -36,7 +36,7 @@ test_that("backendInitialize,MsBackendMassIVE works", {
     ## Offline
     res_o <- backendInitialize(MsBackendMassIVE(), massiveId = "MSV000080547",
                                filePattern = "1.mzML$", offline = TRUE)
-    expect_equal(Spectra::rtime(res), Spectra::rtime(res_o))
+    expect_equal(rtime(res), rtime(res_o))
 })
 
 test_that("backendRequiredSpectraVariables,MsBackendMassIVE works", {

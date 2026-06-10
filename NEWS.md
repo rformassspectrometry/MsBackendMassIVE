@@ -1,5 +1,9 @@
 # MsBackendMassIVE 0.99
 
+## Changes in 0.99.1
+
+- Fix bug caching files with same filename. Use unique random filename.
+
 ## Changes in 0.99.0
 
 - Fix bug in ftp url encoding.
