@@ -399,7 +399,7 @@ massive_cached_data_files <- function(massiveId = character(),
     res <- .massive_data_files_offline(massiveId = massiveId,
                                        pattern = pattern)
     if (length(fileName)) {
-        filename <- c(str_replace(fileName, paste0("^", massiveId, "_"), ""),
+        fileName <- c(str_replace(fileName, paste0("^", massiveId, "_"), ""),
                       fileName)
         res <- res[basename(res$data_file) %in% fileName, ]
     } else res
