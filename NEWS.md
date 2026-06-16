@@ -3,6 +3,8 @@
 ## Changes in 0.99.1
 
 - Fix bug caching files with same filename. Append MassIVE id to filename.
+- Adapt hard-coded timeout for requests to avoid failure on slow connections.
+  Issue [#26](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/26)
 
 ## Changes in 0.99.0
 

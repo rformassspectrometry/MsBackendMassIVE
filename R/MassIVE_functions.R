@@ -345,7 +345,8 @@ massive_param_file <- function(massiveId = character(),
             res <- request(z) |>
                     req_options(use_ssl = 3L, ftp_use_epsv = 1L,
                                 ssl_verifypeer = 0L, ssl_verifyhost = 0L,
-                                connecttimeout = 30L, timeout = 300L) |>
+                                connecttimeout = 30L,
+                                timeout = MASSIVE_TIMEOUT) |>
                     req_perform())))
         xml <- retry(read_xml(resp_body_raw(res)), sleep_mult = .sleep_mult(),
                      retry_on = .RETRY_ON_PATTERN)
@@ -475,7 +476,8 @@ massive_cached_data_files <- function(massiveId = character(),
 
     ## Cache files
     ssl_opts <- list(use_ssl = 3L, ftp_use_epsv = 1L, ssl_verifypeer = 0L,
-                     ssl_verifyhost = 0L, connecttimeout = 30L, timeout = 300L)
+                     ssl_verifyhost = 0L, connecttimeout = 30L,
+                     timeout = MASSIVE_TIMEOUT)
     bfc <- BiocFileCache()
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
