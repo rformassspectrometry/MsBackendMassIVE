@@ -1,5 +1,10 @@
 # MsBackendMassIVE 0.99
 
+## Changes in 0.99.1
+
+- Drop `stringr` dependency.
+- Fix vignette visualization.
+
 ## Changes in 0.99.0
 
 - Fix bug in ftp url encoding.
