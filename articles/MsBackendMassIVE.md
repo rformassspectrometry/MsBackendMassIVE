@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-06-08 07:45:02.869002\
-**Compiled**: Mon Jun 8 08:02:11 2026
+**Last modified:** 2026-06-18 12:17:32.455716\
+**Compiled**: Thu Jun 18 12:35:35 2026
 
 ## Introduction
 
@@ -29,8 +29,9 @@ the re-analysis of public data and replication of results. The
 query, retrieve and cache MS data from MassIVE directly from R hence
 enabling a direct and seamless integration of MS data from MassIVE into
 R-based analysis workflows. *MsBackendMassIVE* leverages on
-Bioconductor’s `r Biocpkg("BiocFileCache")` for caching remote data
-locally and provides a *MS data backend* for the
+Bioconductor’s
+*[BiocFileCache](https://bioconductor.org/packages/3.24/BiocFileCache)*
+for caching remote data locally and provides a *MS data backend* for the
 *[Spectra](https://bioconductor.org/packages/3.24/Spectra)* package to
 enable loading and integrating cached MS data directly into R.
 
@@ -460,8 +461,8 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.99.0 Spectra_1.23.2          BiocParallel_1.47.0    
-    ## [4] S4Vectors_0.51.3        BiocGenerics_0.59.6     generics_0.1.4         
+    ## [1] MsBackendMassIVE_0.99.1 Spectra_1.23.3          BiocParallel_1.47.0    
+    ## [4] S4Vectors_0.51.3        BiocGenerics_0.59.7     generics_0.1.4         
     ## [7] BiocStyle_2.41.0       
     ## 
     ## loaded via a namespace (and not attached):
@@ -471,22 +472,21 @@ sessionInfo()
     ## [10] tibble_3.3.1           RSQLite_3.53.1         cluster_2.1.8.2       
     ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.4     
     ## [16] dbplyr_2.5.2           desc_1.4.3             lifecycle_1.0.5       
-    ## [19] stringr_1.6.0          compiler_4.6.0         textshaping_1.0.5     
-    ## [22] progress_1.2.3         codetools_0.2-20       ncdf4_1.24            
-    ## [25] clue_0.3-68            htmltools_0.5.9        sass_0.4.10           
-    ## [28] yaml_2.3.12            pkgdown_2.2.0.9000     pillar_1.11.1         
-    ## [31] crayon_1.5.3           jquerylib_0.1.4        MASS_7.3-65           
-    ## [34] cachem_1.1.0           MetaboCoreUtils_1.21.1 tidyselect_1.2.1      
-    ## [37] rvest_1.0.5            digest_0.6.39          stringi_1.8.7         
-    ## [40] purrr_1.2.2            dplyr_1.2.1            bookdown_0.46         
-    ## [43] fastmap_1.2.0          cli_3.6.6              magrittr_2.0.5        
-    ## [46] withr_3.0.2            prettyunits_1.2.0      filelock_1.0.3        
-    ## [49] rappdirs_0.3.4         bit64_4.8.2            httr_1.4.8            
-    ## [52] rmarkdown_2.31         bit_4.6.0              otel_0.2.0            
-    ## [55] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
-    ## [58] evaluate_1.0.5         knitr_1.51             IRanges_2.47.2        
-    ## [61] BiocFileCache_3.3.0    rlang_1.2.0            Rcpp_1.1.1-1.1        
-    ## [64] glue_1.8.1             DBI_1.3.0              mzR_2.47.0            
-    ## [67] xml2_1.5.2             BiocManager_1.30.27    jsonlite_2.0.0        
-    ## [70] R6_2.6.1               systemfonts_1.3.2      fs_2.1.0              
-    ## [73] ProtGenerics_1.45.0    MsCoreUtils_1.25.4
+    ## [19] compiler_4.6.0         textshaping_1.0.5      progress_1.2.3        
+    ## [22] codetools_0.2-20       ncdf4_1.24             clue_0.3-68           
+    ## [25] htmltools_0.5.9        sass_0.4.10            yaml_2.3.12           
+    ## [28] pkgdown_2.2.0.9000     pillar_1.11.1          crayon_1.5.3          
+    ## [31] jquerylib_0.1.4        MASS_7.3-65            cachem_1.1.0          
+    ## [34] MetaboCoreUtils_1.21.1 tidyselect_1.2.1       rvest_1.0.5           
+    ## [37] digest_0.6.39          purrr_1.2.2            dplyr_1.2.1           
+    ## [40] bookdown_0.47          fastmap_1.2.0          cli_3.6.6             
+    ## [43] magrittr_2.0.5         withr_3.0.2            prettyunits_1.2.0     
+    ## [46] filelock_1.0.3         rappdirs_0.3.4         bit64_4.8.2           
+    ## [49] httr_1.4.8             rmarkdown_2.31         bit_4.6.0             
+    ## [52] otel_0.2.0             ragg_1.5.2             hms_1.1.4             
+    ## [55] memoise_2.0.1          evaluate_1.0.5         knitr_1.51            
+    ## [58] IRanges_2.47.2         BiocFileCache_3.3.0    rlang_1.2.0           
+    ## [61] Rcpp_1.1.1-1.1         glue_1.8.1             DBI_1.3.0             
+    ## [64] mzR_2.47.0             xml2_1.5.2             BiocManager_1.30.27   
+    ## [67] jsonlite_2.0.0         R6_2.6.1               systemfonts_1.3.2     
+    ## [70] fs_2.1.0               ProtGenerics_1.45.0    MsCoreUtils_1.25.4
