@@ -1,6 +1,6 @@
 Package: MsBackendMassIVE
 Title: Retrieve Mass Spectrometry Data from MassIVE
-Version: 0.99.0
+Version: 0.99.1
 Authors@R:
     c(person(given = "Gabriele", family = "Tomè",
              email = "gabriele.tome@eurac.edu",
@@ -35,7 +35,6 @@ Imports:
     methods,
     MsCoreUtils (>= 1.23.9),
     progress,
-    stringr,
     jsonlite,
     rvest
 Suggests:
