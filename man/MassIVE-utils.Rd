@@ -85,7 +85,8 @@ data set on the MassIVE ftp server.
 data set's base ftp directory.
 \item For \code{massive_sync_data_files()} and \code{massive_cached_data_files()}: a
 \code{data.frame} with the MassIVE ID, the name(s) and remote and
-local file names of the synchronized data files
+local file names of the synchronized data files  sorted by filename
+(\code{"rpath"}).
 \item For \code{massive_number_files()}: \code{integer(1)} with the number of data files
 in the data set.
 }

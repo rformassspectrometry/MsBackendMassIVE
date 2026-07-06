@@ -130,7 +130,8 @@
 #'   data set's base ftp directory.
 #' - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
 #'   `data.frame` with the MassIVE ID, the name(s) and remote and
-#'   local file names of the synchronized data files
+#'   local file names of the synchronized data files  sorted by filename
+#'   (`"rpath"`).
 #' - For `massive_number_files()`: `integer(1)` with the number of data files
 #'   in the data set.
 #'
@@ -398,7 +399,7 @@ massive_cached_data_files <- function(massiveId = character(),
     res <- .massive_data_files_offline(massiveId = massiveId,
                                        pattern = pattern)
     if (length(fileName)) {
-        fileName <- c(str_replace(fileName, paste0("^", massiveId, "_"), ""),
+        fileName <- c(gsub(paste0("^", massiveId, "_"), "", fileName),
                       fileName)
         res <- res[basename(res$data_file) %in% fileName, ]
     } else res
@@ -414,7 +415,7 @@ massive_cached_data_files <- function(massiveId = character(),
 #' - retrieves all files for one MassIVE ID.
 #' - uses BiocFileCache to cache these files, i.e. downloading them if they
 #'   are not yet cached.
-#' - returns a `data.frame` with all information.
+#' - returns a `data.frame` with all information sorted by filename (`"rpath"`).
 #'
 #' This `data.frame` has one row per data file with columns:
 #' - `"rid"`: the BiocFileCache ID of each file.
@@ -450,7 +451,7 @@ massive_cached_data_files <- function(massiveId = character(),
     }
 
     if (length(fileName)) {
-        fileName <- c(str_replace(fileName, paste0("^", massiveId, "_"), ""),
+        fileName <- c(gsub(paste0("^", massiveId, "_"), "", fileName),
                       fileName)
         keep <- basename(dfiles) %in% fileName
         if (!any(keep))
@@ -483,10 +484,20 @@ massive_cached_data_files <- function(massiveId = character(),
                            total = length(ffiles), clear = FALSE)
     lfiles <- unlist(lapply(ffiles, function(z) {
         pb$tick()
-        invisible(capture.output(suppressMessages(
-            f <- retry(bfcrpath(bfc, z, fname = "exact", config = ssl_opts),
-                       sleep_mult = .sleep_mult(),
-                       retry_on = .RETRY_ON_PATTERN))))
+        f <- tryCatch({
+            invisible(capture.output(suppressMessages(
+                ff <- retry(bfcrpath(bfc, z, fname = "exact",
+                                    config = ssl_opts),
+                            sleep_mult = .sleep_mult(),
+                            retry_on = .RETRY_ON_PATTERN))))
+            ff
+        }, interrupt = function(e) {
+            rid <- bfcquery(bfc, z, field = "fpath", exact = TRUE)$rid
+            if (length(rid)) bfcremove(bfc, rid)
+            stop("Download of \"", z, "\" was interrupted; removed the ",
+                 "partial file from the cache. Rerun to resume.",
+                 call. = FALSE)
+        })
         f
     }))
     ## Rename appending the MSV ID to avoid files with same name
@@ -510,7 +521,7 @@ massive_cached_data_files <- function(massiveId = character(),
         data_file = basename(lfiles))
     bfcmeta(bfc, name = "MSV", overwrite = TRUE) <- mdata
     mdata$rpath <- lfiles
-    mdata
+    mdata[order(mdata$rpath), , drop = FALSE]
 }
 
 #' Check for a given MSV ID if we have cached data files. This function is
