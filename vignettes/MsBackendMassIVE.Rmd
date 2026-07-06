@@ -40,8 +40,8 @@ hampering the re-analysis of public data and replication of results. The
 *MsBackendMassIVE* package closes this gap by providing functionality to query,
 retrieve and cache MS data from MassIVE directly from R hence enabling a direct
 and seamless integration of MS data from MassIVE into R-based analysis
-workflows. *MsBackendMassIVE* leverages on Bioconductor's `r
-Biocpkg("BiocFileCache")` for caching remote data locally and provides a *MS
+workflows. *MsBackendMassIVE* leverages on Bioconductor's
+`r Biocpkg("BiocFileCache")` for caching remote data locally and provides a *MS
 data backend* for the `r Biocpkg("Spectra")` package to enable loading and
 integrating cached MS data directly into R.
 

@@ -35,7 +35,6 @@ Imports:
     methods,
     MsCoreUtils (>= 1.23.9),
     progress,
-    stringr,
     jsonlite,
     rvest
 Suggests:

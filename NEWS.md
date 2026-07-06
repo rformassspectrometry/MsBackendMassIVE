@@ -1,10 +1,15 @@
 # MsBackendMassIVE 0.99
 
-## Changes in 0.99.1
+## Changes in 0.99.2
 
 - Fix bug caching files with same filename. Append MassIVE id to filename.
 - Adapt hard-coded timeout for requests to avoid failure on slow connections.
   Issue [#26](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/26)
+
+## Changes in 0.99.1
+
+- Drop `stringr` dependency.
+- Fix vignette visualization.
 
 ## Changes in 0.99.0
 

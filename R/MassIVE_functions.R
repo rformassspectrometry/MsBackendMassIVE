@@ -159,8 +159,6 @@ NULL
 #'
 #' @importFrom MsCoreUtils retry
 #'
-#' @importFrom stringr str_replace
-#'
 #' @importFrom rvest read_html html_elements html_attr
 #'
 #' @rdname MassIVE-utils
@@ -182,8 +180,8 @@ massive_ftp_path <- function(x = character(), mustWork = TRUE) {
 
     if (!is.null(res)) {
         if (grepl("massive.ucsd.edu", res))
-            res <- str_replace(res, pattern = "massive.ucsd.edu",
-                            replacement = "massive-ftp.ucsd.edu")
+            res <- gsub(pattern = "massive.ucsd.edu",
+                            replacement = "massive-ftp.ucsd.edu", res)
     } else {
         ## Method 2
         url <- paste0("https://massive.ucsd.edu/ProteoSAFe/",
