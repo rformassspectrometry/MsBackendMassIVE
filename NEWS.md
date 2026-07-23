@@ -8,6 +8,7 @@
 - Dealing with corrupted files due to interrupted download.
   Issue [#28](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/28)
 - Ensures that files are always returned in the same order.
+- Update GNPS2 test for Metabolights USI.
 
 ## Changes in 0.99.1
 

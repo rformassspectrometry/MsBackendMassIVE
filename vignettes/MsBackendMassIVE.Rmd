@@ -53,7 +53,7 @@ The package can be installed from within R with the commands below:
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
+BiocManager::install("MsBackendMassIVE")
 ```
 
 # Importing MS Data from MassIVE
