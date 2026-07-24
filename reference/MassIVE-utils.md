@@ -165,7 +165,8 @@ massive_delete_cache(massiveId = character())
 
 - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
   `data.frame` with the MassIVE ID, the name(s) and remote and local
-  file names of the synchronized data files
+  file names of the synchronized data files sorted by filename
+  (`"rpath"`).
 
 - For `massive_number_files()`: `integer(1)` with the number of data
   files in the data set.

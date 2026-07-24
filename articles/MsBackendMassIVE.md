@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-06-18 12:17:32.455716\
-**Compiled**: Thu Jun 18 12:35:35 2026
+**Last modified:** 2026-07-24 08:32:21.328624\
+**Compiled**: Fri Jul 24 08:50:27 2026
 
 ## Introduction
 
@@ -44,7 +44,7 @@ The package can be installed from within R with the commands below:
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
+BiocManager::install("MsBackendMassIVE")
 ```
 
 ## Importing MS Data from MassIVE
@@ -126,8 +126,8 @@ s
     ##  ... 36 more variables/columns.
     ## 
     ## file(s):
-    ## AG_spiked_sample1.mzML
-    ## AG_spiked_sample11.mzML
+    ## MSV000080547_AG_spiked_sample1.mzML
+    ## MSV000080547_AG_spiked_sample11.mzML
 
 This call downloaded 2 files from the experiment into the local cache
 and loaded them as a `Spectra` object. The downloading and caching of
@@ -182,25 +182,26 @@ spectraData(s, c("massive_id", "data_file"))
     ## DataFrame with 4322 rows and 2 columns
     ##        massive_id              data_file
     ##       <character>            <character>
-    ## 1    MSV000080547 peak/Quant_assesment..
-    ## 2    MSV000080547 peak/Quant_assesment..
-    ## 3    MSV000080547 peak/Quant_assesment..
-    ## 4    MSV000080547 peak/Quant_assesment..
-    ## 5    MSV000080547 peak/Quant_assesment..
+    ## 1    MSV000080547 MSV000080547_AG_spik..
+    ## 2    MSV000080547 MSV000080547_AG_spik..
+    ## 3    MSV000080547 MSV000080547_AG_spik..
+    ## 4    MSV000080547 MSV000080547_AG_spik..
+    ## 5    MSV000080547 MSV000080547_AG_spik..
     ## ...           ...                    ...
-    ## 4318 MSV000080547 peak/Quant_assesment..
-    ## 4319 MSV000080547 peak/Quant_assesment..
-    ## 4320 MSV000080547 peak/Quant_assesment..
-    ## 4321 MSV000080547 peak/Quant_assesment..
-    ## 4322 MSV000080547 peak/Quant_assesment..
+    ## 4318 MSV000080547 MSV000080547_AG_spik..
+    ## 4319 MSV000080547 MSV000080547_AG_spik..
+    ## 4320 MSV000080547 MSV000080547_AG_spik..
+    ## 4321 MSV000080547 MSV000080547_AG_spik..
+    ## 4322 MSV000080547 MSV000080547_AG_spik..
 
 ``` r
 
 basename(s$data_file) |> head()
 ```
 
-    ## [1] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"
-    ## [4] "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML" "AG_spiked_sample1.mzML"
+    ## [1] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
+    ## [3] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
+    ## [5] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
 
 The
 [`massive_sync()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
@@ -231,8 +232,8 @@ massive_sync(s@backend)
     ##  ... 36 more variables/columns.
     ## 
     ## file(s):
-    ## AG_spiked_sample1.mzML
-    ## AG_spiked_sample11.mzML
+    ## MSV000080547_AG_spiked_sample1.mzML
+    ## MSV000080547_AG_spiked_sample11.mzML
 
 In addition, it is also possible to *manually* cache and download
 selected files from MassIVE using the
@@ -251,10 +252,10 @@ res <- massive_sync_data_files("MSV000080547",
 res
 ```
 
-    ##     rid   massive_id                                        data_file
-    ## 1 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
-    ##                                                         rpath
-    ## 1 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML
+    ##     rid   massive_id                            data_file
+    ## 1 BFC11 MSV000080547 MSV000080547_AG_spiked_sample11.mzML
+    ##                                                                      rpath
+    ## 1 /github/home/.cache/R/BiocFileCache/MSV000080547_AG_spiked_sample11.mzML
 
 The
 [`massive_cached_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -268,10 +269,10 @@ since only local content is queried. With the default settings, a
 massive_cached_data_files()
 ```
 
-    ##     rid   massive_id                                        data_file
-    ## 3 BFC11 MSV000080547 peak/Quant_assesment_QQQ/AG_spiked_sample11.mzML
-    ##                                                         rpath
-    ## 3 /github/home/.cache/R/BiocFileCache/AG_spiked_sample11.mzML
+    ##     rid   massive_id                            data_file
+    ## 3 BFC11 MSV000080547 MSV000080547_AG_spiked_sample11.mzML
+    ##                                                                      rpath
+    ## 3 /github/home/.cache/R/BiocFileCache/MSV000080547_AG_spiked_sample11.mzML
 
 Locally cached files for a MassIVE data set can be removed using the
 [`massive_delete_cache()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -437,7 +438,7 @@ gnps2_usi_download_link(res$usi[4])
 sessionInfo()
 ```
 
-    ## R version 4.6.0 (2026-04-24)
+    ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
     ## Running under: Ubuntu 24.04.4 LTS
     ## 
@@ -461,32 +462,32 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.99.1 Spectra_1.23.3          BiocParallel_1.47.0    
-    ## [4] S4Vectors_0.51.3        BiocGenerics_0.59.7     generics_0.1.4         
+    ## [1] MsBackendMassIVE_0.99.2 Spectra_1.23.3          BiocParallel_1.47.0    
+    ## [4] S4Vectors_0.51.5        BiocGenerics_0.59.10    generics_0.1.4         
     ## [7] BiocStyle_2.41.0       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] xfun_0.58              bslib_0.11.0           httr2_1.2.2           
+    ##  [1] xfun_0.60              bslib_0.11.0           httr2_1.3.0           
     ##  [4] htmlwidgets_1.6.4      Biobase_2.73.1         vctrs_0.7.3           
-    ##  [7] tools_4.6.0            curl_7.1.0             parallel_4.6.0        
-    ## [10] tibble_3.3.1           RSQLite_3.53.1         cluster_2.1.8.2       
+    ##  [7] tools_4.6.1            curl_7.1.0             parallel_4.6.1        
+    ## [10] tibble_3.3.1           RSQLite_3.53.3         cluster_2.1.8.2       
     ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.4     
-    ## [16] dbplyr_2.5.2           desc_1.4.3             lifecycle_1.0.5       
-    ## [19] compiler_4.6.0         textshaping_1.0.5      progress_1.2.3        
+    ## [16] dbplyr_2.6.0           desc_1.4.3             lifecycle_1.0.5       
+    ## [19] compiler_4.6.1         textshaping_1.0.5      progress_1.2.3        
     ## [22] codetools_0.2-20       ncdf4_1.24             clue_0.3-68           
     ## [25] htmltools_0.5.9        sass_0.4.10            yaml_2.3.12           
-    ## [28] pkgdown_2.2.0.9000     pillar_1.11.1          crayon_1.5.3          
-    ## [31] jquerylib_0.1.4        MASS_7.3-65            cachem_1.1.0          
+    ## [28] pkgdown_2.2.1.9000     pillar_1.11.1          crayon_1.5.3          
+    ## [31] jquerylib_0.1.4        MASS_7.3-66            cachem_1.1.0          
     ## [34] MetaboCoreUtils_1.21.1 tidyselect_1.2.1       rvest_1.0.5           
     ## [37] digest_0.6.39          purrr_1.2.2            dplyr_1.2.1           
     ## [40] bookdown_0.47          fastmap_1.2.0          cli_3.6.6             
-    ## [43] magrittr_2.0.5         withr_3.0.2            prettyunits_1.2.0     
-    ## [46] filelock_1.0.3         rappdirs_0.3.4         bit64_4.8.2           
-    ## [49] httr_1.4.8             rmarkdown_2.31         bit_4.6.0             
-    ## [52] otel_0.2.0             ragg_1.5.2             hms_1.1.4             
-    ## [55] memoise_2.0.1          evaluate_1.0.5         knitr_1.51            
-    ## [58] IRanges_2.47.2         BiocFileCache_3.3.0    rlang_1.2.0           
-    ## [61] Rcpp_1.1.1-1.1         glue_1.8.1             DBI_1.3.0             
-    ## [64] mzR_2.47.0             xml2_1.5.2             BiocManager_1.30.27   
-    ## [67] jsonlite_2.0.0         R6_2.6.1               systemfonts_1.3.2     
-    ## [70] fs_2.1.0               ProtGenerics_1.45.0    MsCoreUtils_1.25.4
+    ## [43] magrittr_2.0.5         withr_3.0.3            prettyunits_1.2.0     
+    ## [46] filelock_1.0.3         bit64_4.8.2            rmarkdown_2.31        
+    ## [49] httr_1.4.8             bit_4.6.0              otel_0.2.0            
+    ## [52] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
+    ## [55] evaluate_1.0.5         knitr_1.51             IRanges_2.47.2        
+    ## [58] BiocFileCache_3.3.0    rlang_1.3.0            Rcpp_1.1.2            
+    ## [61] glue_1.8.1             DBI_1.3.0              mzR_2.47.0            
+    ## [64] xml2_1.6.0             BiocManager_1.30.27    jsonlite_2.0.0        
+    ## [67] R6_2.6.1               systemfonts_1.3.2      fs_2.1.0              
+    ## [70] ProtGenerics_1.45.0    MsCoreUtils_1.25.4

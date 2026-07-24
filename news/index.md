@@ -2,6 +2,18 @@
 
 ## MsBackendMassIVE 0.99
 
+### Changes in 0.99.2
+
+- Fix bug caching files with same filename. Append MassIVE id to
+  filename.
+- Adapt hard-coded timeout for requests to avoid failure on slow
+  connections. Issue
+  [\#26](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/26)
+- Dealing with corrupted files due to interrupted download. Issue
+  [\#28](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/28)
+- Ensures that files are always returned in the same order.
+- Update GNPS2 test for Metabolights USI.
+
 ### Changes in 0.99.1
 
 - Drop `stringr` dependency.

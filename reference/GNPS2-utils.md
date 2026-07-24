@@ -295,5 +295,5 @@ gnps2_query("MSV000080547")
 
 ## Get link for an USI
 gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
-#> [1] "https://www.ebi.ac.uk:443/metabolights/ws/studies/MTBLS39/download?file=FILES/AM063A.cdf"
+#> [1] "https://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS39/FILES/AM063A.cdf"
 ```

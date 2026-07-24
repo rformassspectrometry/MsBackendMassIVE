@@ -226,7 +226,7 @@ be
 #>  ... 36 more variables/columns.
 #> 
 #> file(s):
-#> AG_spiked_sample11.mzML
+#> MSV000080547_AG_spiked_sample11.mzML
 
 ## The `massive_sync()` function can be used to ensure that all data files
 ## are available locally. This function will eventually download missing data
