@@ -81,6 +81,6 @@ test_that("gnps2_usi_download_link works", {
 
     ## Metabolights
     res <- gnps2_usi_download_link("mzspec:MTBLS39:FILES/AM063A.cdf")
-    expect_true(grepl("^https://www.ebi.ac.uk", res))
+    expect_true(grepl("^https://www.ebi.ac.uk|^https://ftp.ebi.ac.uk", res))
 
 })

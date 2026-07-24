@@ -130,7 +130,8 @@
 #'   data set's base ftp directory.
 #' - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
 #'   `data.frame` with the MassIVE ID, the name(s) and remote and
-#'   local file names of the synchronized data files
+#'   local file names of the synchronized data files sorted by filename
+#'   (`"rpath"`).
 #' - For `massive_number_files()`: `integer(1)` with the number of data files
 #'   in the data set.
 #'
@@ -257,20 +258,7 @@ massive_download_file <- function(massiveId = character(), pattern = "*",
         dir.create(path, recursive = TRUE)
     }
 
-    ## Update the Volume if files are in ccms_peak folder
-    ## ccms_peak is in volume z01 for all the project
-    api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
-    ffiles <- vapply(dfiles,
-                     function(f) {
-                         u <- ifelse(grepl("^ccms_peak", f),
-                                     paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, "/", f))
-                         ## URLencode for file name with spaces
-                         gsub("%3A", ":",
-                            gsub("%2F", "/",
-                                URLencode(u, reserved = TRUE)))
-                     }, FUN.VALUE = character(1), USE.NAMES = FALSE)
-
+    ffiles <- .update_correct_volume(massiveId, dfiles, fpath)
     ## Save files in the folder
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
@@ -343,7 +331,8 @@ massive_param_file <- function(massiveId = character(),
             res <- request(z) |>
                     req_options(use_ssl = 3L, ftp_use_epsv = 1L,
                                 ssl_verifypeer = 0L, ssl_verifyhost = 0L,
-                                connecttimeout = 30L, timeout = 300L) |>
+                                connecttimeout = 30L,
+                                timeout = MASSIVE_TIMEOUT) |>
                     req_perform())))
         xml <- retry(read_xml(resp_body_raw(res)), sleep_mult = .sleep_mult(),
                      retry_on = .RETRY_ON_PATTERN)
@@ -396,9 +385,11 @@ massive_cached_data_files <- function(massiveId = character(),
                                       pattern = "*", fileName = character()) {
     res <- .massive_data_files_offline(massiveId = massiveId,
                                        pattern = pattern)
-    if (length(fileName))
+    if (length(fileName)) {
+        fileName <- c(sub(paste0("^", massiveId, "_"), "", fileName),
+                      fileName)
         res <- res[basename(res$data_file) %in% fileName, ]
-    else res
+    } else res
 }
 
 #' Get information on data files for a given MSV ID eventually
@@ -411,7 +402,7 @@ massive_cached_data_files <- function(massiveId = character(),
 #' - retrieves all files for one MassIVE ID.
 #' - uses BiocFileCache to cache these files, i.e. downloading them if they
 #'   are not yet cached.
-#' - returns a `data.frame` with all information.
+#' - returns a `data.frame` with all information sorted by filename (`"rpath"`).
 #'
 #' This `data.frame` has one row per data file with columns:
 #' - `"rid"`: the BiocFileCache ID of each file.
@@ -429,7 +420,7 @@ massive_cached_data_files <- function(massiveId = character(),
 #'
 #' @importFrom progress progress_bar
 #'
-#' @importMethodsFrom BiocFileCache bfcrpath bfcmeta<-
+#' @importMethodsFrom BiocFileCache bfcrpath bfcmeta<- bfcupdate
 #'
 #' @importFrom utils capture.output URLencode
 #'
@@ -447,6 +438,8 @@ massive_cached_data_files <- function(massiveId = character(),
     }
 
     if (length(fileName)) {
+        fileName <- c(gsub(paste0("^", massiveId, "_"), "", fileName),
+                      fileName)
         keep <- basename(dfiles) %in% fileName
         if (!any(keep))
             stop("None of the 'fileName' found in data set \"", massiveId, "\"")
@@ -454,22 +447,8 @@ massive_cached_data_files <- function(massiveId = character(),
     }
 
     ## Update the Volume if files are in ccms_peak folder
-    ## ccms_peak is in volume z01 for all the project
-    api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
-    ffiles <- vapply(dfiles,
-                     function(f) {
-                         u <- ifelse(grepl("^ccms_peak", f),
-                                     paste0(api_z_volume, massiveId, "/", f),
-                                     paste0(fpath, "/", f))
-                         ## URLencode for file name with spaces
-                         gsub("%3A", ":",
-                            gsub("%2F", "/",
-                                URLencode(u, reserved = TRUE)))
-                     }, FUN.VALUE = character(1), USE.NAMES = FALSE)
-
+    ffiles <- .update_correct_volume(massiveId, dfiles, fpath)
     ## Cache files
-    ssl_opts <- list(use_ssl = 3L, ftp_use_epsv = 1L, ssl_verifypeer = 0L,
-                     ssl_verifyhost = 0L, connecttimeout = 30L, timeout = 300L)
     bfc <- BiocFileCache()
     pb <- progress_bar$new(format = paste0("[:bar] :current/:",
                                            "total (:percent) in ",
@@ -477,21 +456,42 @@ massive_cached_data_files <- function(massiveId = character(),
                            total = length(ffiles), clear = FALSE)
     lfiles <- unlist(lapply(ffiles, function(z) {
         pb$tick()
-        invisible(capture.output(suppressMessages(
-            f <- retry(bfcrpath(bfc, z, fname = "exact", config = ssl_opts),
-                       sleep_mult = .sleep_mult(),
-                       retry_on = .RETRY_ON_PATTERN))))
+        f <- tryCatch({
+            invisible(capture.output(suppressMessages(
+                ff <- retry(bfcrpath(bfc, z, fname = "exact",
+                                    config = SSL_OPTS),
+                            sleep_mult = .sleep_mult(),
+                            retry_on = .RETRY_ON_PATTERN))))
+            ff
+        }, interrupt = function(e) {
+            rid <- bfcquery(bfc, z, field = "fpath", exact = TRUE)$rid
+            if (length(rid)) bfcremove(bfc, rid)
+            stop("Download of \"", z, "\" was interrupted; removed the ",
+                 "partial file from the cache. Rerun to resume.",
+                 call. = FALSE)
+        })
         f
     }))
+    ## Rename appending the MSV ID to avoid files with same name
+    filename_to_update <- !startsWith(basename(lfiles), massiveId)
+    if (any(filename_to_update)) {
+        lfiles_to_update <- lfiles[filename_to_update]
+        rpath_update <- file.path(dirname(lfiles_to_update),
+                                  paste0(massiveId, "_",
+                                         basename(lfiles_to_update)))
+        file.rename(lfiles_to_update, rpath_update)
+        suppressWarnings(bfcupdate(bfc, names(lfiles_to_update),
+                                   rpath = rpath_update))
+        names(rpath_update) <- names(lfiles_to_update)
+        lfiles <- c(lfiles[!filename_to_update], rpath_update)
+    }
 
     ## Add and store metadata to the cached files
-    mdata <- data.frame(
-        rid = names(lfiles),
-        massive_id = massiveId,
-        data_file = dfiles)
+    mdata <- data.frame(rid = names(lfiles), massive_id = massiveId,
+                        data_file = basename(lfiles))
     bfcmeta(bfc, name = "MSV", overwrite = TRUE) <- mdata
     mdata$rpath <- lfiles
-    mdata
+    mdata[order(mdata$rpath), , drop = FALSE]
 }
 
 #' Check for a given MSV ID if we have cached data files. This function is
@@ -541,6 +541,34 @@ massive_delete_cache <- function(massiveId = character()) {
             bfcremove(bfc, rids = rem$rid)
         }
     }
+}
+
+#' Helper function to update the Volume if files are in "ccms_peak" folder
+#' "ccms_peak" is in volume z01 for all the project
+#'
+#' @param massiveId `character(1)` with the ID of a single MassIVE data
+#'     set/experiment.
+#'
+#' @param dfiles `character` with the names of the files in the
+#'     data set's base ftp directory.
+#'
+#' @param fpath `character(1)` with the ftp path to the specified
+#'     data set on the MassIVE ftp server.
+#'
+#' @noRd
+.update_correct_volume <- function(massiveId, dfiles, fpath) {
+    api_z_volume <- "ftp://massive-ftp.ucsd.edu/z01/"
+    ffiles <- vapply(dfiles,
+                    function(f) {
+                        u <- ifelse(grepl("^ccms_peak", f),
+                                    paste0(api_z_volume, massiveId, "/", f),
+                                    paste0(fpath, "/", f))
+                        ## URLencode for file name with spaces
+                        gsub("%3A", ":",
+                            gsub("%2F", "/",
+                                URLencode(u, reserved = TRUE)))
+                    }, FUN.VALUE = character(1), USE.NAMES = FALSE)
+    ffiles
 }
 
 #' @noRd

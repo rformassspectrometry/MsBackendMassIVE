@@ -23,7 +23,7 @@ The package can be installed with
 
 ```r
 install.packages("BiocManager")
-BiocManager::install("RforMassSpectrometry/MsBackendMassIVE")
+BiocManager::install("MsBackendMassIVE")
 ```
 
 
