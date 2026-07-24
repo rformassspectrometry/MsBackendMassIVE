@@ -130,7 +130,7 @@
 #'   data set's base ftp directory.
 #' - For `massive_sync_data_files()` and `massive_cached_data_files()`: a
 #'   `data.frame` with the MassIVE ID, the name(s) and remote and
-#'   local file names of the synchronized data files  sorted by filename
+#'   local file names of the synchronized data files sorted by filename
 #'   (`"rpath"`).
 #' - For `massive_number_files()`: `integer(1)` with the number of data files
 #'   in the data set.
@@ -386,7 +386,7 @@ massive_cached_data_files <- function(massiveId = character(),
     res <- .massive_data_files_offline(massiveId = massiveId,
                                        pattern = pattern)
     if (length(fileName)) {
-        fileName <- c(gsub(paste0("^", massiveId, "_"), "", fileName),
+        fileName <- c(sub(paste0("^", massiveId, "_"), "", fileName),
                       fileName)
         res <- res[basename(res$data_file) %in% fileName, ]
     } else res
