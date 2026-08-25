@@ -4,6 +4,7 @@
 [![R-CMD-check-bioc](https://github.com/RforMassSpectrometry/MsBackendMassIVE/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RforMassSpectrometry/MsBackendMassIVE/actions?query=workflow%3AR-CMD-check-bioc)
 [![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE/graph/badge.svg?token=P1mTOnS0RE)](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE)
 [![:name status badge](https://rformassspectrometry.r-universe.dev/badges/:name)](https://rformassspectrometry.r-universe.dev/)
+[![years in bioc](http://bioconductor.org/shields/years-in-bioc/MsBackendMassIVE.svg)](https://bioconductor.org/packages/MsBackendMassIVE)
 [![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)
 
 This repository provides a *backend* for
