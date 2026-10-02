@@ -17,36 +17,49 @@ exportMethods(backendInitialize)
 exportMethods(backendRequiredSpectraVariables)
 importClassesFrom(Spectra,MsBackendDataFrame)
 importClassesFrom(Spectra,MsBackendMzR)
-importFrom(BiocFileCache,BiocFileCache)
-importFrom(BiocFileCache,bfcinfo)
-importFrom(BiocFileCache,bfcremove)
+importFrom(BiocFileCache,
+  BiocFileCache,
+  bfcinfo,
+  bfcremove
+)
 importFrom(MsCoreUtils,retry)
 importFrom(S4Vectors,DataFrame)
 importFrom(Spectra,MsBackendMzR)
-importFrom(httr2,req_options)
-importFrom(httr2,req_perform)
-importFrom(httr2,req_url_query)
-importFrom(httr2,request)
-importFrom(httr2,resp_body_raw)
-importFrom(httr2,resp_body_string)
+importFrom(httr2,
+  req_options,
+  req_perform,
+  req_url_query,
+  request,
+  resp_body_raw,
+  resp_body_string
+)
 importFrom(jsonlite,fromJSON)
-importFrom(methods,as)
-importFrom(methods,callNextMethod)
-importFrom(methods,new)
-importFrom(methods,validObject)
+importFrom(methods,
+  as,
+  callNextMethod,
+  new,
+  validObject
+)
 importFrom(progress,progress_bar)
-importFrom(rvest,html_attr)
-importFrom(rvest,html_elements)
-importFrom(rvest,read_html)
-importFrom(utils,URLencode)
-importFrom(utils,capture.output)
-importFrom(utils,download.file)
-importFrom(utils,read.csv)
-importFrom(xml2,read_xml)
-importFrom(xml2,xml_attrs)
-importFrom(xml2,xml_find_all)
-importFrom(xml2,xml_text)
+importFrom(rvest,
+  html_attr,
+  html_elements,
+  read_html
+)
+importFrom(utils,
+  URLencode,
+  capture.output,
+  download.file,
+  read.csv
+)
+importFrom(xml2,
+  read_xml,
+  xml_attrs,
+  xml_find_all,
+  xml_text
+)
 importMethodsFrom(BiocFileCache,"bfcmeta<-")
+importMethodsFrom(BiocFileCache,bfcmeta)
 importMethodsFrom(BiocFileCache,bfcmetalist)
 importMethodsFrom(BiocFileCache,bfcquery)
 importMethodsFrom(BiocFileCache,bfcrpath)

@@ -14,6 +14,7 @@ MsBackendMassIVE()
   object,
   massiveId = character(),
   filePattern = "mzML$|CDF$|cdf$|mzXML$",
+  fileName = character(),
   offline = FALSE,
   ...
 )
@@ -33,6 +34,9 @@ requested) file types. Defaults to
 \code{filePattern = "mzML$|CDF$|cdf$|mzXML$"} hence restricting to mzML,
 CDF and mzXML files which are supported by \emph{Spectra}'s
 \code{MsBackendMzR} backend.}
+
+\item{fileName}{\code{character} defining the names of specific data files of a
+data set that should be downloaded and cached.}
 
 \item{offline}{\code{logical(1)} whether only locally cached content should be
 evaluated/loaded.}

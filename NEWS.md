@@ -1,5 +1,11 @@
 # MsBackendMassIVE 0.99
 
+## Changes in 0.99.3
+
+- Fix bug when files have same filenames in different subfolder [#30](https://github.com/rformassspectrometry/MsBackendMassIVE/issues/30).
+- Fix bug overwrite *BiocFileCache* metatable.
+- Add `fileName` parameter to `backendInitialize()`.
+
 ## Changes in 0.99.2
 
 - Fix bug caching files with same filename. Append MassIVE id to filename.

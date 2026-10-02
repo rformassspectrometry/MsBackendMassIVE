@@ -68,6 +68,9 @@
 #'     CDF and mzXML files which are supported by *Spectra*'s
 #'     `MsBackendMzR` backend.
 #'
+#' @param fileName `character` defining the names of specific data files of a
+#'     data set that should be downloaded and cached.
+#'
 #' @param offline `logical(1)` whether only locally cached content should be
 #'     evaluated/loaded.
 #'
@@ -172,7 +175,8 @@ MsBackendMassIVE <- function() {
 setMethod(
     "backendInitialize", "MsBackendMassIVE",
     function(object, massiveId = character(),
-             filePattern = "mzML$|CDF$|cdf$|mzXML$", offline = FALSE, ...) {
+             filePattern = "mzML$|CDF$|cdf$|mzXML$", fileName = character(),
+             offline = FALSE, ...) {
         dots <- list(...)
         if (any(names(dots) == "data"))
             stop("Parameter 'data' is not supported for ",
@@ -182,8 +186,9 @@ setMethod(
             stop("Parameter 'massiveId' is required and can only be a single ",
                  "ID of a MassIVE data set.")
         if (offline)
-            mdata <- .massive_data_files_offline(massiveId, filePattern)
-        else mdata <- .massive_data_files(massiveId, filePattern)
+            mdata <- massive_cached_data_files(massiveId, filePattern,
+                                                fileName)
+        else mdata <- massive_sync_data_files(massiveId, filePattern, fileName)
         object <- backendInitialize(MsBackendMzR(), files = mdata$rpath)
         idx <- match(dataOrigin(object),
                      normalizePath(mdata$rpath, mustWork = FALSE))
