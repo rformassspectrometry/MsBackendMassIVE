@@ -389,7 +389,8 @@ massive_cached_data_files <- function(massiveId = character(),
         fileName <- c(sub(paste0("^", massiveId, "_"), "", fileName),
                       fileName)
         res <- res[basename(res$data_file) %in% fileName, ]
-    } else res
+    }
+    res[order(res$rpath), , drop = FALSE]
 }
 
 #' Get information on data files for a given MSV ID eventually
@@ -420,7 +421,7 @@ massive_cached_data_files <- function(massiveId = character(),
 #'
 #' @importFrom progress progress_bar
 #'
-#' @importMethodsFrom BiocFileCache bfcrpath bfcmeta<- bfcupdate
+#' @importMethodsFrom BiocFileCache bfcrpath bfcmeta<- bfcupdate bfcmeta
 #'
 #' @importFrom utils capture.output URLencode
 #'
@@ -440,7 +441,8 @@ massive_cached_data_files <- function(massiveId = character(),
     if (length(fileName)) {
         fileName <- c(gsub(paste0("^", massiveId, "_"), "", fileName),
                       fileName)
-        keep <- basename(dfiles) %in% fileName
+        keep <- basename(dfiles) %in% fileName |
+                gsub("/", "_", dfiles) %in% fileName
         if (!any(keep))
             stop("None of the 'fileName' found in data set \"", massiveId, "\"")
         dfiles <- dfiles[keep]
@@ -458,13 +460,25 @@ massive_cached_data_files <- function(massiveId = character(),
         pb$tick()
         f <- tryCatch({
             invisible(capture.output(suppressMessages(
-                ff <- retry(bfcrpath(bfc, z, fname = "exact",
+                ff <- retry(bfcrpath(bfc, z,
                                     config = SSL_OPTS),
                             sleep_mult = .sleep_mult(),
                             retry_on = .RETRY_ON_PATTERN))))
+            ## Rename appending the MSV ID to avoid files with same name
+            if (!startsWith(basename(ff), massiveId)) {
+                rpath_update <- file.path(dirname(ff),
+                                    paste0(massiveId, "_",
+                                        gsub("/", "_", strsplit(z,
+                                            paste0(massiveId, "/"))[[1]][2])))
+                file.rename(ff, rpath_update)
+                suppressWarnings(bfcupdate(bfc, names(ff),
+                                        rpath = rpath_update))
+                names(rpath_update) <- names(ff)
+                ff <- rpath_update
+            }
             ff
         }, interrupt = function(e) {
-            rid <- bfcquery(bfc, z, field = "fpath", exact = TRUE)$rid
+            rid <- bfcquery(bfc, z, field = "fpath")$rid
             if (length(rid)) bfcremove(bfc, rid)
             stop("Download of \"", z, "\" was interrupted; removed the ",
                  "partial file from the cache. Rerun to resume.",
@@ -472,24 +486,18 @@ massive_cached_data_files <- function(massiveId = character(),
         })
         f
     }))
-    ## Rename appending the MSV ID to avoid files with same name
-    filename_to_update <- !startsWith(basename(lfiles), massiveId)
-    if (any(filename_to_update)) {
-        lfiles_to_update <- lfiles[filename_to_update]
-        rpath_update <- file.path(dirname(lfiles_to_update),
-                                  paste0(massiveId, "_",
-                                         basename(lfiles_to_update)))
-        file.rename(lfiles_to_update, rpath_update)
-        suppressWarnings(bfcupdate(bfc, names(lfiles_to_update),
-                                   rpath = rpath_update))
-        names(rpath_update) <- names(lfiles_to_update)
-        lfiles <- c(lfiles[!filename_to_update], rpath_update)
-    }
 
     ## Add and store metadata to the cached files
     mdata <- data.frame(rid = names(lfiles), massive_id = massiveId,
                         data_file = basename(lfiles))
-    bfcmeta(bfc, name = "MSV", overwrite = TRUE) <- mdata
+    if (.massive_has_massive_table()) {
+        cached_mdata <- bfcmeta(bfc, name = "MSV")
+        update_mdata <- mdata[!mdata$rid %in% cached_mdata$rid, , drop = FALSE]
+        if (nrow(update_mdata) > 0)
+            bfcmeta(bfc, name = "MSV", append = TRUE) <- update_mdata
+    } else {
+        bfcmeta(bfc, name = "MSV") <- mdata
+    }
     mdata$rpath <- lfiles
     mdata[order(mdata$rpath), , drop = FALSE]
 }
