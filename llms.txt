@@ -7,6 +7,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE/graph/badge.svg?token=P1mTOnS0RE)](https://codecov.io/gh/rformassspectrometry/MsBackendMassIVE)
 [![:name status
 badge](https://rformassspectrometry.r-universe.dev/badges/:name)](https://rformassspectrometry.r-universe.dev/)
+[![years in
+bioc](http://bioconductor.org/shields/years-in-bioc/MsBackendMassIVE.svg)](https://bioconductor.org/packages/MsBackendMassIVE)
 [![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)
 
 This repository provides a *backend* for
@@ -23,11 +25,9 @@ to avoid repeated download.
 
 The package can be installed with
 
-``` r
-
-install.packages("BiocManager")
-BiocManager::install("MsBackendMassIVE")
-```
+\
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"BiocManager"``)`\
+`BiocManager``::`[`install`](https://bioconductor.github.io/BiocManager/reference/install.html)`(``"MsBackendMassIVE"``)`
 
 # Contributions
 

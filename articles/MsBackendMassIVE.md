@@ -9,8 +9,8 @@ Bolzano under the Joint Projects South Tyrol–Germany 2025 program.),
 Philippine Louail \[aut\] (ORCID:
 <https://orcid.org/0009-0007-5429-6846>), Johannes Rainer \[aut\]
 (ORCID: <https://orcid.org/0000-0002-6977-7147>)\
-**Last modified:** 2026-07-24 08:32:21.328624\
-**Compiled**: Fri Jul 24 08:50:27 2026
+**Last modified:** 2026-10-06 07:11:50.449195\
+**Compiled**: Tue Oct 6 07:31:15 2026
 
 ## Introduction
 
@@ -39,13 +39,11 @@ enable loading and integrating cached MS data directly into R.
 
 The package can be installed from within R with the commands below:
 
-``` r
-
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install("MsBackendMassIVE")
-```
+\
+`if`` ``(``!`[`requireNamespace`](https://rdrr.io/r/base/ns-load.html)`(``"BiocManager"``, quietly ``=`` ``TRUE``)``)`\
+`    `[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"BiocManager"``)`\
+\
+`BiocManager``::`[`install`](https://bioconductor.github.io/BiocManager/reference/install.html)`(``"MsBackendMassIVE"``)`
 
 ## Importing MS Data from MassIVE
 
@@ -61,14 +59,12 @@ query information on MassIVE experiments.
 Below we list all files from the MassIVE data set with the ID
 *MSV000080547*.
 
-``` r
-
-library(MsBackendMassIVE)
-
-#' List files of a MassIVE data set
-all_files <- massive_list_files("MSV000080547")
-head(all_files)
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`MsBackendMassIVE`](https://github.com/RforMassSpectrometry/MsBackendMassIVE)`)`\
+\
+`#' List files of a MassIVE data set`\
+`all_files`` ``<-`` `[`massive_list_files`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000080547"``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``all_files``)`
 
     ## [1] "ccms_parameters/params.xml"                      
     ## [2] "peak/Quant_assesment_QE/AG_spiked_sample1.mzXML" 
@@ -82,10 +78,8 @@ MassIVE data set. Below we use the
 [`massive_ftp_path()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
 function to return the FTP path for our test data set.
 
-``` r
-
-massive_ftp_path("MSV000080547", mustWork = FALSE)
-```
+\
+[`massive_ftp_path`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000080547"``, mustWork ``=`` ``FALSE``)`
 
     ## [1] "ftp://massive-ftp.ucsd.edu/v01/MSV000080547"
 
@@ -99,15 +93,13 @@ of data that needs to be downloaded. To this end we define a pattern
 matching the file name of only some data files using the `filePattern`
 parameter.
 
-``` r
-
-library(Spectra)
-
-#' Load MS data files of one data set
-s <- Spectra("MSV000080547", filePattern = "1.mzML$",
-             source = MsBackendMassIVE())
-s
-```
+\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`Spectra`](https://github.com/RforMassSpectrometry/Spectra)`)`\
+\
+`#' Load MS data files of one data set`\
+`s`` ``<-`` `[`Spectra`](https://rdrr.io/pkg/Spectra/man/Spectra.html)`(``"MSV000080547"``, filePattern ``=`` ``"1.mzML$"``,`\
+`             source ``=`` `[`MsBackendMassIVE`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)`(``)``)`\
+`s`
 
     ## MSn data (Spectra) with 4322 spectra in a MsBackendMassIVE backend:
     ##        msLevel     rtime scanIndex
@@ -126,8 +118,8 @@ s
     ##  ... 36 more variables/columns.
     ## 
     ## file(s):
-    ## MSV000080547_AG_spiked_sample1.mzML
-    ## MSV000080547_AG_spiked_sample11.mzML
+    ## MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML
+    ## MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
 
 This call downloaded 2 files from the experiment into the local cache
 and loaded them as a `Spectra` object. The downloading and caching of
@@ -145,10 +137,8 @@ data files also additional information related to the MassIVE data set
 are available as specific *spectra variables*. We list all available
 spectra variables of the data set below.
 
-``` r
-
-spectraVariables(s)
-```
+\
+[`spectraVariables`](https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html)`(``s``)`
 
     ##  [1] "msLevel"                  "rtime"                   
     ##  [3] "acquisitionNum"           "scanIndex"               
@@ -174,34 +164,33 @@ The MassIVE-specific variables are `"massive_id"` and `"data_file"`
 providing the MassIVE ID of the data set and the original data file name
 in the MassIVE FTP server for each individual spectrum.
 
-``` r
-
-spectraData(s, c("massive_id", "data_file"))
-```
+\
+[`spectraData`](https://rdrr.io/pkg/ProtGenerics/man/protgenerics.html)`(``s``, `[`c`](https://rdrr.io/r/base/c.html)`(``"massive_id"``, ``"data_file"``)``)`
 
     ## DataFrame with 4322 rows and 2 columns
     ##        massive_id              data_file
     ##       <character>            <character>
-    ## 1    MSV000080547 MSV000080547_AG_spik..
-    ## 2    MSV000080547 MSV000080547_AG_spik..
-    ## 3    MSV000080547 MSV000080547_AG_spik..
-    ## 4    MSV000080547 MSV000080547_AG_spik..
-    ## 5    MSV000080547 MSV000080547_AG_spik..
+    ## 1    MSV000080547 MSV000080547_peak_Qu..
+    ## 2    MSV000080547 MSV000080547_peak_Qu..
+    ## 3    MSV000080547 MSV000080547_peak_Qu..
+    ## 4    MSV000080547 MSV000080547_peak_Qu..
+    ## 5    MSV000080547 MSV000080547_peak_Qu..
     ## ...           ...                    ...
-    ## 4318 MSV000080547 MSV000080547_AG_spik..
-    ## 4319 MSV000080547 MSV000080547_AG_spik..
-    ## 4320 MSV000080547 MSV000080547_AG_spik..
-    ## 4321 MSV000080547 MSV000080547_AG_spik..
-    ## 4322 MSV000080547 MSV000080547_AG_spik..
+    ## 4318 MSV000080547 MSV000080547_peak_Qu..
+    ## 4319 MSV000080547 MSV000080547_peak_Qu..
+    ## 4320 MSV000080547 MSV000080547_peak_Qu..
+    ## 4321 MSV000080547 MSV000080547_peak_Qu..
+    ## 4322 MSV000080547 MSV000080547_peak_Qu..
 
-``` r
+\
+[`basename`](https://rdrr.io/r/base/basename.html)`(``s``$``data_file``)`` ``|>`` `[`head`](https://rdrr.io/r/utils/head.html)`(``)`
 
-basename(s$data_file) |> head()
-```
-
-    ## [1] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
-    ## [3] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
-    ## [5] "MSV000080547_AG_spiked_sample1.mzML" "MSV000080547_AG_spiked_sample1.mzML"
+    ## [1] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
+    ## [2] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
+    ## [3] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
+    ## [4] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
+    ## [5] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
+    ## [6] "MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML"
 
 The
 [`massive_sync()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)
@@ -210,10 +199,8 @@ function can be used to *synchronize* the local content of a
 were deleted. The function checks if all data files of the backend are
 available locally and eventually downloads and caches missing files.
 
-``` r
-
-massive_sync(s@backend)
-```
+\
+[`massive_sync`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MsBackendMassIVE.md)`(``s``@``backend``)`
 
     ## MsBackendMassIVE with 4322 spectra
     ##        msLevel     rtime scanIndex
@@ -232,8 +219,8 @@ massive_sync(s@backend)
     ##  ... 36 more variables/columns.
     ## 
     ## file(s):
-    ## MSV000080547_AG_spiked_sample1.mzML
-    ## MSV000080547_AG_spiked_sample11.mzML
+    ## MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML
+    ## MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
 
 In addition, it is also possible to *manually* cache and download
 selected files from MassIVE using the
@@ -245,17 +232,17 @@ storage location and other information of the cached file(s). Below we
 use this function to retrieve the local storage information on one of
 the data files of the MassIVE data set *MSV000080547*:
 
-``` r
+\
+`res`` ``<-`` `[`massive_sync_data_files`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000080547"``,`\
+`                               fileName ``=`` ``"AG_spiked_sample11.mzML"``)`\
+`res`
 
-res <- massive_sync_data_files("MSV000080547",
-                               fileName = "AG_spiked_sample11.mzML")
-res
-```
-
-    ##     rid   massive_id                            data_file
-    ## 1 BFC11 MSV000080547 MSV000080547_AG_spiked_sample11.mzML
-    ##                                                                      rpath
-    ## 1 /github/home/.cache/R/BiocFileCache/MSV000080547_AG_spiked_sample11.mzML
+    ##     rid   massive_id
+    ## 1 BFC15 MSV000080547
+    ##                                                       data_file
+    ## 1 MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
+    ##                                                                                               rpath
+    ## 1 /github/home/.cache/R/BiocFileCache/MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
 
 The
 [`massive_cached_data_files()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -264,15 +251,21 @@ files. This function does not require an active internet connection
 since only local content is queried. With the default settings, a
 `data.frame` with all available data files is returned.
 
-``` r
+\
+[`massive_cached_data_files`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``)`
 
-massive_cached_data_files()
-```
-
-    ##     rid   massive_id                            data_file
-    ## 3 BFC11 MSV000080547 MSV000080547_AG_spiked_sample11.mzML
-    ##                                                                      rpath
-    ## 3 /github/home/.cache/R/BiocFileCache/MSV000080547_AG_spiked_sample11.mzML
+    ##     rid   massive_id
+    ## 1  BFC9 MSV000080224
+    ## 2 BFC14 MSV000080547
+    ## 3 BFC15 MSV000080547
+    ##                                                       data_file
+    ## 1 MSV000080224_ccms_peak_150918_PekkaR_LAP_PAD2_inclusion.mzXML
+    ## 2  MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML
+    ## 3 MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
+    ##                                                                                               rpath
+    ## 1 /github/home/.cache/R/BiocFileCache/MSV000080224_ccms_peak_150918_PekkaR_LAP_PAD2_inclusion.mzXML
+    ## 2  /github/home/.cache/R/BiocFileCache/MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample1.mzML
+    ## 3 /github/home/.cache/R/BiocFileCache/MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
 
 Locally cached files for a MassIVE data set can be removed using the
 [`massive_delete_cache()`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)
@@ -292,11 +285,9 @@ general, experiment-specific information. These are retrieved as a
 two-column `data.frame` with the first column containing the names of
 the data set properties, and the second their values.
 
-``` r
-
-prm <- massive_param_file("MSV000080547")
-head(prm)
-```
+\
+`prm`` ``<-`` `[`massive_param_file`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000080547"``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``prm``)`
 
     ##          ParameterName
     ## 1     dataset.comments
@@ -319,10 +310,8 @@ function returns the number of files in a MassIVE data set. By default,
 only MS data files (mzML, CDF, mzXML) are counted, but this can be
 changed by providing a different pattern to the `pattern` parameter.
 
-``` r
-
-massive_number_files("MSV000080547")
-```
+\
+[`massive_number_files`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000080547"``)`
 
     ## [1] 40
 
@@ -332,10 +321,8 @@ function allows to download any file of an experiment (directly, i.e.,
 without caching). As an example we download below a docx file to a
 temporary folder.
 
-``` r
-
-massive_list_files("MSV000083058") |> head()
-```
+\
+[`massive_list_files`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000083058"``)`` ``|>`` `[`head`](https://rdrr.io/r/utils/head.html)`(``)`
 
     ## [1] "ccms_parameters/params.xml"            
     ## [2] "ccms_statistics/statistics.tsv"        
@@ -344,12 +331,10 @@ massive_list_files("MSV000083058") |> head()
     ## [5] "other/Table 2 SAINT3788_TripleTOF.xlsx"
     ## [6] "other/Table 3 SAINT3788_TripleTOF.xlsx"
 
-``` r
-
-massive_download_file("MSV000083058",
-                      fileName = "README_Histones_P108_VS3.docx",
-                      path = tempdir())
-```
+\
+[`massive_download_file`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/MassIVE-utils.md)`(``"MSV000083058"``,`\
+`                      fileName ``=`` ``"README_Histones_P108_VS3.docx"``,`\
+`                      path ``=`` `[`tempdir`](https://rdrr.io/r/base/tempfile.html)`(``)``)`
 
 *MsBackendMassIVE* provides also two utility functions to query the
 GNPS2 *datasetcache*,
@@ -362,11 +347,9 @@ Below we use
 to retrieve all information for a MassIVE data set from the
 datasetcache.
 
-``` r
-
-res <- gnps2_query("MSV000083058")
-head(res)
-```
+\
+`res`` ``<-`` `[`gnps2_query`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)`(``"MSV000083058"``)`\
+[`head`](https://rdrr.io/r/utils/head.html)`(``res``)`
 
     ##                                                          usi
     ## 1             mzspec:MSV000083058:ccms_parameters/params.xml
@@ -410,12 +393,10 @@ function, it is also possible to compute the total size of data files in
 a MassIVE data set. To this end, the `filepath_pattern` parameter can be
 used to restrict the query to specific files.
 
-``` r
-
-files_info <- gnps2_query("MSV000083058", filepath_pattern = "mzML$")
-size_gb <- round(sum(files_info$size)/(2^30), 2)
-message("Total size of mzML files in data set MSV000083058: ", size_gb, " GB")
-```
+\
+`files_info`` ``<-`` `[`gnps2_query`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)`(``"MSV000083058"``, filepath_pattern ``=`` ``"mzML$"``)`\
+`size_gb`` ``<-`` `[`round`](https://rdrr.io/r/base/Round.html)`(`[`sum`](https://rdrr.io/r/base/sum.html)`(``files_info``$``size``)``/``(``2``^``30``)``, ``2``)`\
+[`message`](https://rdrr.io/r/base/message.html)`(``"Total size of mzML files in data set MSV000083058: "``, ``size_gb``, ``" GB"``)`
 
     ## Total size of mzML files in data set MSV000083058: 3.48 GB
 
@@ -424,19 +405,15 @@ The
 returns a fully qualified link to a data file (listed in the GNPS2
 datasetcache), based on it’s USI.
 
-``` r
-
-gnps2_usi_download_link(res$usi[4])
-```
+\
+[`gnps2_usi_download_link`](https://rformassspectrometry.github.io/MsBackendMassIVE/reference/GNPS2-utils.md)`(``res``$``usi``[``4``]``)`
 
     ## [1] "https://massiveproxy.gnps2.org/massiveproxy/MSV000083058/other/Table%201%20SAINT3788_TripleTOF.xlsx"
 
 ## Session information
 
-``` r
-
-sessionInfo()
-```
+\
+[`sessionInfo`](https://rdrr.io/r/utils/sessionInfo.html)`(``)`
 
     ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
@@ -462,16 +439,16 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ## [1] MsBackendMassIVE_0.99.2 Spectra_1.23.3          BiocParallel_1.47.0    
-    ## [4] S4Vectors_0.51.5        BiocGenerics_0.59.10    generics_0.1.4         
+    ## [1] MsBackendMassIVE_0.99.3 Spectra_1.23.5          BiocParallel_1.47.0    
+    ## [4] S4Vectors_0.51.10       BiocGenerics_0.59.12    generics_0.1.4         
     ## [7] BiocStyle_2.41.0       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] xfun_0.60              bslib_0.11.0           httr2_1.3.0           
-    ##  [4] htmlwidgets_1.6.4      Biobase_2.73.1         vctrs_0.7.3           
-    ##  [7] tools_4.6.1            curl_7.1.0             parallel_4.6.1        
-    ## [10] tibble_3.3.1           RSQLite_3.53.3         cluster_2.1.8.2       
-    ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.4     
+    ##  [1] xfun_0.61              bslib_0.12.0           httr2_1.3.0           
+    ##  [4] htmlwidgets_1.6.4      Biobase_2.73.2         vctrs_0.7.3           
+    ##  [7] tools_4.6.1            curl_8.0.0             parallel_4.6.1        
+    ## [10] tibble_3.3.1           RSQLite_3.53.3         cluster_2.1.8.3       
+    ## [13] blob_1.3.0             pkgconfig_2.0.3        data.table_1.18.6.1   
     ## [16] dbplyr_2.6.0           desc_1.4.3             lifecycle_1.0.5       
     ## [19] compiler_4.6.1         textshaping_1.0.5      progress_1.2.3        
     ## [22] codetools_0.2-20       ncdf4_1.24             clue_0.3-68           
@@ -480,14 +457,14 @@ sessionInfo()
     ## [31] jquerylib_0.1.4        MASS_7.3-66            cachem_1.1.0          
     ## [34] MetaboCoreUtils_1.21.1 tidyselect_1.2.1       rvest_1.0.5           
     ## [37] digest_0.6.39          purrr_1.2.2            dplyr_1.2.1           
-    ## [40] bookdown_0.47          fastmap_1.2.0          cli_3.6.6             
+    ## [40] bookdown_0.48          fastmap_1.2.0          cli_3.6.6             
     ## [43] magrittr_2.0.5         withr_3.0.3            prettyunits_1.2.0     
-    ## [46] filelock_1.0.3         bit64_4.8.2            rmarkdown_2.31        
-    ## [49] httr_1.4.8             bit_4.6.0              otel_0.2.0            
+    ## [46] filelock_1.0.3         bit64_4.8.6            rmarkdown_2.32        
+    ## [49] httr_1.4.9             bit_4.6.0              otel_0.2.0            
     ## [52] ragg_1.5.2             hms_1.1.4              memoise_2.0.1         
-    ## [55] evaluate_1.0.5         knitr_1.51             IRanges_2.47.2        
+    ## [55] evaluate_1.0.5         knitr_1.52             IRanges_2.47.5        
     ## [58] BiocFileCache_3.3.0    rlang_1.3.0            Rcpp_1.1.2            
-    ## [61] glue_1.8.1             DBI_1.3.0              mzR_2.47.0            
+    ## [61] glue_1.8.1             DBI_1.3.0              mzR_2.47.1            
     ## [64] xml2_1.6.0             BiocManager_1.30.27    jsonlite_2.0.0        
     ## [67] R6_2.6.1               systemfonts_1.3.2      fs_2.1.0              
     ## [70] ProtGenerics_1.45.0    MsCoreUtils_1.25.4

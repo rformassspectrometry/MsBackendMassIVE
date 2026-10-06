@@ -29,6 +29,7 @@ backendInitialize(
   object,
   massiveId = character(),
   filePattern = "mzML$|CDF$|cdf$|mzXML$",
+  fileName = character(),
   offline = FALSE,
   ...
 )
@@ -55,6 +56,11 @@ massive_sync(x, offline = FALSE)
   file types. Defaults to `filePattern = "mzML$|CDF$|cdf$|mzXML$"` hence
   restricting to mzML, CDF and mzXML files which are supported by
   *Spectra*'s `MsBackendMzR` backend.
+
+- fileName:
+
+  `character` defining the names of specific data files of a data set
+  that should be downloaded and cached.
 
 - offline:
 
@@ -226,7 +232,7 @@ be
 #>  ... 36 more variables/columns.
 #> 
 #> file(s):
-#> MSV000080547_AG_spiked_sample11.mzML
+#> MSV000080547_peak_Quant_assesment_QQQ_AG_spiked_sample11.mzML
 
 ## The `massive_sync()` function can be used to ensure that all data files
 ## are available locally. This function will eventually download missing data
